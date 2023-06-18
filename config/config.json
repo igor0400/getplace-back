@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "MainUser",
+    "password": "dkfjsdofnsofnmno5j84584nknvkIDJFIDOFJODS&&&***&(hjhdfkldf",
+    "database": "main_database",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "MainUser",
+    "password": "dkfjsdofnsofnmno5j84584nknvkIDJFIDOFJODS&&&***&(hjhdfkldf",
+    "database": "main_database",
+    "host": "localhost",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "MainUser",
+    "password": "dkfjsdofnsofnmno5j84584nknvkIDJFIDOFJODS&&&***&(hjhdfkldf",
+    "database": "main_database",
+    "host": "45.134.27.33",
+    "dialect": "mysql"
+  }
+}
