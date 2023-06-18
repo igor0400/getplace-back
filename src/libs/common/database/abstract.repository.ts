@@ -32,11 +32,6 @@ export abstract class AbstractRepository<
   async findOne(options: FindOptions) {
     const document = await this.model.findOne(options);
 
-    if (!document) {
-      this.logger.warn('Document not found with FindOptions', options);
-      throw new NotFoundException('Document not found.');
-    }
-
     return document as TModel;
   }
 
