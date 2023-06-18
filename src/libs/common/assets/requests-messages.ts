@@ -9,4 +9,5 @@ export const requestMessages = {
     `Максимальная длинна поля ${title} ${len} символ(ов, a)`,
   isEnum: (title: string, values: string) =>
     `Поле ${title} может иметь значения ${values}`,
+  isArray: (title: string) => `Поле ${title} должно быть массивом`,
 };

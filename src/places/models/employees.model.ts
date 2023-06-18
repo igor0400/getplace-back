@@ -15,6 +15,7 @@ import { EmployeePlaceRoles } from 'src/roles/models/employee-place-roles.model'
 export interface PlaceEmployeesCreationArgs {
   placeId: string;
   employeeId: string;
+  title?: string;
 }
 
 @Table({ tableName: 'place_employees' })
@@ -35,6 +36,11 @@ export class PlaceEmployees extends AbstractModel<
     allowNull: false,
   })
   employeeId: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  title: string;
 
   @BelongsToMany(() => Role, () => EmployeePlaceRoles)
   employeeRoles: Role[];

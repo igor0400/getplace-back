@@ -53,23 +53,30 @@ export class PlaceRolesGuard implements CanActivate {
       if (!requiredRoles) {
         return true;
       }
-  
+
       const tokenInfo = this.jwtService.verify(token);
 
       return this.employeeService
         .getEmployeeById(tokenInfo.sub)
         .then((employee: Employee) => {
+          if (!employee) {
+            throw new UnauthorizedException('Сотрудник не найден');
+          }
+
           req.employee = employee;
 
           for (let place of employee.places) {
-            if (place.id === placeId) {
-              return place.employeeRoles.some((role) =>
-                requiredRoles.includes(role.value),
-              );
+            if (place.placeId === placeId) {
+              for (let role of place.employeeRoles) {
+                if (requiredRoles.includes(role.value)) return true;
+              }
             }
           }
 
-          throw new HttpException('Нет доступа', HttpStatus.FORBIDDEN);
+          throw new HttpException(
+            `Нет роли: ${requiredRoles.join(' или ')}`,
+            HttpStatus.FORBIDDEN,
+          );
         });
     } catch (e) {
       if (e.message) {

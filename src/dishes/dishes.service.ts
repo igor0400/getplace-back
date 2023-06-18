@@ -10,5 +10,4 @@ export class DishesService {
     const dish = await this.dishRepository.create(dto);
     return dish;
   }
-  
 }

@@ -1,15 +1,15 @@
 export const employeesRoles = [
   {
-    value: 'OWNER',
-    description: 'Владелец заведения',
-  },
-  {
     value: 'ADMIN',
     description: 'Администратор',
   },
   {
     value: 'USER',
     description: 'Пользователь',
+  },
+  {
+    value: 'OWNER',
+    description: 'Владелец заведения',
   },
   {
     value: 'MENU',

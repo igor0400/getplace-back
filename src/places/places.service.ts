@@ -1,7 +1,9 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto';
@@ -27,6 +29,9 @@ import { EmployeePlaceRolesRepository } from '../roles/repositories/employee-pla
 import { RestaurantsService } from '../restaurants/restaurants.service';
 import { RolesService } from '../roles/roles.service';
 import { Place } from './models/place.model';
+import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
+import { EmployeesService } from 'src/employees/employees.service';
+import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -48,6 +53,7 @@ export class PlacesService {
     private readonly employeePlaceRolesRepository: EmployeePlaceRolesRepository,
     private restaurantService: RestaurantsService,
     private rolesService: RolesService,
+    private employeesService: EmployeesService,
   ) {}
 
   async getAllPlaces(limit: number, offset: number, search: string = '') {
@@ -115,6 +121,7 @@ export class PlacesService {
     const placeEmployee = await this.placeEmployeesRepository.create({
       placeId: place.id,
       employeeId,
+      title: 'Владелец',
     });
 
     await this.addPlaceEmployeeRole(placeEmployee.id, 'OWNER');
@@ -139,12 +146,109 @@ export class PlacesService {
     });
   }
 
+  async createEmployee(dto: CreatePlaceEmployeeDto) {
+    const { placeId, employeeEmail, title, roles } = dto;
+
+    const employee = await this.employeesService.getEmployeeByEmail(
+      employeeEmail,
+    );
+
+    if (!employee) {
+      throw new NotFoundException(
+        `Сотрудник с email: ${employeeEmail}, не найден. Возможно он еще не зарегестрировался.`,
+      );
+    }
+
+    const isCreated = await this.isEmployeeCreated(employeeEmail, placeId);
+
+    if (isCreated) {
+      throw new BadRequestException(
+        `Сотрудник с email: ${employeeEmail} уже существует`,
+      );
+    }
+
+    const placeEmployee = await this.placeEmployeesRepository.create({
+      placeId,
+      employeeId: employee.id,
+      title,
+    });
+
+    for (let roleValue of roles) {
+      await this.addPlaceEmployeeRole(placeEmployee.id, roleValue);
+    }
+
+    return this.getPlaceEmployeeById(placeEmployee.id);
+  }
+
+  async changeEmployee(dto: ChangePlaceEmployeeDto) {
+    const { placeEmployeeId, title, roles } = dto;
+
+    const placeEmployee = await this.getPlaceEmployeeById(placeEmployeeId);
+
+    if (!placeEmployee) {
+      throw new NotFoundException('Сотрудник не найден');
+    }
+
+    if (roles) {
+      await this.employeePlaceRolesRepository.destroy({
+        where: {
+          placeEmployeeId,
+        },
+      });
+      for (let roleValue of roles) {
+        await this.addPlaceEmployeeRole(placeEmployee.id, roleValue);
+      }
+    }
+
+    if (title) {
+      placeEmployee.title = title;
+    }
+
+    return this.getPlaceEmployeeById(placeEmployee.id);
+  }
+
+  async deleteEmployee(placeEmployeeId: string) {
+    const deleteCount = await this.placeEmployeesRepository.destroy({
+      where: { id: placeEmployeeId },
+    });
+
+    await this.employeePlaceRolesRepository.destroy({
+      where: {
+        placeEmployeeId,
+      },
+    });
+
+    return deleteCount;
+  }
+
   async deletePlaceById(id: string) {
     const deleteCount = await this.placeRepository.destroy({
       where: { id },
     });
 
     return deleteCount;
+  }
+
+  async getPlaceEmployeeById(id: string) {
+    const employee = await this.placeEmployeesRepository.findByPk(id, {
+      include: [Role],
+    });
+
+    return employee;
+  }
+
+  async isEmployeeCreated(email: string, placeId: string) {
+    const employee = await this.employeesService.getEmployeeByEmail(email);
+    const placeEmployee = await this.placeEmployeesRepository.findOne({
+      where: {
+        employeeId: employee.id,
+        placeId,
+      },
+    });
+
+    if (placeEmployee) return true;
+
+    return false;
   }
 
   moderatePlaceById(dto: ModeratePlaceDto) {
