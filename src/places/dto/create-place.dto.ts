@@ -46,10 +46,23 @@ export class CreatePlaceDto {
   @MaxLength(100, { message: requestMessages.maxLength('category', 100) })
   readonly category: string;
 
-  @ApiProperty({ example: 2200, description: 'Цена' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('price') })
+  @ApiProperty({
+    example: 2200,
+    description: 'Стартовая цена',
+    required: false,
+  })
+  @IsOptional()
   @IsNumber({}, { message: requestMessages.isNumber('price') })
-  readonly price: number;
+  readonly price?: number;
+
+  @ApiProperty({
+    example: '#000000',
+    description: 'Цвет',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('color') })
+  readonly color?: string;
 
   @ApiProperty({ example: 'Понедельник', description: 'День начала работы' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('workDaysFrom') })

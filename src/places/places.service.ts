@@ -56,7 +56,19 @@ export class PlacesService {
     private employeesService: EmployeesService,
   ) {}
 
-  async getAllPlaces(limit: number, offset: number, search: string = '') {
+  async getAllPlaces(
+    limit: number,
+    offset: number,
+    search: string = '',
+    accepted,
+    notAccepted,
+  ) {
+    const isAccepted = accepted
+      ? { isAccepted: true }
+      : notAccepted
+      ? { isAccepted: false }
+      : {};
+
     const places = await this.placeRepository.findAll({
       offset: offset || 0,
       limit: limit || 20,
@@ -65,6 +77,7 @@ export class PlacesService {
         title: {
           [Op.like]: `%${search}%`,
         },
+        ...isAccepted,
       },
       order: ['id'],
     });
@@ -265,7 +278,7 @@ export class PlacesService {
     const place = await this.placeRepository.findByPk(id);
 
     if (place) {
-      place.accepted = true;
+      place.isAccepted = true;
       place.save();
       return true;
     }

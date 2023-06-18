@@ -41,13 +41,31 @@ export class PlacesController {
     description: 'Поиск по названию',
     required: false,
   })
+  @ApiQuery({
+    name: 'accepted',
+    description: 'Только принятые',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'notAccepted',
+    description: 'Только непринятые',
+    required: false,
+  })
   @Get()
   getAllPlaces(
     @Query('limit') limit: string,
     @Query('offset') offset: string,
     @Query('search') search: string,
+    @Query('accepted') accepted: boolean,
+    @Query('notAccepted') notAccepted: boolean,
   ) {
-    return this.placesService.getAllPlaces(+limit, +offset, search);
+    return this.placesService.getAllPlaces(
+      +limit,
+      +offset,
+      search,
+      accepted,
+      notAccepted,
+    );
   }
 
   @ApiDefaultResponse({

@@ -1,13 +1,7 @@
-import {
-  Column,
-  Model,
-  Table,
-  DataType,
-  ForeignKey,
-} from 'sequelize-typescript';
-import { Dish } from './dish.model';
+import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import { Dish } from '../../dishes/models/dish.model';
 import { AbstractModel } from 'src/libs/common';
-import { Restaurant } from 'src/restaurants/models/restaurant.model';
+import { Restaurant } from './restaurant.model';
 
 export interface RestaurantDishesCreationArgs {
   restaurantId: string;

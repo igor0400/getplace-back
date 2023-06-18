@@ -23,15 +23,9 @@ export interface PlaceCreationArgs {
   title: string;
   description: string;
   type: PlaceTypes;
-  price: number;
+  price?: number;
+  color?: string;
 }
-
-///// НАДО СДЕЛАТЬ!!!!!!!!!!!!!
-// ОТЗЫВЫ
-// СТОЛЫ
-// АКЦИИ
-// ПРОДВИЖЕНИЕ
-// сделать в модели заведения общее кол-во того что будет отрисовано
 
 @Table({ tableName: 'places' })
 export class Place extends AbstractModel<Place, PlaceCreationArgs> {
@@ -70,12 +64,17 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
     type: DataType.BOOLEAN,
     defaultValue: false,
   })
-  accepted: boolean;
+  isAccepted: boolean;
 
   @Column({
     type: DataType.INTEGER,
   })
   price: number;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  color: string;
 
   @HasOne(() => PlaceWork)
   work: PlaceWork;

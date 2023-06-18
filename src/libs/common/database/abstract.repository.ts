@@ -29,31 +29,31 @@ export abstract class AbstractRepository<
     return createdDocument as TModel;
   }
 
-  async findOne(options: FindOptions) {
+  async findOne(options: FindOptions<TModel>) {
     const document = await this.model.findOne(options);
 
     return document as TModel;
   }
 
-  async findByPk(id: string, options?: Omit<FindOptions<any>, 'where'>) {
+  async findByPk(id: string, options?: Omit<FindOptions<TModel>, 'where'>) {
     const document = await this.model.findByPk(id, options);
 
     return document as TModel;
   }
 
-  async findAll(options: FindOptions) {
+  async findAll(options: FindOptions<TModel>) {
     const documents = await this.model.findAll(options);
 
     return documents as TModel[];
   }
 
-  async findOrCreate(options: FindOrCreateOptions) {
+  async findOrCreate(options: FindOrCreateOptions<TModel, TModelCreation>) {
     const documents = await this.model.findOrCreate(options);
 
     return documents[0] as TModel;
   }
 
-  async destroy(options: DestroyOptions) {
+  async destroy(options: DestroyOptions<TModel>) {
     const deletedCount = await this.model.destroy(options);
 
     return deletedCount;

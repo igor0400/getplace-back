@@ -57,5 +57,6 @@ import { WorkTimeRepository } from './repositories/work-time.repository';
     forwardRef(() => EmployeesModule),
     forwardRef(() => RolesModule),
   ],
+  exports: [PlacesService],
 })
 export class PlacesModule {}

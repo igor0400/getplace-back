@@ -26,7 +26,10 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      accepted: {
+      color: {
+        type: Sequelize.STRING(50),
+      },
+      isAccepted: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
@@ -47,7 +50,6 @@ module.exports = {
       },
       price: {
         type: Sequelize.INTEGER,
-        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,

@@ -6,23 +6,13 @@ import { Dish } from './models/dish.model';
 import { DishDrink } from './models/drink.model';
 import { DishFood } from './models/food.model';
 import { DishImages } from './models/images.model';
-import { RestaurantDishes } from './models/restaurant-dishes.model';
 import { DishRepository } from './repositories/dish.repository';
 import { DishImagesRepository } from './repositories/images.repository';
 import { DishDrinkRepository } from './repositories/drink.repository';
 import { DishFoodRepository } from './repositories/food.repository';
-import { RestaurantDishesRepository } from './repositories/restaurant-dishes.repository';
 
 @Module({
-  imports: [
-    DatabaseModule.forFeature([
-      Dish,
-      DishDrink,
-      DishFood,
-      DishImages,
-      RestaurantDishes,
-    ]),
-  ],
+  imports: [DatabaseModule.forFeature([Dish, DishDrink, DishFood, DishImages])],
   controllers: [DishesController],
   providers: [
     DishesService,
@@ -30,7 +20,6 @@ import { RestaurantDishesRepository } from './repositories/restaurant-dishes.rep
     DishImagesRepository,
     DishDrinkRepository,
     DishFoodRepository,
-    RestaurantDishesRepository,
   ],
   exports: [
     DishesService,
@@ -38,7 +27,6 @@ import { RestaurantDishesRepository } from './repositories/restaurant-dishes.rep
     DishImagesRepository,
     DishDrinkRepository,
     DishFoodRepository,
-    RestaurantDishesRepository,
   ],
 })
 export class DishesModule {}

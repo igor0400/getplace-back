@@ -25,7 +25,7 @@ export class ChangePlaceEmployeeDto {
   @IsNotEmpty({ message: requestMessages.isNotEmpty('title') })
   @IsOptional()
   @MaxLength(50, { message: requestMessages.maxLength('title', 50) })
-  readonly title: string;
+  readonly title?: string;
 
   @ApiProperty({
     example: ['MENU', 'SETTINGS'],
@@ -34,5 +34,5 @@ export class ChangePlaceEmployeeDto {
   })
   @IsOptional()
   @IsArray({ message: requestMessages.isArray('roles') })
-  readonly roles: RoleTypes[];
+  readonly roles?: RoleTypes[];
 }

@@ -4,7 +4,7 @@ import { Dish } from '../dishes/models/dish.model';
 import { DishDrink } from '../dishes/models/drink.model';
 import { DishFood } from '../dishes/models/food.model';
 import { DishImages } from '../dishes/models/images.model';
-import { RestaurantDishes } from '../dishes/models/restaurant-dishes.model';
+import { RestaurantDishes } from '../restaurants/models/restaurant-dishes.model';
 import { Employee } from '../employees/models/employee.model';
 import { File } from '../files/models/file.model';
 import { Place } from '../places/models/place.model';

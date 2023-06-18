@@ -7,7 +7,7 @@ import {
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { Dish } from 'src/dishes/models/dish.model';
-import { RestaurantDishes } from 'src/dishes/models/restaurant-dishes.model';
+import { RestaurantDishes } from 'src/restaurants/models/restaurant-dishes.model';
 import { Place } from 'src/places/models/place.model';
 
 export interface RestaurantCreationArgs {
@@ -27,5 +27,5 @@ export class Restaurant extends AbstractModel<
   placeId: string;
 
   @BelongsToMany(() => Dish, () => RestaurantDishes)
-  dishes: Dish[];
+  menu: Dish[];
 }

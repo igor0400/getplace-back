@@ -54,7 +54,7 @@ export class CreateDishDto {
     example: 1200,
     description: 'Стартовая цена',
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('type') })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('cost') })
   @IsNumber({}, { message: requestMessages.isNumber('cost') })
   readonly cost: number;
 
@@ -62,8 +62,8 @@ export class CreateDishDto {
     example: 1200,
     description: 'Стартовая цена',
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('type') })
-  @IsNumber({}, { message: requestMessages.isNumber('cost') })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('position') })
+  @IsNumber({}, { message: requestMessages.isNumber('position') })
   readonly position: number;
 
   @ApiProperty({
