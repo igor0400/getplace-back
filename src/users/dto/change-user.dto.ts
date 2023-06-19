@@ -8,6 +8,8 @@ import {
   MaxLength,
 } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
+import { statusTypes } from '../configs/status-types';
+import { StatusTypes } from '../types/status-types';
 
 export class ChangeUserDto {
   readonly userId: string;
@@ -34,17 +36,14 @@ export class ChangeUserDto {
   @ApiProperty({
     example: 'cybersportsman',
     description: 'Статус',
-    enum: ['default', 'cybersportsman', 'premium', 'celebrity'],
+    enum: statusTypes,
     required: false,
   })
   @IsOptional()
-  @IsEnum(['default', 'cybersportsman', 'premium', 'celebrity'], {
-    message: requestMessages.isEnum(
-      'status',
-      'default, cybersportsman, premium или celebrity',
-    ),
+  @IsEnum(statusTypes, {
+    message: requestMessages.isEnum('status', statusTypes),
   })
-  readonly status?: 'default' | 'cybersportsman' | 'premium' | 'celebrity';
+  readonly status?: StatusTypes;
 
   @ApiProperty({
     example: 'user@mail.ru',

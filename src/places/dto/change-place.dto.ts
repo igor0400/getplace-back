@@ -9,42 +9,43 @@ import {
   MaxLength,
 } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
-import { PlaceTypes } from '../types/place-types';
-import { placeTypes } from '../configs/place-types';
-import { Days } from '../types/days';
 import { days } from '../configs/days';
+import { Days } from '../types/days';
 
-export class CreatePlaceDto {
-  readonly employeeId: string;
+export class ChangePlaceDto {
+  @ApiProperty({
+    example: 'fdfsdfsdf-fdsfsdfsdf-dfsfsdfs3-34r342rsdfs',
+    description: 'id заведения',
+  })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('placeId') })
+  @IsString({ message: requestMessages.isString('placeId') })
+  readonly placeId: string;
 
-  @ApiProperty({ example: 'Onyx', description: 'Название' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('title') })
+  @ApiProperty({ example: 'Onyx', description: 'Название', required: false })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('title') })
   @MaxLength(100, { message: requestMessages.maxLength('title', 100) })
-  readonly title: string;
-
-  @ApiProperty({ example: 'Лучшее в мире заведение', description: 'Название' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('description') })
-  @IsString({ message: requestMessages.isString('description') })
-  @MaxLength(1000, { message: requestMessages.maxLength('description', 1000) })
-  readonly description: string;
+  readonly title?: string;
 
   @ApiProperty({
-    example: 'restaurant',
-    description: 'Тип заведения',
-    enum: placeTypes,
+    example: 'Лучшее в мире заведение',
+    description: 'Название',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('type') })
-  @IsEnum(placeTypes, {
-    message: requestMessages.isEnum('type', placeTypes),
-  })
-  readonly type: PlaceTypes;
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('description') })
+  @MaxLength(1000, { message: requestMessages.maxLength('description', 1000) })
+  readonly description?: string;
 
-  @ApiProperty({ example: 'Азиатская кухня', description: 'Категория' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('category') })
+  @ApiProperty({
+    example: 'Азиатская кухня',
+    description: 'Категория',
+    required: false,
+  })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('category') })
   @MaxLength(100, { message: requestMessages.maxLength('category', 100) })
-  readonly category: string;
+  readonly category?: string;
 
   @ApiProperty({
     example: 2200,
@@ -58,54 +59,73 @@ export class CreatePlaceDto {
   @ApiProperty({
     example: '#000000',
     description: 'Цвет',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('color') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('color') })
-  readonly color: string;
+  readonly color?: string;
 
-  @ApiProperty({ example: 'Понедельник', description: 'День начала работы' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('workDaysFrom') })
+  @ApiProperty({
+    example: 'Понедельник',
+    description: 'День начала работы',
+    required: false,
+  })
+  @IsOptional()
   @IsEnum(days, {
     message: requestMessages.isEnum('workDaysFrom', days),
   })
-  readonly workDaysFrom: Days;
+  readonly workDaysFrom?: Days;
 
-  @ApiProperty({ example: 'Воскресенье', description: 'День окончания работы' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('workDaysTill') })
+  @ApiProperty({
+    example: 'Воскресенье',
+    description: 'День окончания работы',
+    required: false,
+  })
+  @IsOptional()
   @IsEnum(days, {
     message: requestMessages.isEnum('workDaysTill', days),
   })
-  readonly workDaysTill: Days;
+  readonly workDaysTill?: Days;
 
-  @ApiProperty({ example: '10:00', description: 'Время начала работы' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('workTimeFrom') })
+  @ApiProperty({
+    example: '10:00',
+    description: 'Время начала работы',
+    required: false,
+  })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('workTimeFrom') })
   @MaxLength(20, { message: requestMessages.maxLength('workTimeFrom', 20) })
-  readonly workTimeFrom: string;
+  readonly workTimeFrom?: string;
 
-  @ApiProperty({ example: '20:00', description: 'Время окончания работы' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('workTimeTill') })
+  @ApiProperty({
+    example: '20:00',
+    description: 'Время окончания работы',
+    required: false,
+  })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('workTimeTill') })
   @MaxLength(20, { message: requestMessages.maxLength('workTimeTill', 20) })
-  readonly workTimeTill: string;
+  readonly workTimeTill?: string;
 
   @ApiProperty({
     example: 'Italia, Catanzaro, Contrada Neri 1',
     description: 'Адрес',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('address') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('address') })
   @MaxLength(200, { message: requestMessages.maxLength('address', 200) })
-  readonly address: string;
+  readonly address?: string;
 
   @ApiProperty({
     example: '+79114063377',
     description: 'Контактный номер телефона',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('contactPhone1') })
+  @IsOptional()
   @IsPhoneNumber(undefined, { message: requestMessages.isPhone })
   @MaxLength(30, { message: requestMessages.maxLength('contactPhone1', 100) })
-  readonly contactPhone1: string;
+  readonly contactPhone1?: string;
 
   @ApiProperty({
     example: '+79114063377',

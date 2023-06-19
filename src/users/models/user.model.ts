@@ -11,11 +11,13 @@ import { Referals } from 'src/referals/models/referal.model';
 import { Role } from 'src/roles/models/roles.model';
 import { UserRoles } from 'src/roles/models/user-roles.model';
 import { UserSession } from 'src/sessions/models/user-session.model';
+import { StatusTypes } from '../types/status-types';
+import { statusTypes } from '../configs/status-types';
 
 export interface UserCreationArgs {
   password: string;
   email: string;
-  status: 'default' | 'cybersportsman' | 'premium' | 'celebrity';
+  status: StatusTypes;
   iin: string;
   phone: string;
   referalCode?: string;
@@ -55,11 +57,10 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   emailVerify: boolean;
 
   @Column({
-    type: DataType.ENUM('default', 'cybersportsman', 'premium', 'celebrity'),
-    allowNull: false,
+    type: DataType.ENUM(...statusTypes),
     defaultValue: 'default',
   })
-  status: 'default' | 'cybersportsman' | 'premium' | 'celebrity';
+  status: StatusTypes;
 
   @Column({
     type: DataType.STRING,

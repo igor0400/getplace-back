@@ -35,10 +35,10 @@ module.exports = {
         type: Sequelize.ENUM(
           'default',
           'cybersportsman',
-          'premium',
           'celebrity',
+          'premium',
+          'superpremium',
         ),
-        allowNull: false,
         defaultValue: 'default',
       },
       name: {

@@ -7,7 +7,7 @@ export const requestMessages = {
   isNotEmpty: (title: string) => `Поле ${title} обязательно`,
   maxLength: (title: string, len: number) =>
     `Максимальная длинна поля ${title} ${len} символ(ов, a)`,
-  isEnum: (title: string, values: string) =>
-    `Поле ${title} может иметь значения ${values}`,
+  isEnum: (title: string, values: string[]) =>
+    `Поле ${title} может иметь значения ${values.join(', ')}`,
   isArray: (title: string) => `Поле ${title} должно быть массивом`,
 };

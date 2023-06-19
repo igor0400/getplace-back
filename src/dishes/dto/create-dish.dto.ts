@@ -46,7 +46,7 @@ export class CreateDishDto {
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('type') })
   @IsEnum(dishTypes, {
-    message: requestMessages.isEnum('type', dishTypes.join(', ')),
+    message: requestMessages.isEnum('type', dishTypes),
   })
   readonly type: DishTypes;
 

@@ -2,7 +2,7 @@ import { Logger, NotFoundException } from '@nestjs/common';
 import { AbstractModel } from './abstract.model';
 import { ModelCtor } from 'sequelize-typescript';
 import { getUId } from './assets/getUId';
-import { DestroyOptions, FindOptions, FindOrCreateOptions } from 'sequelize';
+import { DestroyOptions, FindOptions, FindOrCreateOptions, UpdateOptions } from 'sequelize';
 
 export abstract class AbstractRepository<
   TModel extends AbstractModel,
@@ -57,5 +57,9 @@ export abstract class AbstractRepository<
     const deletedCount = await this.model.destroy(options);
 
     return deletedCount;
+  }
+
+  async update(values: TModel, options: Omit<UpdateOptions<any>, 'returning'>) {
+    const document = await this.model.update(values, options);
   }
 }

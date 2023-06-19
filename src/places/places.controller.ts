@@ -19,6 +19,7 @@ import { PlacesRoles } from 'src/roles/decorators/places-roles.decorator';
 import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
 import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
+import { ChangePlaceDto } from './dto/change-place.dto';
 
 @ApiTags('Заведения')
 @Controller('places')
@@ -79,6 +80,17 @@ export class PlacesController {
       ...dto,
       employeeId: req.user.sub,
     });
+  }
+
+  @ApiDefaultResponse({
+    description: 'Изменение заведения (только с ролью SETTINGS или OWNER)',
+  })
+  @ApiBearerAuth('Only SETTINGS or OWNER roles')
+  @PlacesRoles('OWNER', 'SETTINGS')
+  @UseGuards(PlaceRolesGuard)
+  @Patch(':id')
+  changePlace(@Body() dto: ChangePlaceDto) {
+    return this.placesService.changePlace(dto);
   }
 
   @ApiDefaultResponse({

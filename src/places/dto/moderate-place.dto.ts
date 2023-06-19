@@ -8,7 +8,7 @@ export class ModeratePlaceDto {
   @ApiProperty({ example: 'accept', description: 'Решение' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('solution') })
   @IsEnum(['accept', 'reject'], {
-    message: requestMessages.isEnum('solution', 'accept, reject'),
+    message: requestMessages.isEnum('solution', ['accept', 'reject']),
   })
   readonly solution: 'accept' | 'reject';
 }

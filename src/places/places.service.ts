@@ -32,11 +32,17 @@ import { Place } from './models/place.model';
 import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
 import { EmployeesService } from 'src/employees/employees.service';
 import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
+import { DishFood } from 'src/dishes/models/food.model';
+import { DishDrink } from 'src/dishes/models/drink.model';
+import { ChangePlaceDto } from './dto/change-place.dto';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
   PlaceAddress,
-  { model: Restaurant, include: [Dish] },
+  {
+    model: Restaurant,
+    include: [{ model: Dish, include: [DishFood, DishDrink, File] }],
+  },
   { model: File },
   { model: PlaceEmployees, include: [Role, Employee] },
 ];
@@ -144,6 +150,28 @@ export class PlacesService {
     }
 
     return this.getPlaceById(place.id);
+  }
+
+  async changePlace(dto: ChangePlaceDto) {
+    const {
+      placeId,
+      title,
+      description,
+      category,
+      price,
+      workDaysFrom,
+      workDaysTill,
+      workTimeFrom,
+      workTimeTill,
+      address,
+      contactPhone1,
+      contactPhone2,
+      contactPhone3,
+    } = dto;
+
+    const place = await this.getPlaceById(placeId);
+
+    // сделать цикл на смену полей в place, а потом менять все сопутствующие
   }
 
   async addPlaceEmployeeRole(placeEmployeeId: string, value: string) {
