@@ -13,12 +13,6 @@ import { days } from '../configs/days';
 import { Days } from '../types/days';
 
 export class ChangePlaceDto {
-  @ApiProperty({
-    example: 'fdfsdfsdf-fdsfsdfsdf-dfsfsdfs3-34r342rsdfs',
-    description: 'id заведения',
-  })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('placeId') })
-  @IsString({ message: requestMessages.isString('placeId') })
   readonly placeId: string;
 
   @ApiProperty({ example: 'Onyx', description: 'Название', required: false })

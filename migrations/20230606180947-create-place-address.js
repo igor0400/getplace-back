@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
-      title: {
+      address: {
         type: Sequelize.STRING(200),
         allowNull: false,
       },

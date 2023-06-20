@@ -4,7 +4,7 @@ import { AbstractModel } from 'src/libs/common';
 
 export interface PlaceAddressCreationArgs {
   placeId: string;
-  title: string;
+  address: string;
   phone1?: string;
   phone2?: string;
   phone3?: string;
@@ -26,7 +26,7 @@ export class PlaceAddress extends AbstractModel<
     type: DataType.STRING,
     allowNull: false,
   })
-  title: string;
+  address: string;
 
   @Column({
     type: DataType.STRING,

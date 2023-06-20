@@ -20,6 +20,7 @@ import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
 import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 import { ChangePlaceDto } from './dto/change-place.dto';
+import { PlaceRolesUrlGuard } from 'src/roles/guards/place-roles-url.guard';
 
 @ApiTags('Заведения')
 @Controller('places')
@@ -85,16 +86,39 @@ export class PlacesController {
   @ApiDefaultResponse({
     description: 'Изменение заведения (только с ролью SETTINGS или OWNER)',
   })
+  @ApiParam({
+    name: 'id',
+    description: 'id заведения',
+  })
   @ApiBearerAuth('Only SETTINGS or OWNER roles')
   @PlacesRoles('OWNER', 'SETTINGS')
-  @UseGuards(PlaceRolesGuard)
+  @UseGuards(PlaceRolesUrlGuard)
   @Patch(':id')
-  changePlace(@Body() dto: ChangePlaceDto) {
-    return this.placesService.changePlace(dto);
+  changePlace(@Body() dto: ChangePlaceDto, @Param('id') placeId: string) {
+    return this.placesService.changePlace({ ...dto, placeId });
+  }
+
+  @ApiDefaultResponse({
+    description: 'Изменение заведения (только с ролью OWNER)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id заведения',
+  })
+  @ApiBearerAuth('Only OWNER role')
+  @PlacesRoles('OWNER')
+  @UseGuards(PlaceRolesUrlGuard)
+  @Delete(':id')
+  deletePlace(@Param('id') id: string) {
+    return this.placesService.deletePlaceById(id);
   }
 
   @ApiDefaultResponse({
     description: 'Получение заведения по id',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id заведения',
   })
   @Get(':id')
   async getPlaceById(@Param('id') id: string) {
@@ -109,6 +133,10 @@ export class PlacesController {
 
   @ApiDefaultResponse({
     description: 'Модерация заведения (только с глобальной ролью ADMIN)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id заведения',
   })
   @ApiSecurity('ADMIN only')
   @EmployeesRoles('ADMIN')

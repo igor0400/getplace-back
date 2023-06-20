@@ -66,8 +66,8 @@ export class PlacesService {
     limit: number,
     offset: number,
     search: string = '',
-    accepted,
-    notAccepted,
+    accepted: boolean = false,
+    notAccepted: boolean = false,
   ) {
     const isAccepted = accepted
       ? { isAccepted: true }
@@ -131,7 +131,7 @@ export class PlacesService {
     });
     await this.placeAddressRepository.create({
       placeId: place.id,
-      title: address,
+      address,
       phone1: contactPhone1,
       phone2: contactPhone2,
       phone3: contactPhone3,
@@ -155,10 +155,6 @@ export class PlacesService {
   async changePlace(dto: ChangePlaceDto) {
     const {
       placeId,
-      title,
-      description,
-      category,
-      price,
       workDaysFrom,
       workDaysTill,
       workTimeFrom,
@@ -171,7 +167,99 @@ export class PlacesService {
 
     const place = await this.getPlaceById(placeId);
 
-    // сделать цикл на смену полей в place, а потом менять все сопутствующие
+    for (let item in dto) {
+      if (place[item]) {
+        place[item] = dto[item];
+      }
+    }
+
+    place.save();
+
+    const work = await this.placeWorkRepository.findOne({
+      where: {
+        placeId,
+      },
+    });
+
+    // смена или создание дней работы
+    const workDays = await this.workDaysRepository.findOne({
+      where: {
+        workId: work.id,
+      },
+    });
+
+    if (workDays) {
+      if (workDaysFrom) workDays.from = workDaysFrom;
+      if (workDaysTill) workDays.till = workDaysTill;
+    } else {
+      await this.workDaysRepository.create({
+        workId: work.id,
+        from: workDaysFrom ?? 'Понедельник',
+        till: workDaysTill ?? 'Пятница',
+      });
+    }
+
+    // смена или создание времени работы
+    const workTime = await this.workTimeRepository.findOne({
+      where: {
+        workId: work.id,
+      },
+    });
+
+    if (workTime) {
+      if (workTimeFrom) workTime.from = workTimeFrom;
+      if (workTimeTill) workTime.till = workTimeTill;
+    } else {
+      await this.workTimeRepository.create({
+        workId: work.id,
+        from: workTimeFrom ?? '08:00',
+        till: workTimeTill ?? '22:00',
+      });
+    }
+
+    // смена адреса
+    const placeAddres = await this.placeAddressRepository.findOne({
+      where: {
+        placeId,
+      },
+    });
+
+    if (placeAddres) {
+      if (address) placeAddres.address = address;
+      if (contactPhone1) placeAddres.phone1 = contactPhone1;
+      if (contactPhone2) placeAddres.phone2 = contactPhone2;
+      if (contactPhone3) placeAddres.phone3 = contactPhone3;
+    } else {
+      await this.placeAddressRepository.create({
+        placeId,
+        address,
+        phone1: contactPhone1,
+        phone2: contactPhone2,
+        phone3: contactPhone3,
+      });
+    }
+  }
+
+  async deletePlaceById(id: string) {
+    const deleteCount = await this.placeRepository.destroy({
+      where: { id },
+    });
+
+    const work = await this.placeWorkRepository.findOne({
+      where: {
+        placeId: id,
+      },
+    });
+
+    await this.placeAddressRepository.destroy({ where: { placeId: id } });
+
+    if (work) {
+      await this.workDaysRepository.destroy({ where: { workId: work.id } });
+      await this.workTimeRepository.destroy({ where: { workId: work.id } });
+      await this.placeWorkRepository.destroy({ where: { placeId: id } });
+    }
+
+    return deleteCount;
   }
 
   async addPlaceEmployeeRole(placeEmployeeId: string, value: string) {
@@ -257,14 +345,6 @@ export class PlacesService {
       where: {
         placeEmployeeId,
       },
-    });
-
-    return deleteCount;
-  }
-
-  async deletePlaceById(id: string) {
-    const deleteCount = await this.placeRepository.destroy({
-      where: { id },
     });
 
     return deleteCount;

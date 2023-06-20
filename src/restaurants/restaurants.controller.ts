@@ -20,4 +20,6 @@ export class RestaurantsController {
   createDish(@Body() dto: CreateRestaurantDishDto) {
     return this.restaurantsService.createDish(dto);
   }
+
+  // удаление и смена блюд
 }
