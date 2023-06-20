@@ -1,15 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
-import { statusTypes } from '../configs/status-types';
-import { StatusTypes } from '../types/status-types';
 
 export class ChangeUserDto {
   readonly userId: string;
@@ -32,18 +29,6 @@ export class ChangeUserDto {
   @IsOptional()
   @IsString({ message: requestMessages.isString('phone') })
   readonly phone?: string;
-
-  @ApiProperty({
-    example: 'cybersportsman',
-    description: 'Статус',
-    enum: statusTypes,
-    required: false,
-  })
-  @IsOptional()
-  @IsEnum(statusTypes, {
-    message: requestMessages.isEnum('status', statusTypes),
-  })
-  readonly status?: StatusTypes;
 
   @ApiProperty({
     example: 'user@mail.ru',

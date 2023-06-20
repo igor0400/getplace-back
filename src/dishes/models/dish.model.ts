@@ -20,7 +20,6 @@ export interface DishCreationArgs {
   type: DishTypes;
   cost: number;
   position: number;
-  isAvailable: boolean;
 }
 
 @Table({ tableName: 'dishes' })

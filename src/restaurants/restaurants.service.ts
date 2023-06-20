@@ -4,6 +4,7 @@ import { DishesService } from 'src/dishes/dishes.service';
 import { CreateRestaurantDishDto } from './dto/create-dish.dto';
 import { RestaurantDishesRepository } from './repositories/restaurant-dishes.repository';
 import { PlacesService } from 'src/places/places.service';
+import { ChangeRestaurantDishDto } from './dto/change-dish.dto';
 
 @Injectable()
 export class RestaurantsService {
@@ -44,5 +45,24 @@ export class RestaurantsService {
       restaurantDish,
       dishInfo: dish,
     };
+  }
+
+  async changeDish(dto: ChangeRestaurantDishDto) {
+    const dishDto = JSON.parse(JSON.stringify(dto));
+    delete dishDto.placeId;
+
+    const dish = await this.dishesService.changeDish(dishDto);
+    return dish;
+  }
+
+  async deleteDishById(id: string) {
+    await this.dishesService.deleteDishById(id);
+    await this.restaurantDishesRepository.destroy({
+      where: {
+        dishId: id,
+      },
+    });
+
+    return true;
   }
 }

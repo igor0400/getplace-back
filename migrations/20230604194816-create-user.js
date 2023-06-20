@@ -31,16 +31,6 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
-      status: {
-        type: Sequelize.ENUM(
-          'default',
-          'cybersportsman',
-          'celebrity',
-          'premium',
-          'superpremium',
-        ),
-        defaultValue: 'default',
-      },
       name: {
         type: Sequelize.STRING(100),
         allowNull: false,

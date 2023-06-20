@@ -20,6 +20,9 @@ import { UserRolesRepository } from '../roles/repositories/user-roles.repository
 import { UserSessionRepository } from '../sessions/repositories/user-session.repository';
 import { RolesService } from '../roles/roles.service';
 import { UsersEmailService } from '../email/users-email.service';
+import { StatusesService } from 'src/statuses/statuses.service';
+import { AddStatusDto } from './dto/add-status.dto';
+import { UserStatusesRepository } from 'src/statuses/repositories/user-statuses.repository';
 
 export const usersInclude = [
   { model: Role },
@@ -39,7 +42,9 @@ export class UsersService {
     private readonly userRepository: UsersRepository,
     private readonly userRolesRepository: UserRolesRepository,
     private readonly userSessionRepository: UserSessionRepository,
+    private readonly userStatusesRepository: UserStatusesRepository,
     private roleService: RolesService,
+    private statusesService: StatusesService,
     private emailService: UsersEmailService,
   ) {}
 
@@ -100,6 +105,7 @@ export class UsersService {
     const { id } = user;
 
     await this.addRole({ value: 'USER', userId: id });
+    await this.addStatus({ value: 'DEFAULT', userId: id });
 
     user.referalCode = uid(12);
     user.save();
@@ -130,6 +136,24 @@ export class UsersService {
 
     throw new HttpException(
       'Пользователь или роль не найдены',
+      HttpStatus.NOT_FOUND,
+    );
+  }
+
+  async addStatus(dto: AddStatusDto) {
+    const user = await this.userRepository.findByPk(dto.userId);
+    const status = await this.statusesService.getStatusByValue(dto.value);
+
+    if (status && user) {
+      const userStatus = await this.userStatusesRepository.create({
+        userId: dto.userId,
+        statusId: status.id,
+      });
+      return userStatus;
+    }
+
+    throw new HttpException(
+      'Пользователь или статус не найдены',
       HttpStatus.NOT_FOUND,
     );
   }

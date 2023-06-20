@@ -191,6 +191,7 @@ export class PlacesService {
     if (workDays) {
       if (workDaysFrom) workDays.from = workDaysFrom;
       if (workDaysTill) workDays.till = workDaysTill;
+      workDays.save();
     } else {
       await this.workDaysRepository.create({
         workId: work.id,
@@ -209,6 +210,7 @@ export class PlacesService {
     if (workTime) {
       if (workTimeFrom) workTime.from = workTimeFrom;
       if (workTimeTill) workTime.till = workTimeTill;
+      workTime.save();
     } else {
       await this.workTimeRepository.create({
         workId: work.id,
@@ -229,6 +231,7 @@ export class PlacesService {
       if (contactPhone1) placeAddres.phone1 = contactPhone1;
       if (contactPhone2) placeAddres.phone2 = contactPhone2;
       if (contactPhone3) placeAddres.phone3 = contactPhone3;
+      placeAddres.save();
     } else {
       await this.placeAddressRepository.create({
         placeId,
@@ -238,6 +241,9 @@ export class PlacesService {
         phone3: contactPhone3,
       });
     }
+
+    const newPlace = await this.getPlaceById(place.id);
+    return newPlace;
   }
 
   async deletePlaceById(id: string) {
@@ -331,6 +337,7 @@ export class PlacesService {
 
     if (title) {
       placeEmployee.title = title;
+      placeEmployee.save();
     }
 
     return this.getPlaceEmployeeById(placeEmployee.id);

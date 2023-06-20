@@ -8,6 +8,7 @@ import { RolesModule } from '../roles/roles.module';
 import { AuthModule } from '../auth/auth.module';
 import { EmailModule } from '../email/email.module';
 import { SessionsModule } from '../sessions/sessions.module';
+import { StatusesModule } from 'src/statuses/statuses.module';
 
 @Module({
   controllers: [UsersController],
@@ -18,6 +19,7 @@ import { SessionsModule } from '../sessions/sessions.module';
     forwardRef(() => AuthModule),
     forwardRef(() => EmailModule),
     SessionsModule,
+    forwardRef(() => StatusesModule),
   ],
   exports: [UsersService, UsersRepository],
 })

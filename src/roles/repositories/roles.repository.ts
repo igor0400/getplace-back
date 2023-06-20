@@ -1,12 +1,12 @@
 import { AbstractRepository } from 'src/libs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Role, RoleCreationAttrs } from '../models/roles.model';
+import { Role, RoleCreationArgs } from '../models/roles.model';
 
 @Injectable()
 export class RolesRepository extends AbstractRepository<
   Role,
-  RoleCreationAttrs
+  RoleCreationArgs
 > {
   protected readonly logger = new Logger(Role.name);
 

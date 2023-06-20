@@ -1,9 +1,23 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiDefaultResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import {
+  ApiDefaultResponse,
+  ApiParam,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PlacesRoles } from 'src/roles/decorators/places-roles.decorator';
 import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { CreateRestaurantDishDto } from './dto/create-dish.dto';
 import { RestaurantsService } from './restaurants.service';
+import { ChangeRestaurantDishDto } from './dto/change-dish.dto';
 
 @ApiTags('Рестораны (заведения)')
 @Controller('restaurants')
@@ -21,5 +35,36 @@ export class RestaurantsController {
     return this.restaurantsService.createDish(dto);
   }
 
-  // удаление и смена блюд
+  @ApiDefaultResponse({
+    description: 'Изменение блюда (только с ролью MENU или OWNER)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id блюда',
+  })
+  @ApiSecurity('MENU or OWNER only')
+  @PlacesRoles('MENU', 'OWNER')
+  @UseGuards(PlaceRolesGuard)
+  @Patch('dishes/:id')
+  changeDish(
+    @Body() dto: ChangeRestaurantDishDto,
+    @Param('id') dishId: string,
+  ) {
+    return this.restaurantsService.changeDish({ ...dto, dishId });
+  }
+
+  @ApiDefaultResponse({
+    description: 'Удаление блюда (только с ролью MENU или OWNER)',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id блюда',
+  })
+  @ApiSecurity('MENU or OWNER only')
+  @PlacesRoles('MENU', 'OWNER')
+  @UseGuards(PlaceRolesGuard)
+  @Delete('dishes/:id')
+  deleteDish(@Param('id') id: string) {
+    return this.restaurantsService.deleteDishById(id);
+  }
 }

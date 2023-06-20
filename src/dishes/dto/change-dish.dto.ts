@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { DishTypes } from '../types/dish-types';
 import {
   IsBoolean,
   IsEnum,
@@ -10,61 +9,70 @@ import {
   MaxLength,
 } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
-import { dishTypes } from '../configs/dish-types';
 
-export class CreateDishDto {
-  @ApiProperty({ example: 'Бургер', description: 'Название', maxLength: 50 })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('title') })
+export class ChangeDishDto {
+  readonly dishId: string;
+
+  @ApiProperty({
+    example: 'Бургер',
+    description: 'Название',
+    maxLength: 50,
+    required: false,
+  })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('title') })
   @MaxLength(50, { message: requestMessages.maxLength('title', 50) })
-  readonly title: string;
+  readonly title?: string;
 
   @ApiProperty({
     example: 'Очень вкусный',
     description: 'Описание',
     maxLength: 300,
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('description') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('description') })
   @MaxLength(300, { message: requestMessages.maxLength('description', 300) })
-  readonly description: string;
+  readonly description?: string;
 
   @ApiProperty({
     example: 'Фастфуд',
     description: 'Категория',
     maxLength: 50,
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('catigory') })
+  @IsOptional()
   @IsString({ message: requestMessages.isString('catigory') })
   @MaxLength(50, { message: requestMessages.maxLength('catigory', 50) })
-  readonly catigory: string;
-
-  @ApiProperty({
-    example: 'food',
-    description: 'Тип',
-    enum: dishTypes,
-  })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('type') })
-  @IsEnum(dishTypes, {
-    message: requestMessages.isEnum('type', dishTypes),
-  })
-  readonly type: DishTypes;
+  readonly catigory?: string;
 
   @ApiProperty({
     example: 1200,
     description: 'Стартовая цена',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('cost') })
+  @IsOptional()
   @IsNumber({}, { message: requestMessages.isNumber('cost') })
-  readonly cost: number;
+  readonly cost?: number;
 
   @ApiProperty({
     example: 1200,
     description: 'Стартовая цена',
+    required: false,
   })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('position') })
+  @IsOptional()
   @IsNumber({}, { message: requestMessages.isNumber('position') })
-  readonly position: number;
+  readonly position?: number;
+
+  @ApiProperty({
+    example: true,
+    description: 'Доступно',
+    required: false,
+    default: true,
+  })
+  @IsOptional()
+  @IsBoolean({ message: requestMessages.isBoolean('isAvailable') })
+  readonly isAvailable?: boolean;
 
   @ApiProperty({
     example: 800,

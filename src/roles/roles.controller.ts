@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   UseGuards,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
@@ -36,7 +35,7 @@ export class RolesController {
   })
   @ApiSecurity('ADMIN only')
   @Get(':id')
-  getRoleById(@Param('id', ParseIntPipe) roleId: string) {
+  getRoleById(@Param('id') roleId: string) {
     const role = this.roleService.getRoleById(roleId);
 
     if (role) {
@@ -62,7 +61,7 @@ export class RolesController {
   @Patch(':id')
   changeRole(
     @Body() dto: ChangeRoleDto,
-    @Param('id', ParseIntPipe) roleId: string,
+    @Param('id') roleId: string,
   ) {
     return this.roleService.changeRole({ ...dto, roleId });
   }

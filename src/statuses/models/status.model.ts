@@ -1,13 +1,13 @@
 import { AbstractModel } from 'src/libs/common';
 import { Column, DataType, Table } from 'sequelize-typescript';
 
-export interface RoleCreationArgs {
+export interface StatusCreationArgs {
   value: string;
   description: string;
 }
 
-@Table({ tableName: 'roles' })
-export class Role extends AbstractModel<Role, RoleCreationArgs> {
+@Table({ tableName: 'statuses' })
+export class Status extends AbstractModel<Status, StatusCreationArgs> {
   @Column({ type: DataType.STRING, unique: true, allowNull: false })
   value: string;
 
