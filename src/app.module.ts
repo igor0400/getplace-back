@@ -15,6 +15,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { DishesModule } from './dishes/dishes.module';
 import { StartModule } from './start/start.module';
 import { StatusesModule } from './statuses/statuses.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { StatusesModule } from './statuses/statuses.module';
     DishesModule,
     StartModule,
     StatusesModule,
+    StorageModule,
   ],
 })
 export class AppModule {}
