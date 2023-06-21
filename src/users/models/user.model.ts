@@ -11,6 +11,8 @@ import { Referals } from 'src/referals/models/referal.model';
 import { Role } from 'src/roles/models/roles.model';
 import { UserRoles } from 'src/roles/models/user-roles.model';
 import { UserSession } from 'src/sessions/models/user-session.model';
+import { Status } from 'src/statuses/models/status.model';
+import { UserStatuses } from 'src/statuses/models/user-statuses';
 
 export interface UserCreationArgs {
   password: string;
@@ -76,4 +78,7 @@ export class User extends AbstractModel<User, UserCreationArgs> {
 
   @BelongsToMany(() => Role, () => UserRoles)
   roles: Role[];
+
+  @BelongsToMany(() => Status, () => UserStatuses)
+  status: Status[];
 }

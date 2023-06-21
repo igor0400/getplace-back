@@ -5,6 +5,8 @@ import { UsersAuthService } from '../auth/users-auth.service';
 import { RolesService } from '../roles/roles.service';
 import { UsersService } from '../users/users.service';
 import { usersRoles } from './configs/users-roles';
+import { usersStatuses } from './configs/users-statuses';
+import { StatusesService } from 'src/statuses/statuses.service';
 
 @Injectable()
 export class UsersStartService {
@@ -12,6 +14,7 @@ export class UsersStartService {
     private authService: UsersAuthService,
     private rolesService: RolesService,
     private usersService: UsersService,
+    private statusesService: StatusesService,
   ) {}
 
   async createInitialData(
@@ -29,6 +32,22 @@ export class UsersStartService {
       }
 
       roles.push(createdRole);
+    }
+
+    const statuses = [];
+
+    for (let status of usersStatuses) {
+      const createdStatus = await this.statusesService.findOrCreateStatus(
+        status,
+      );
+
+      if (!createdStatus) {
+        throw new UnauthorizedException(
+          `Ошибка создания статуса пользователя: ${status.value}`,
+        );
+      }
+
+      statuses.push(createdStatus);
     }
 
     const userData = await this.authService.createRegiserData(
@@ -52,6 +71,7 @@ export class UsersStartService {
     return {
       userData,
       roles,
+      statuses,
     };
   }
 }

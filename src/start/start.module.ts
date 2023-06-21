@@ -7,10 +7,17 @@ import { AuthModule } from '../auth/auth.module';
 import { RolesModule } from '../roles/roles.module';
 import { EmployeesModule } from '../employees/employees.module';
 import { UsersModule } from '../users/users.module';
+import { StatusesModule } from 'src/statuses/statuses.module';
 
 @Module({
   controllers: [EmplayeesStartController, UsersStartController],
   providers: [EmployeesStartService, UsersStartService],
-  imports: [AuthModule, RolesModule, EmployeesModule, UsersModule],
+  imports: [
+    AuthModule,
+    RolesModule,
+    EmployeesModule,
+    UsersModule,
+    StatusesModule,
+  ],
 })
 export class StartModule {}

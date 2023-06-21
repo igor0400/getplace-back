@@ -23,9 +23,11 @@ import { UsersEmailService } from '../email/users-email.service';
 import { StatusesService } from 'src/statuses/statuses.service';
 import { AddStatusDto } from './dto/add-status.dto';
 import { UserStatusesRepository } from 'src/statuses/repositories/user-statuses.repository';
+import { Status } from 'src/statuses/models/status.model';
 
 export const usersInclude = [
   { model: Role },
+  { model: Status },
   { model: UserSession },
   {
     model: Referals,

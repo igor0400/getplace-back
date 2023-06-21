@@ -26,6 +26,8 @@ import { UserRoles } from '../roles/models/user-roles.model';
 import { EmployeeSession } from '../sessions/models/employee-session.model';
 import { UserSession } from '../sessions/models/user-session.model';
 import { User } from '../users/models/user.model';
+import { Status } from 'src/statuses/models/status.model';
+import { UserStatuses } from 'src/statuses/models/user-statuses';
 
 @Module({
   imports: [
@@ -56,6 +58,8 @@ import { User } from '../users/models/user.model';
       EmployeeSession,
       UserSession,
       User,
+      Status,
+      UserStatuses,
     ]),
   ],
 })
