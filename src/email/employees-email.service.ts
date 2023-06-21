@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { join } from 'path';
-import { uid } from 'uid';
 import { EmployeesRepository } from '../employees/repositories/employees.repository';
 import { RedisCacheService } from '../redis/redis.service';
 
@@ -62,7 +61,7 @@ export class EmployeesEmailService {
 
     const { id, email } = employee;
 
-    const verifyCode = uid(10);
+    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
     await this.redisService.set(id.toString(), verifyCode);
 
     return await this.mailerService
@@ -88,7 +87,7 @@ export class EmployeesEmailService {
 
     const { id, email } = employee;
 
-    const verifyCode = uid(10);
+    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
     await this.redisService.set(id.toString(), verifyCode);
 
     return await this.mailerService

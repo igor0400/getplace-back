@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { join } from 'path';
-import { uid } from 'uid';
 import { UsersRepository } from '../users/repositories/users.repository';
 import { RedisCacheService } from '../redis/redis.service';
 
@@ -27,7 +26,7 @@ export class UsersEmailService {
       throw new UnauthorizedException('Данный email уже используется');
     }
 
-    const verifyCode = uid(10);
+    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
     await this.redisService.set(email, verifyCode);
 
     return await this.mailerService
@@ -62,7 +61,7 @@ export class UsersEmailService {
 
     const { id, email } = user;
 
-    const verifyCode = uid(10);
+    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
     await this.redisService.set(id.toString(), verifyCode);
 
     return await this.mailerService
@@ -88,7 +87,7 @@ export class UsersEmailService {
 
     const { id, email } = user;
 
-    const verifyCode = uid(10);
+    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
     await this.redisService.set(id.toString(), verifyCode);
 
     return await this.mailerService
