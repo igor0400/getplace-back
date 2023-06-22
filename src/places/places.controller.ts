@@ -1,4 +1,15 @@
-import { Controller, Param, Query, Req, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Param,
+  Query,
+  Req,
+  Patch,
+  Delete,
+  UseInterceptors,
+  UploadedFiles,
+  ParseFilePipeBuilder,
+  HttpStatus,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiParam,
@@ -21,6 +32,7 @@ import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
 import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 import { ChangePlaceDto } from './dto/change-place.dto';
 import { PlaceRolesUrlGuard } from 'src/roles/guards/place-roles-url.guard';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Заведения')
 @Controller('places')
@@ -76,11 +88,19 @@ export class PlacesController {
   @ApiBearerAuth('Bearer token')
   @UseGuards(JwtAuthGuard)
   @Post()
-  createPlace(@Body() dto: CreatePlaceDto, @Req() req: CustomReq) {
-    return this.placesService.createPlace({
-      ...dto,
-      employeeId: req.user.sub,
-    });
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
+  createPlace(
+    @Body() dto: CreatePlaceDto,
+    @Req() req: CustomReq,
+    @UploadedFiles() files: { image: Express.Multer.File[] },
+  ) {
+    return this.placesService.createPlace(
+      {
+        ...dto,
+        employeeId: req.user.sub,
+      },
+      files?.image,
+    );
   }
 
   @ApiDefaultResponse({

@@ -35,6 +35,8 @@ import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 import { DishFood } from 'src/dishes/models/food.model';
 import { DishDrink } from 'src/dishes/models/drink.model';
 import { ChangePlaceDto } from './dto/change-place.dto';
+import { FilesService } from 'src/files/files.service';
+import { PlaceImagesRepository } from './repositories/images.repository';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -56,10 +58,12 @@ export class PlacesService {
     private readonly workTimeRepository: WorkTimeRepository,
     private readonly placeAddressRepository: PlaceAddressRepository,
     private readonly placeEmployeesRepository: PlaceEmployeesRepository,
+    private readonly placeImagesRepository: PlaceImagesRepository,
     private readonly employeePlaceRolesRepository: EmployeePlaceRolesRepository,
-    private restaurantService: RestaurantsService,
-    private rolesService: RolesService,
-    private employeesService: EmployeesService,
+    private readonly restaurantService: RestaurantsService,
+    private readonly rolesService: RolesService,
+    private readonly employeesService: EmployeesService,
+    private readonly filesService: FilesService,
   ) {}
 
   async getAllPlaces(
@@ -100,7 +104,7 @@ export class PlacesService {
     return place;
   }
 
-  async createPlace(dto: CreatePlaceDto) {
+  async createPlace(dto: CreatePlaceDto, images?: Express.Multer.File[]) {
     const place = await this.placeRepository.create(dto);
 
     if (!place) {
@@ -147,6 +151,16 @@ export class PlacesService {
 
     if (dto.type === 'restaurant') {
       await this.restaurantService.createRestaurant(place.id);
+    }
+
+    if (images) {
+      for (let image of images) {
+        const fileData = await this.filesService.createImage(image);
+        await this.placeImagesRepository.create({
+          placeId: place.id,
+          fileId: fileData.file.id,
+        });
+      }
     }
 
     return this.getPlaceById(place.id);

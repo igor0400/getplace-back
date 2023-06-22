@@ -22,6 +22,7 @@ import { FavouritePlacesRepository } from './repositories/favourite-places.repos
 import { PlaceAddressRepository } from './repositories/address.repository';
 import { WorkDaysRepository } from './repositories/work-days.repository';
 import { WorkTimeRepository } from './repositories/work-time.repository';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
   controllers: [PlacesController],
@@ -56,6 +57,7 @@ import { WorkTimeRepository } from './repositories/work-time.repository';
     forwardRef(() => RestaurantsModule),
     forwardRef(() => EmployeesModule),
     forwardRef(() => RolesModule),
+    FilesModule,
   ],
   exports: [PlacesService],
 })
