@@ -3,4 +3,5 @@ dist
 migrations
 PC-key.*
 PC-key
-dump.rdb
+rdb
+db

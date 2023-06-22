@@ -5,7 +5,8 @@
 PC-key.*
 PC-key
 
-dump.rdb
+rdb
+db
 
 # Logs
 logs

@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { FileCreationArgs, File } from '../models/file.model';
 
 @Injectable()
-export class FilesRepository extends AbstractRepository<
+export class FileRepository extends AbstractRepository<
   File,
   FileCreationArgs
 > {

@@ -15,27 +15,11 @@ module.exports = {
         allowNull: false,
       },
       from: {
-        type: Sequelize.ENUM(
-          'Понедельник',
-          'Вторник',
-          'Среда',
-          'Четверг',
-          'Пятница',
-          'Суббота',
-          'Воскресенье',
-        ),
+        type: Sequelize.STRING(20),
         allowNull: false,
       },
       till: {
-        type: Sequelize.ENUM(
-          'Понедельник',
-          'Вторник',
-          'Среда',
-          'Четверг',
-          'Пятница',
-          'Суббота',
-          'Воскресенье',
-        ),
+        type: Sequelize.STRING(20),
         allowNull: false,
       },
       createdAt: {

@@ -19,7 +19,7 @@ services:
       - NODE_ENV=production
 
     volumes:
-      - 'D:/Progects/Onyx/last-rest-api:/data'
+      - 'C:/Users/ulano/Desktop/Progects/Onyx/rest-api:/data'
 
   redis:
     container_name: 'redis'
@@ -28,7 +28,26 @@ services:
     expose:
       - 6379
 
+    ports:
+      - '6379:6379'
+
     volumes:
-      - 'D:/Progects/Onyx/last-rest-api:/data'
+      - 'C:/Users/ulano/Desktop/Progects/Onyx/rest-api/rdb:/data'
 
     command: ['redis-server', '--bind', 'redis', '--port', '6379']
+
+  db:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'main_database'
+      MYSQL_USER: 'MainUser'
+      MYSQL_PASSWORD: 'dkfjsdofnsofnmno5j84584nknvkIDJFIDOFJODS&&&***&(hjhdfkldf'
+      MYSQL_ROOT_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - C:/Users/ulano/Desktop/Progects/Onyx/rest-api/db:/var/lib/mysql
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
