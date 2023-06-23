@@ -16,6 +16,9 @@ import { DishesModule } from './dishes/dishes.module';
 import { StartModule } from './start/start.module';
 import { StatusesModule } from './statuses/statuses.module';
 import { StorageModule } from './storage/storage.module';
+import { TablesModule } from './tables/tables.module';
+import { RoomsModule } from './rooms/rooms.module';
+import { SeatsModule } from './seats/seats.module';
 
 @Module({
   imports: [
@@ -39,6 +42,9 @@ import { StorageModule } from './storage/storage.module';
     StartModule,
     StatusesModule,
     StorageModule,
+    TablesModule,
+    RoomsModule,
+    SeatsModule,
   ],
 })
 export class AppModule {}

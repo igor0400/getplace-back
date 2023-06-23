@@ -3,42 +3,20 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable('places', {
+    return queryInterface.createTable('place_rooms', {
       id: {
         type: Sequelize.STRING(500),
         allowNull: false,
         unique: true,
         primaryKey: true,
       },
-      employeeId: {
+      placeId: {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
       title: {
         type: Sequelize.STRING(100),
         allowNull: false,
-      },
-      description: {
-        type: Sequelize.STRING(1000),
-        allowNull: false,
-      },
-      category: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
-      color: {
-        type: Sequelize.STRING(50),
-      },
-      isAccepted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
-      },
-      type: {
-        type: Sequelize.STRING(100),
-        allowNull: false,
-      },
-      price: {
-        type: Sequelize.STRING(50),
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -54,6 +32,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    return queryInterface.dropTable('places');
+    return queryInterface.dropTable('place_rooms');
   },
 };

@@ -23,7 +23,7 @@ module.exports = {
         allowNull: false,
       },
       type: {
-        type: Sequelize.ENUM('food', 'drink'),
+        type: Sequelize.STRING(100),
         allowNull: false,
       },
       cost: {

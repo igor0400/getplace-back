@@ -11,7 +11,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import {
+  ApiAcceptedResponse,
   ApiBearerAuth,
+  ApiExcludeController,
   ApiParam,
   ApiQuery,
   ApiSecurity,
@@ -85,6 +87,9 @@ export class PlacesController {
   @ApiDefaultResponse({
     description: 'Создание заведения (только с Bearer токеном)',
   })
+  @ApiAcceptedResponse({
+    description: 'Загрузка до 5 файлов, поле image',
+  })
   @ApiBearerAuth('Bearer token')
   @UseGuards(JwtAuthGuard)
   @Post()
@@ -106,6 +111,9 @@ export class PlacesController {
   @ApiDefaultResponse({
     description: 'Изменение заведения (только с ролью SETTINGS или OWNER)',
   })
+  @ApiAcceptedResponse({
+    description: 'Загрузка до 5 файлов, поле image',
+  })
   @ApiParam({
     name: 'id',
     description: 'id заведения',
@@ -124,7 +132,7 @@ export class PlacesController {
   }
 
   @ApiDefaultResponse({
-    description: 'Изменение заведения (только с ролью OWNER)',
+    description: 'Удаление заведения (только с ролью OWNER)',
   })
   @ApiParam({
     name: 'id',

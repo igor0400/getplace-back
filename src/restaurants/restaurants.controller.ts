@@ -10,6 +10,7 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import {
+  ApiAcceptedResponse,
   ApiDefaultResponse,
   ApiParam,
   ApiSecurity,
@@ -30,6 +31,9 @@ export class RestaurantsController {
   @ApiDefaultResponse({
     description: 'Создание блюда (только с ролью MENU или OWNER)',
   })
+  @ApiAcceptedResponse({
+    description: 'Загрузка до 5 файлов, поле image',
+  })
   @ApiSecurity('MENU or OWNER only')
   @PlacesRoles('MENU', 'OWNER')
   @UseGuards(PlaceRolesGuard)
@@ -46,6 +50,9 @@ export class RestaurantsController {
 
   @ApiDefaultResponse({
     description: 'Изменение блюда (только с ролью MENU или OWNER)',
+  })
+  @ApiAcceptedResponse({
+    description: 'Загрузка до 5 файлов, поле image',
   })
   @ApiParam({
     name: 'id',

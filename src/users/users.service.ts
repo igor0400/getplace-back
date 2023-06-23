@@ -66,7 +66,7 @@ export class UsersService {
     return users;
   }
 
-  async getUserById(id: string): Promise<User> {
+  async getUserById(id: string) {
     const user = await this.userRepository.findByPk(id, {
       include: usersInclude,
     });

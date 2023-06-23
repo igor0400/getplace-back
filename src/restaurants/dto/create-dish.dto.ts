@@ -5,8 +5,8 @@ import { requestMessages } from 'src/libs/common';
 
 export class CreateRestaurantDishDto extends CreateDishDto {
   @ApiProperty({
-    example: 'id заведения',
-    description: 'placeId',
+    example: 'uiuhicdcdsc-3r3fnzdjvnso-3e3e3njc-2eqfndkcn',
+    description: 'id заведения',
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('placeId') })
   @IsString({ message: requestMessages.isString('placeId') })

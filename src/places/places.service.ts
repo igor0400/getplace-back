@@ -37,16 +37,20 @@ import { DishDrink } from 'src/dishes/models/drink.model';
 import { ChangePlaceDto } from './dto/change-place.dto';
 import { FilesService } from 'src/files/files.service';
 import { PlaceImagesRepository } from './repositories/images.repository';
+import { Room } from 'src/rooms/models/room.model';
+import { Table } from 'src/tables/models/table.model';
+import { Seat } from 'src/seats/models/seat.model';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
-  PlaceAddress,
   {
     model: Restaurant,
     include: [{ model: Dish, include: [DishFood, DishDrink, File] }],
   },
   { model: File },
   { model: PlaceEmployees, include: [Role, Employee] },
+  { model: Room, include: [{ model: Table, include: [Seat] }] },
+  PlaceAddress,
 ];
 
 @Injectable()

@@ -17,6 +17,7 @@ import { AbstractModel } from 'src/libs/common';
 import { Employee } from 'src/employees/models/employee.model';
 import { Restaurant } from 'src/restaurants/models/restaurant.model';
 import { File } from 'src/files/models/file.model';
+import { Room } from 'src/rooms/models/room.model';
 
 export interface PlaceCreationArgs {
   employeeId: string;
@@ -90,4 +91,7 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
 
   @HasMany(() => PlaceEmployees)
   employees: PlaceEmployees[];
+
+  @HasMany(() => Room)
+  rooms: Room[];
 }
