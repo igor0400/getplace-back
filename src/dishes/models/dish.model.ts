@@ -18,8 +18,8 @@ export interface DishCreationArgs {
   description: string;
   catigory: string;
   type: DishTypes;
-  cost: number;
-  position: number;
+  cost: string;
+  position: string;
 }
 
 @Table({ tableName: 'dishes' })
@@ -49,16 +49,16 @@ export class Dish extends AbstractModel<Dish, DishCreationArgs> {
   type: DishTypes;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     allowNull: false,
   })
-  cost: number;
+  cost: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
     allowNull: false,
   })
-  position: number;
+  position: string;
 
   @Column({
     type: DataType.BOOLEAN,

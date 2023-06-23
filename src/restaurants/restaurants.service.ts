@@ -1,4 +1,9 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  forwardRef,
+  NotFoundException,
+} from '@nestjs/common';
 import { RestaurantRepository } from './repositories/restaurants.repository';
 import { DishesService } from 'src/dishes/dishes.service';
 import { CreateRestaurantDishDto } from './dto/create-dish.dto';
@@ -28,14 +33,20 @@ export class RestaurantsService {
     return isDeleted;
   }
 
-  async createDish(dto: CreateRestaurantDishDto) {
+  async createDish(
+    dto: CreateRestaurantDishDto,
+    images?: Express.Multer.File[],
+  ) {
     const dishDto = JSON.parse(JSON.stringify(dto));
     delete dishDto.placeId;
 
-    const dish = await this.dishesService.createDish(dishDto);
+    const dish = await this.dishesService.createDish(dishDto, images);
 
     const place = await this.placeService.getPlaceById(dto.placeId);
 
+    if (!place) {
+      throw new NotFoundException('Заведение не найдено');
+    }
     const restaurantDish = await this.restaurantDishesRepository.create({
       restaurantId: place.restaurantInfo.id,
       dishId: dish.id,
@@ -47,11 +58,14 @@ export class RestaurantsService {
     };
   }
 
-  async changeDish(dto: ChangeRestaurantDishDto) {
+  async changeDish(
+    dto: ChangeRestaurantDishDto,
+    images?: Express.Multer.File[],
+  ) {
     const dishDto = JSON.parse(JSON.stringify(dto));
     delete dishDto.placeId;
 
-    const dish = await this.dishesService.changeDish(dishDto);
+    const dish = await this.dishesService.changeDish(dishDto, images);
     return dish;
   }
 

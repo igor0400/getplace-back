@@ -47,13 +47,13 @@ export class CreatePlaceDto {
   readonly category: string;
 
   @ApiProperty({
-    example: 2200,
+    example: '2200',
     description: 'Стартовая цена',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('price') })
-  readonly price?: number;
+  @IsString({ message: requestMessages.isString('price') })
+  readonly price?: string;
 
   @ApiProperty({
     example: '#000000',

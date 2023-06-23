@@ -14,7 +14,7 @@ module.exports = {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
-      volume: Sequelize.INTEGER,
+      volume: Sequelize.STRING(30),
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

@@ -49,7 +49,7 @@ module.exports = {
         allowNull: false,
       },
       price: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(50),
       },
       createdAt: {
         type: Sequelize.DATE,

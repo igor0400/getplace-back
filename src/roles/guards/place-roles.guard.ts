@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   CanActivate,
   ExecutionContext,
   HttpException,
@@ -6,7 +7,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { JwtService } from '@nestjs/jwt';
 import { Reflector } from '@nestjs/core';
 import { EmployeesService } from 'src/employees/employees.service';
@@ -21,22 +21,34 @@ export class PlaceRolesGuard implements CanActivate {
     private employeeService: EmployeesService,
   ) {}
 
-  canActivate(
-    context: ExecutionContext,
-  ): boolean | Promise<boolean> | Observable<boolean> {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
       const requiredRoles = this.reflector.getAllAndOverride<string[]>(
         PLACES_ROLES_KEY,
         [context.getHandler(), context.getClass()],
       );
 
-      const placeId = context.getArgs()[0]?.body?.placeId;
+      let placeId = context.getArgByIndex(0)?.body?.placeId;
 
       if (!placeId) {
-        throw new HttpException(
-          'Параметр placeId обязателен',
-          HttpStatus.BAD_REQUEST,
-        );
+        const request = context.switchToHttp().getRequest();
+        const bufferData = request?._readableState?.buffer?.head?.data;
+
+        if (bufferData) {
+          const requestBody = Buffer.concat([bufferData]).toString();
+
+          const strBody = requestBody.replaceAll('\r', '').split('\n');
+
+          for (let item of strBody) {
+            if (item.includes('placeId')) {
+              placeId = strBody[strBody.indexOf(item) + 2];
+            }
+          }
+        }
+
+        if (!placeId) {
+          throw new BadRequestException('Параметр placeId обязателен');
+        }
       }
 
       const req = context.switchToHttp().getRequest();

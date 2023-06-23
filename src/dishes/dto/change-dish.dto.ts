@@ -1,13 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  MaxLength,
-} from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
 
 export class ChangeDishDto {
@@ -47,22 +39,22 @@ export class ChangeDishDto {
   readonly catigory?: string;
 
   @ApiProperty({
-    example: 1200,
+    example: '1200',
     description: 'Стартовая цена',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('cost') })
-  readonly cost?: number;
+  @IsString({ message: requestMessages.isString('cost') })
+  readonly cost?: string;
 
   @ApiProperty({
-    example: 1200,
-    description: 'Стартовая цена',
+    example: '1',
+    description: 'Позиция в меню',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('position') })
-  readonly position?: number;
+  @IsString({ message: requestMessages.isString('position') })
+  readonly position?: string;
 
   @ApiProperty({
     example: true,
@@ -75,29 +67,29 @@ export class ChangeDishDto {
   readonly isAvailable?: boolean;
 
   @ApiProperty({
-    example: 800,
+    example: '800',
     description: 'Вес в граммах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('weight') })
-  readonly weight?: number;
+  @IsString({ message: requestMessages.isString('weight') })
+  readonly weight?: string;
 
   @ApiProperty({
-    example: 800,
+    example: '800',
     description: 'Размер в сантиметрах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('size') })
-  readonly size?: number;
+  @IsString({ message: requestMessages.isString('size') })
+  readonly size?: string;
 
   @ApiProperty({
-    example: 1,
+    example: '1',
     description: 'Объём в литрах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('volume') })
-  readonly volume?: number;
+  @IsString({ message: requestMessages.isString('volume') })
+  readonly volume?: string;
 }

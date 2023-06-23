@@ -6,8 +6,11 @@ import { DishDrinkRepository } from './repositories/drink.repository';
 import { ChangeDishDto } from './dto/change-dish.dto';
 import { DishDrink } from './models/drink.model';
 import { DishFood } from './models/food.model';
+import { FilesService } from 'src/files/files.service';
+import { DishImagesRepository } from './repositories/images.repository';
+import { File } from 'src/files/models/file.model';
 
-const dishInclude = [DishDrink, DishFood];
+const dishInclude = [DishDrink, DishFood, File];
 
 @Injectable()
 export class DishesService {
@@ -15,6 +18,8 @@ export class DishesService {
     private readonly dishRepository: DishRepository,
     private readonly dishFoodRepository: DishFoodRepository,
     private readonly dishDrinkRepository: DishDrinkRepository,
+    private readonly dishImagesRepository: DishImagesRepository,
+    private readonly filesService: FilesService,
   ) {}
 
   async getDishById(id: string) {
@@ -25,7 +30,7 @@ export class DishesService {
     return dish;
   }
 
-  async createDish(dto: CreateDishDto) {
+  async createDish(dto: CreateDishDto, images?: Express.Multer.File[]) {
     const {
       title,
       description,
@@ -62,10 +67,14 @@ export class DishesService {
       });
     }
 
+    if (images) {
+      await this.createDishImages(images, dish.id);
+    }
+
     return this.getDishById(dish.id);
   }
 
-  async changeDish(dto: ChangeDishDto) {
+  async changeDish(dto: ChangeDishDto, images?: Express.Multer.File[]) {
     const { dishId, weight, size, volume } = dto;
 
     const dish = await this.getDishById(dishId);
@@ -114,9 +123,18 @@ export class DishesService {
         });
       }
     }
+
+    if (images) {
+      await this.deleteDishImages(dish.images);
+      await this.createDishImages(images, dish.id);
+    }
+
+    return this.getDishById(dish.id);
   }
 
   async deleteDishById(id: string) {
+    const dish = await this.getDishById(id);
+
     const deleteCount = await this.dishRepository.destroy({
       where: {
         id,
@@ -133,6 +151,29 @@ export class DishesService {
       },
     });
 
+    if (dish.images) {
+      await this.deleteDishImages(dish.images);
+    }
+
     return deleteCount;
+  }
+
+  private async createDishImages(
+    images: Express.Multer.File[],
+    dishId: string,
+  ) {
+    for (let image of images) {
+      const fileData = await this.filesService.createImage(image);
+      await this.dishImagesRepository.create({
+        dishId,
+        fileId: fileData.file.id,
+      });
+    }
+  }
+
+  private async deleteDishImages(images: File[]) {
+    for (let dishImage of images) {
+      await this.filesService.deleteFile(dishImage.id);
+    }
   }
 }

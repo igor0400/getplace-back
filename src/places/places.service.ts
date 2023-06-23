@@ -154,19 +154,13 @@ export class PlacesService {
     }
 
     if (images) {
-      for (let image of images) {
-        const fileData = await this.filesService.createImage(image);
-        await this.placeImagesRepository.create({
-          placeId: place.id,
-          fileId: fileData.file.id,
-        });
-      }
+      await this.createPlaceImages(images, place.id);
     }
 
     return this.getPlaceById(place.id);
   }
 
-  async changePlace(dto: ChangePlaceDto) {
+  async changePlace(dto: ChangePlaceDto, images?: Express.Multer.File[]) {
     const {
       placeId,
       workDaysFrom,
@@ -256,11 +250,17 @@ export class PlacesService {
       });
     }
 
-    const newPlace = await this.getPlaceById(place.id);
-    return newPlace;
+    if (images) {
+      await this.deletePlaceImages(place.images);
+      await this.createPlaceImages(images, place.id);
+    }
+
+    return this.getPlaceById(place.id);
   }
 
   async deletePlaceById(id: string) {
+    const place = await this.getPlaceById(id);
+
     const deleteCount = await this.placeRepository.destroy({
       where: { id },
     });
@@ -277,6 +277,10 @@ export class PlacesService {
       await this.workDaysRepository.destroy({ where: { workId: work.id } });
       await this.workTimeRepository.destroy({ where: { workId: work.id } });
       await this.placeWorkRepository.destroy({ where: { placeId: id } });
+    }
+
+    if (place.images) {
+      await this.deletePlaceImages(place.images);
     }
 
     return deleteCount;
@@ -400,6 +404,25 @@ export class PlacesService {
       return this.acceptPlaceById(placeId);
     } else {
       return this.rejectPlaceById(placeId);
+    }
+  }
+
+  private async createPlaceImages(
+    images: Express.Multer.File[],
+    placeId: string,
+  ) {
+    for (let image of images) {
+      const fileData = await this.filesService.createImage(image);
+      await this.placeImagesRepository.create({
+        placeId,
+        fileId: fileData.file.id,
+      });
+    }
+  }
+
+  private async deletePlaceImages(images: File[]) {
+    for (let placeImage of images) {
+      await this.filesService.deleteFile(placeImage.id);
     }
   }
 

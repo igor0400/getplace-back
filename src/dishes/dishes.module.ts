@@ -10,9 +10,13 @@ import { DishRepository } from './repositories/dish.repository';
 import { DishImagesRepository } from './repositories/images.repository';
 import { DishDrinkRepository } from './repositories/drink.repository';
 import { DishFoodRepository } from './repositories/food.repository';
+import { FilesModule } from 'src/files/files.module';
 
 @Module({
-  imports: [DatabaseModule.forFeature([Dish, DishDrink, DishFood, DishImages])],
+  imports: [
+    DatabaseModule.forFeature([Dish, DishDrink, DishFood, DishImages]),
+    FilesModule,
+  ],
   controllers: [DishesController],
   providers: [
     DishesService,

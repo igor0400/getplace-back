@@ -6,6 +6,8 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import {
   ApiDefaultResponse,
@@ -18,6 +20,7 @@ import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { CreateRestaurantDishDto } from './dto/create-dish.dto';
 import { RestaurantsService } from './restaurants.service';
 import { ChangeRestaurantDishDto } from './dto/change-dish.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Рестораны (заведения)')
 @Controller('restaurants')
@@ -31,8 +34,14 @@ export class RestaurantsController {
   @PlacesRoles('MENU', 'OWNER')
   @UseGuards(PlaceRolesGuard)
   @Post('dishes')
-  createDish(@Body() dto: CreateRestaurantDishDto) {
-    return this.restaurantsService.createDish(dto);
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
+  createDish(
+    @Body() dto: CreateRestaurantDishDto,
+    @UploadedFiles() files: { image: Express.Multer.File[] },
+  ) {
+    console.log(dto);
+
+    return this.restaurantsService.createDish(dto, files.image);
   }
 
   @ApiDefaultResponse({
@@ -46,11 +55,13 @@ export class RestaurantsController {
   @PlacesRoles('MENU', 'OWNER')
   @UseGuards(PlaceRolesGuard)
   @Patch('dishes/:id')
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
   changeDish(
     @Body() dto: ChangeRestaurantDishDto,
     @Param('id') dishId: string,
+    @UploadedFiles() files: { image: Express.Multer.File[] },
   ) {
-    return this.restaurantsService.changeDish({ ...dto, dishId });
+    return this.restaurantsService.changeDish({ ...dto, dishId }, files.image);
   }
 
   @ApiDefaultResponse({

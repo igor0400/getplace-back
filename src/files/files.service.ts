@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+} from '@nestjs/common';
 import { StorageService } from 'src/storage/storage.service';
 import { FileRepository } from './repositories/file.repository';
 import { v4 as uuid } from 'uuid';
@@ -32,6 +37,7 @@ export class FilesService {
 
     const fileModel = await this.fileRepository.create({
       name: file.originalname,
+      storageName: fileName,
       src: `${process.env.BACKET_URL}/${fileName}`,
       size: file.size,
     });
@@ -51,6 +57,7 @@ export class FilesService {
 
     const fileModel = await this.fileRepository.create({
       name: file.originalname,
+      storageName: fileName,
       src: `${process.env.BACKET_URL}/${fileName}`,
       size: file.size,
     });
@@ -59,6 +66,23 @@ export class FilesService {
       file: fileModel,
       storageData: fileData,
     };
+  }
+
+  async deleteFile(fileId: string) {
+    const file = await this.fileRepository.findByPk(fileId);
+
+    if (!file) {
+      throw new NotFoundException('Файл не найден');
+    }
+
+    await this.storageService.delete(file.storageName);
+    const deleteCount = await this.fileRepository.destroy({
+      where: {
+        id: fileId,
+      },
+    });
+
+    return deleteCount;
   }
 
   private getNewFileName(fileName: string) {

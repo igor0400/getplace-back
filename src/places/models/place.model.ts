@@ -23,7 +23,7 @@ export interface PlaceCreationArgs {
   title: string;
   description: string;
   type: PlaceTypes;
-  price?: number;
+  price?: string;
   color?: string;
 }
 
@@ -67,9 +67,9 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
   isAccepted: boolean;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  price: number;
+  price: string;
 
   @Column({
     type: DataType.STRING,

@@ -1,10 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { DishTypes } from '../types/dish-types';
 import {
-  IsBoolean,
   IsEnum,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   MaxLength,
@@ -51,45 +49,45 @@ export class CreateDishDto {
   readonly type: DishTypes;
 
   @ApiProperty({
-    example: 1200,
+    example: '1200',
     description: 'Стартовая цена',
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('cost') })
-  @IsNumber({}, { message: requestMessages.isNumber('cost') })
-  readonly cost: number;
+  @IsString({ message: requestMessages.isString('cost') })
+  readonly cost: string;
 
   @ApiProperty({
-    example: 1200,
-    description: 'Стартовая цена',
+    example: '1',
+    description: 'Позиция в меню',
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('position') })
-  @IsNumber({}, { message: requestMessages.isNumber('position') })
-  readonly position: number;
+  @IsString({ message: requestMessages.isString('position') })
+  readonly position: string;
 
   @ApiProperty({
-    example: 800,
+    example: '800',
     description: 'Вес в граммах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('weight') })
-  readonly weight?: number;
+  @IsString({ message: requestMessages.isString('weight') })
+  readonly weight?: string;
 
   @ApiProperty({
-    example: 800,
+    example: '800',
     description: 'Размер в сантиметрах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('size') })
-  readonly size?: number;
+  @IsString({ message: requestMessages.isString('size') })
+  readonly size?: string;
 
   @ApiProperty({
-    example: 1,
+    example: '1',
     description: 'Объём в литрах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('volume') })
-  readonly volume?: number;
+  @IsString({ message: requestMessages.isString('volume') })
+  readonly volume?: string;
 }

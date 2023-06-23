@@ -3,6 +3,7 @@ import { Column, Table, DataType } from 'sequelize-typescript';
 
 export interface FileCreationArgs {
   name: string;
+  storageName: string;
   src: string;
   size: number;
 }
@@ -14,6 +15,12 @@ export class File extends AbstractModel<File, FileCreationArgs> {
     allowNull: false,
   })
   name: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  storageName: string;
 
   @Column({
     type: DataType.STRING,

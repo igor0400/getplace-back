@@ -114,8 +114,13 @@ export class PlacesController {
   @PlacesRoles('OWNER', 'SETTINGS')
   @UseGuards(PlaceRolesUrlGuard)
   @Patch(':id')
-  changePlace(@Body() dto: ChangePlaceDto, @Param('id') placeId: string) {
-    return this.placesService.changePlace({ ...dto, placeId });
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
+  changePlace(
+    @Body() dto: ChangePlaceDto,
+    @Param('id') placeId: string,
+    @UploadedFiles() files: { image: Express.Multer.File[] },
+  ) {
+    return this.placesService.changePlace({ ...dto, placeId }, files.image);
   }
 
   @ApiDefaultResponse({

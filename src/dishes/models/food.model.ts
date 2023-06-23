@@ -4,8 +4,8 @@ import { AbstractModel } from 'src/libs/common';
 
 export interface DishFoodCreationArgs {
   dishId: string;
-  weight?: number;
-  size?: number;
+  weight?: string;
+  size?: string;
 }
 
 @Table({ tableName: 'dish_food_info' })
@@ -18,12 +18,12 @@ export class DishFood extends AbstractModel<DishFood, DishFoodCreationArgs> {
   dishId: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  size: number;
+  size: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  weight: number;
+  weight: string;
 }

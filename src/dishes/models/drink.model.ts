@@ -4,7 +4,7 @@ import { AbstractModel } from 'src/libs/common';
 
 export interface DishDrinkCreationArgs {
   dishId: string;
-  volume?: number;
+  volume?: string;
 }
 
 @Table({ tableName: 'dish_drink_info' })
@@ -17,7 +17,7 @@ export class DishDrink extends AbstractModel<DishDrink, DishDrinkCreationArgs> {
   dishId: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  volume: number;
+  volume: string;
 }

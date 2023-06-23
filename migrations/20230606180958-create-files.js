@@ -14,6 +14,10 @@ module.exports = {
         type: Sequelize.STRING(300),
         allowNull: false,
       },
+      storageName: {
+        type: Sequelize.STRING(300),
+        allowNull: false,
+      },
       src: {
         type: Sequelize.TEXT,
         allowNull: false,

@@ -27,11 +27,11 @@ module.exports = {
         allowNull: false,
       },
       cost: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(30),
         allowNull: false,
       },
       position: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(30),
         allowNull: false,
       },
       isAvailable: {
