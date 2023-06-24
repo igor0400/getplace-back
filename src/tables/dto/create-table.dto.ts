@@ -30,6 +30,14 @@ export class CreateTableDto {
   readonly number: string;
 
   @ApiProperty({
+    example: 2000,
+    description: 'Цена',
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('price') })
+  readonly price?: string;
+
+  @ApiProperty({
     example: 'free',
     description: 'Состояние стола',
     default: 'free',

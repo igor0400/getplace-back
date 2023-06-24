@@ -31,6 +31,8 @@ import { UserStatuses } from 'src/statuses/models/user-statuses';
 import { Room } from 'src/rooms/models/room.model';
 import { Table } from 'src/tables/models/table.model';
 import { Seat } from 'src/seats/models/seat.model';
+import { TableReservation } from 'src/tables/models/reservation.model';
+import { ReservationUser } from 'src/tables/models/reservation-user.model';
 
 @Module({
   imports: [
@@ -65,6 +67,8 @@ import { Seat } from 'src/seats/models/seat.model';
       UserStatuses,
       Room,
       Table,
+      TableReservation,
+      ReservationUser,
       Seat,
     ]),
   ],

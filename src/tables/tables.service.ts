@@ -5,7 +5,7 @@ import { SeatsService } from 'src/seats/seats.service';
 import { Seat } from 'src/seats/models/seat.model';
 import { ChangeTableDto } from './dto/change-table.dto';
 import { Op } from 'sequelize';
-import { threadId } from 'worker_threads';
+import { TableReservationDto } from './dto/table-reservation.dto';
 
 const tablesInclude = [Seat];
 
@@ -80,5 +80,9 @@ export class TablesService {
     }
 
     return deletedCount;
+  }
+
+  async createTableReservation(dto: TableReservationDto) {
+    
   }
 }
