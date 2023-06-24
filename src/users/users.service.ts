@@ -60,7 +60,6 @@ export class UsersService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
 
     return users;

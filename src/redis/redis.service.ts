@@ -12,6 +12,9 @@ export class RedisCacheService {
   public async set(key: string, value: string) {
     await this.cacheManager.set(key, value);
   }
+  public async setWithTtl(key: string, value: string, ttl: number) {
+    await this.cacheManager.set(key, value, ttl);
+  }
   public async del(key: any) {
     await this.cacheManager.del(key);
   }

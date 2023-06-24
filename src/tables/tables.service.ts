@@ -5,15 +5,23 @@ import { SeatsService } from 'src/seats/seats.service';
 import { Seat } from 'src/seats/models/seat.model';
 import { ChangeTableDto } from './dto/change-table.dto';
 import { Op } from 'sequelize';
-import { TableReservationDto } from './dto/table-reservation.dto';
+import { CreateReservationDto } from './dto/create-reservation.dto';
+import { TableReservationRepository } from './repositories/reservation.repository';
+import { TableReservationUserRepository } from './repositories/reservation-user.repository';
+import { TableReservationUser } from './models/reservation-user.model';
+import { User } from 'src/users/models/user.model';
+import { RedisCacheService } from 'src/redis/redis.service';
 
 const tablesInclude = [Seat];
+const reservationInclude = [{ model: TableReservationUser, include: [User] }];
 
 @Injectable()
 export class TablesService {
   constructor(
     private readonly tableRepository: TableRepository,
-    private readonly seatsService: SeatsService,
+    private readonly reservationRepository: TableReservationRepository,
+    private readonly reservationUserRepository: TableReservationUserRepository,
+    private readonly seatsService: SeatsService, // private readonly redisService: RedisCacheService,
   ) {}
 
   async getAllTables(limit: number, offset: number, search: string = '') {
@@ -26,7 +34,6 @@ export class TablesService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
 
     return tables;
@@ -82,7 +89,32 @@ export class TablesService {
     return deletedCount;
   }
 
-  async createTableReservation(dto: TableReservationDto) {
-    
+  async getReservationById(id: string) {
+    const reservation = await this.reservationRepository.findByPk(id, {
+      include: reservationInclude,
+    });
+
+    return reservation;
+  }
+
+  async createReservation(dto: CreateReservationDto) {
+    const reservation = await this.reservationRepository.create(dto);
+    await this.reservationUserRepository.create({
+      reservationId: reservation.id,
+      userId: dto.userId,
+      role: 'owner',
+    });
+
+    // await this.redisService.setWithTtl(
+    //   reservation.id,
+    //   JSON.stringify({
+    //     reservationId: reservation.id,
+    //     tableId: dto.tableId,
+    //     date: new Date().toISOString(),
+    //   }),
+    //   10,
+    // );
+
+    return this.getReservationById(reservation.id);
   }
 }

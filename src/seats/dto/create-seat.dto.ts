@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SeatStates } from '../types/seat-states';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
-import { seatStates } from '../configs/seat-states';
 
 export class CreateSeatDto {
   @ApiProperty({
@@ -28,15 +26,4 @@ export class CreateSeatDto {
   @IsNotEmpty({ message: requestMessages.isNotEmpty('number') })
   @IsString({ message: requestMessages.isString('number') })
   readonly number: string;
-
-  @ApiProperty({
-    example: 'free',
-    description: 'Состояние места',
-    default: 'free',
-    required: false,
-    enum: seatStates,
-  })
-  @IsOptional()
-  @IsEnum(seatStates, { message: requestMessages.isEnum('state', seatStates) })
-  readonly state?: SeatStates;
 }

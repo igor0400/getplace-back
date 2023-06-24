@@ -21,7 +21,7 @@ export class ChangeTableDto {
   })
   @IsOptional()
   @IsString({ message: requestMessages.isString('number') })
-  readonly number: string;
+  readonly number?: string;
 
   @ApiProperty({
     example: '2000',

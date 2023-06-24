@@ -3,6 +3,7 @@ import {
   Table as NestTable,
   DataType,
   ForeignKey,
+  BelongsTo,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { Table } from './table.model';
@@ -11,14 +12,16 @@ import { reservationUserRoles } from '../configs/reservation-user-roles';
 import { ReservationUserRoles } from '../types/reservation-user-roles';
 import { User } from 'src/users/models/user.model';
 
-export interface ReservationUserCreationArgs {
+export interface TableReservationUserCreationArgs {
   reservationId: string;
+  userId: string;
+  role: ReservationUserRoles;
 }
 
 @NestTable({ tableName: 'table_reservation_users' })
-export class ReservationUser extends AbstractModel<
-  ReservationUser,
-  ReservationUserCreationArgs
+export class TableReservationUser extends AbstractModel<
+  TableReservationUser,
+  TableReservationUserCreationArgs
 > {
   @ForeignKey(() => TableReservation)
   @Column({
@@ -39,4 +42,7 @@ export class ReservationUser extends AbstractModel<
     allowNull: false,
   })
   role: ReservationUserRoles;
+
+  @BelongsTo(() => User)
+  userData: User;
 }

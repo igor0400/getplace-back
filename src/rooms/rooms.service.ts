@@ -25,7 +25,6 @@ export class RoomsService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
 
     return rooms;

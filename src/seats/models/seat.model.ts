@@ -3,16 +3,15 @@ import {
   Table as NestTable,
   DataType,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { Table } from 'src/tables/models/table.model';
-import { SeatStates } from '../types/seat-states';
-import { seatStates } from '../configs/seat-states';
+import { SeatReservation } from './reservation.model';
 
 export interface SeatCreationArgs {
   tableId: string;
   number: string;
-  state?: SeatStates;
 }
 
 @NestTable({ tableName: 'table_seats' })
@@ -30,9 +29,6 @@ export class Seat extends AbstractModel<Seat, SeatCreationArgs> {
   })
   number: string;
 
-  @Column({
-    type: DataType.ENUM(...seatStates),
-    defaultValue: 'free',
-  })
-  state: SeatStates;
+  @HasMany(() => SeatReservation)
+  reservations: SeatReservation[];
 }

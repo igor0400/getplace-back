@@ -32,7 +32,9 @@ import { Room } from 'src/rooms/models/room.model';
 import { Table } from 'src/tables/models/table.model';
 import { Seat } from 'src/seats/models/seat.model';
 import { TableReservation } from 'src/tables/models/reservation.model';
-import { ReservationUser } from 'src/tables/models/reservation-user.model';
+import { TableReservationUser } from 'src/tables/models/reservation-user.model';
+import { SeatReservation } from 'src/seats/models/reservation.model';
+import { SeatReservationUser } from 'src/seats/models/reservation-user.model';
 
 @Module({
   imports: [
@@ -68,8 +70,10 @@ import { ReservationUser } from 'src/tables/models/reservation-user.model';
       Room,
       Table,
       TableReservation,
-      ReservationUser,
+      TableReservationUser,
       Seat,
+      SeatReservation,
+      SeatReservationUser,
     ]),
   ],
 })

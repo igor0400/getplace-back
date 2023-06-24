@@ -1,7 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { seatStates } from '../configs/seat-states';
-import { SeatStates } from '../types/seat-states';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { requestMessages } from 'src/libs/common';
 
 export class ChangeSeatDto {
@@ -22,15 +20,4 @@ export class ChangeSeatDto {
   @IsOptional()
   @IsString({ message: requestMessages.isString('number') })
   readonly number?: string;
-
-  @ApiProperty({
-    example: 'free',
-    description: 'Состояние места',
-    default: 'free',
-    required: false,
-    enum: seatStates,
-  })
-  @IsOptional()
-  @IsEnum(seatStates, { message: requestMessages.isEnum('state', seatStates) })
-  readonly state?: SeatStates;
 }

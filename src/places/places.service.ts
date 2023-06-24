@@ -93,7 +93,6 @@ export class PlacesService {
         },
         ...isAccepted,
       },
-      order: ['id'],
     });
 
     return places;

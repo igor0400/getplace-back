@@ -41,7 +41,6 @@ export class EmployeesService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
 
     return employees;

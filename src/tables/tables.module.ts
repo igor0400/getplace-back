@@ -9,13 +9,13 @@ import { DatabaseModule } from 'src/libs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
 import { TableReservation } from './models/reservation.model';
-import { ReservationUser } from './models/reservation-user.model';
+import { TableReservationUser } from './models/reservation-user.model';
 import { TableReservationRepository } from './repositories/reservation.repository';
-import { ReservationUserRepository } from './repositories/reservation-user.repository';
+import { TableReservationUserRepository } from './repositories/reservation-user.repository';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([Table, TableReservation, ReservationUser]),
+    DatabaseModule.forFeature([Table, TableReservation, TableReservationUser]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -30,7 +30,7 @@ import { ReservationUserRepository } from './repositories/reservation-user.repos
     TablesService,
     TableRepository,
     TableReservationRepository,
-    ReservationUserRepository,
+    TableReservationUserRepository,
   ],
   controllers: [TablesController],
   exports: [TablesService],

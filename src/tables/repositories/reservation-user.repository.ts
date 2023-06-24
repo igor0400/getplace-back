@@ -2,20 +2,20 @@ import { AbstractRepository } from 'src/libs/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import {
-  ReservationUser,
-  ReservationUserCreationArgs,
+  TableReservationUser,
+  TableReservationUserCreationArgs,
 } from '../models/reservation-user.model';
 
 @Injectable()
-export class ReservationUserRepository extends AbstractRepository<
-  ReservationUser,
-  ReservationUserCreationArgs
+export class TableReservationUserRepository extends AbstractRepository<
+  TableReservationUser,
+  TableReservationUserCreationArgs
 > {
-  protected readonly logger = new Logger(ReservationUser.name);
+  protected readonly logger = new Logger(TableReservationUser.name);
 
   constructor(
-    @InjectModel(ReservationUser)
-    private reservationUserModel: typeof ReservationUser,
+    @InjectModel(TableReservationUser)
+    private reservationUserModel: typeof TableReservationUser,
   ) {
     super(reservationUserModel);
   }

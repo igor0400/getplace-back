@@ -25,7 +25,6 @@ export class FilesService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
   }
 

@@ -8,9 +8,10 @@ import {
 import { TablesService } from './tables.service';
 import { Server } from 'socket.io';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { TableReservationDto } from './dto/table-reservation.dto';
+import { CreateReservationDto } from './dto/create-reservation.dto';
 import { CustomReq } from 'src/libs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ChangeTableStatusDto } from './dto/change-table-status.dto';
 
 @ApiTags('Бронь столов')
 @WebSocketGateway(9090, { namespace: 'tables' })
@@ -27,25 +28,38 @@ export class TablesGateway implements OnModuleInit {
     });
   }
 
-  // сделать статусы и создание
-  // сделать подтверждение бронирования
-  // сделать одновременную бронь 10сек (сохранять id стола и брони и время в redis)
-  // сделать миграции
+  // сделать миграции (всё что связано с reservations)
   // сделать изменение статуса стола
   // сделать приглашение пользователя за стол
+  // сделать заказ блюд за стол
+  // сделать оплату, общий чек и тд
 
   @UseGuards(JwtAuthGuard)
-  @SubscribeMessage('tableReservation')
-  async createTableReservation(
-    @MessageBody() dto: TableReservationDto,
+  @SubscribeMessage('changeTableState')
+  async changeTableState(@MessageBody() dto: ChangeTableStatusDto) {
+    await this.tablesService.changeTable({
+      ...dto,
+      placeId: 'id',
+    });
+
+    this.server.emit('onChangeTableState', {
+      msg: 'Изменение состояния стола',
+      content: dto,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('createReservation')
+  async createReservation(
+    @MessageBody() dto: CreateReservationDto,
     @Req() req: CustomReq,
   ) {
-    const reservation = await this.tablesService.createTableReservation({
+    const reservation = await this.tablesService.createReservation({
       ...dto,
       userId: req.user.sub,
     });
 
-    this.server.emit('onTableReservation', {
+    this.server.emit('onCreateReservation', {
       msg: 'Новое бронирование',
       content: reservation,
     });

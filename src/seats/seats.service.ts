@@ -17,7 +17,6 @@ export class SeatsService {
           [Op.like]: `%${search}%`,
         },
       },
-      order: ['id'],
     });
 
     return seats;

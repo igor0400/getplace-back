@@ -10,4 +10,5 @@ export const requestMessages = {
   isEnum: (title: string, values: string[]) =>
     `Поле ${title} может иметь значения ${values.join(', ')}`,
   isArray: (title: string) => `Поле ${title} должно быть массивом`,
+  isDate: (title: string) => `Поле ${title} должно быть датой в формате ISO`,
 };
