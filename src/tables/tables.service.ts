@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { TableRepository } from './repositories/table.repository';
 import { SeatsService } from 'src/seats/seats.service';
@@ -10,7 +14,10 @@ import { TableReservationRepository } from './repositories/reservation.repositor
 import { TableReservationUserRepository } from './repositories/reservation-user.repository';
 import { TableReservationUser } from './models/reservation-user.model';
 import { User } from 'src/users/models/user.model';
-import { RedisCacheService } from 'src/redis/redis.service';
+import { ChangeReservationDto } from './dto/change-reservation.dto';
+import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
+import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
+import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
 
 const tablesInclude = [Seat];
 const reservationInclude = [{ model: TableReservationUser, include: [User] }];
@@ -21,7 +28,8 @@ export class TablesService {
     private readonly tableRepository: TableRepository,
     private readonly reservationRepository: TableReservationRepository,
     private readonly reservationUserRepository: TableReservationUserRepository,
-    private readonly seatsService: SeatsService, // private readonly redisService: RedisCacheService,
+    private readonly reservationInviteRepository: TableReservationInviteRepository,
+    private readonly seatsService: SeatsService,
   ) {}
 
   async getAllTables(limit: number, offset: number, search: string = '') {
@@ -105,16 +113,93 @@ export class TablesService {
       role: 'owner',
     });
 
-    // await this.redisService.setWithTtl(
-    //   reservation.id,
-    //   JSON.stringify({
-    //     reservationId: reservation.id,
-    //     tableId: dto.tableId,
-    //     date: new Date().toISOString(),
-    //   }),
-    //   10,
-    // );
-
     return this.getReservationById(reservation.id);
   }
+
+  async changeReservation(dto: ChangeReservationDto) {
+    const { reservationId, userId } = dto;
+    const reservation = await this.reservationRepository.findByPk(
+      reservationId,
+      { include: reservationInclude },
+    );
+    const user = await this.reservationUserRepository.findOne({
+      where: {
+        reservationId,
+        userId,
+      },
+    });
+
+    if (!user) {
+      throw new BadRequestException('У вас нет доступа к этой брони');
+    }
+
+    for (let item in dto) {
+      if (reservation[item]) {
+        reservation[item] = dto[item];
+      }
+    }
+
+    return reservation.save();
+  }
+
+  async createReservationUserInvite(dto: InviteReservationUserDto) {
+    const { reservationId, inviterId } = dto;
+
+    const owner = await this.reservationUserRepository.findOne({
+      where: {
+        reservationId,
+        userId: inviterId,
+      },
+    });
+
+    if (!owner) {
+      throw new BadRequestException(
+        'У вас нет прав на приглашение пользователя',
+      );
+    }
+
+    const invite = await this.reservationInviteRepository.create(dto);
+
+    return invite;
+  }
+
+  async replyToReservationUserInvite(dto: ReplyReservationInviteDto) {
+    const { inviteId, userId, solution } = dto;
+    const invite = await this.reservationInviteRepository.findOne({
+      where: {
+        id: inviteId,
+        friendId: userId,
+      },
+    });
+
+    await this.reservationInviteRepository.destroy({
+      where: {
+        id: inviteId,
+        friendId: userId,
+      },
+    });
+
+    if (solution === 'accept') {
+      if (invite) {
+        const user = await this.reservationUserRepository.create({
+          reservationId: invite.reservationId,
+          userId: invite.friendId,
+          role: 'guest',
+        });
+
+        return user;
+      } else {
+        throw new BadRequestException('Приглашение не найдено');
+      }
+    }
+
+    if (solution === 'reject') {
+      return {
+        reservationId: invite.reservationId,
+        inviterId: invite.inviterId,
+      };
+    }
+  }
+
+  
 }

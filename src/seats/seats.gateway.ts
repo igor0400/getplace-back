@@ -8,4 +8,6 @@ import { SeatsService } from './seats.service';
 @WebSocketGateway()
 export class SeatsGateway {
   constructor(private readonly seatsService: SeatsService) {}
+
+  // сделать repositories
 }

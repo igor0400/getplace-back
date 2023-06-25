@@ -6,6 +6,7 @@ services:
 
     container_name: 'onyx-back'
     image: onyx-back
+    restart: always
 
     ports:
       - '8080:8080'
@@ -24,6 +25,7 @@ services:
   redis:
     container_name: 'redis'
     image: redis:latest
+    restart: always
 
     expose:
       - 6379

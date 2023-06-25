@@ -7,20 +7,18 @@ import {
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { TableReservation } from './reservation.model';
-import { reservationUserRoles } from '../configs/reservation-user-roles';
-import { ReservationUserRoles } from '../types/reservation-user-roles';
 import { User } from 'src/users/models/user.model';
 
-export interface TableReservationUserCreationArgs {
+export interface TableReservationInviteCreationArgs {
   reservationId: string;
-  userId: string;
-  role: ReservationUserRoles;
+  inviterId: string;
+  friendId: string;
 }
 
-@Table({ tableName: 'table_reservation_users' })
-export class TableReservationUser extends AbstractModel<
-  TableReservationUser,
-  TableReservationUserCreationArgs
+@Table({ tableName: 'table_reservation_invites', updatedAt: false })
+export class TableReservationInvite extends AbstractModel<
+  TableReservationInvite,
+  TableReservationInviteCreationArgs
 > {
   @ForeignKey(() => TableReservation)
   @Column({
@@ -34,14 +32,18 @@ export class TableReservationUser extends AbstractModel<
     type: DataType.STRING,
     allowNull: false,
   })
-  userId: string;
+  inviterId: string;
 
+  @ForeignKey(() => User)
   @Column({
-    type: DataType.ENUM(...reservationUserRoles),
+    type: DataType.STRING,
     allowNull: false,
   })
-  role: ReservationUserRoles;
+  friendId: string;
 
-  @BelongsTo(() => User)
-  userData: User;
+  @BelongsTo(() => User, 'inviterId')
+  inviterData: User;
+
+  @BelongsTo(() => User, 'friendId')
+  friendData: User;
 }

@@ -12,10 +12,17 @@ import { TableReservation } from './models/reservation.model';
 import { TableReservationUser } from './models/reservation-user.model';
 import { TableReservationRepository } from './repositories/reservation.repository';
 import { TableReservationUserRepository } from './repositories/reservation-user.repository';
+import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
+import { TableReservationInvite } from './models/reservation-invite.model';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([Table, TableReservation, TableReservationUser]),
+    DatabaseModule.forFeature([
+      Table,
+      TableReservation,
+      TableReservationUser,
+      TableReservationInvite,
+    ]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -31,6 +38,7 @@ import { TableReservationUserRepository } from './repositories/reservation-user.
     TableRepository,
     TableReservationRepository,
     TableReservationUserRepository,
+    TableReservationInviteRepository,
   ],
   controllers: [TablesController],
   exports: [TablesService],

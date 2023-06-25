@@ -13,8 +13,8 @@ import { ReservationStatuses } from '../types/reservation-statuses';
 
 export interface TableReservationCreationArgs {
   tableId: string;
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   status?: ReservationStatuses;
 }
 
@@ -40,13 +40,13 @@ export class TableReservation extends AbstractModel<
     type: DataType.DATE,
     allowNull: false,
   })
-  startDate: string;
+  startDate: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: false,
   })
-  endDate: string;
+  endDate: Date;
 
   @HasMany(() => TableReservationUser)
   users: TableReservationUser[];

@@ -1,6 +1,14 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { requestMessages } from 'src/libs/common';
+import { ReservationStatuses } from '../types/reservation-statuses';
+import { reservationStatuses } from '../configs/reservation-statuses';
 
 export class ChangeReservationDto {
   readonly userId: string;
@@ -14,12 +22,23 @@ export class ChangeReservationDto {
   readonly reservationId: string;
 
   @ApiProperty({
+    example: 'CONFIRMED',
+    description: 'Статус брони',
+    enum: reservationStatuses,
+  })
+  @IsOptional()
+  @IsEnum(reservationStatuses, {
+    message: requestMessages.isEnum('status', reservationStatuses),
+  })
+  readonly status?: ReservationStatuses;
+
+  @ApiProperty({
     example: '2023-08-24T10:00:00.319Z',
     description: 'Дата начала',
   })
   @IsOptional()
   @IsDate({ message: requestMessages.isDate('startDate') })
-  readonly startDate?: string;
+  readonly startDate?: Date;
 
   @ApiProperty({
     example: '2023-08-24T11:00:00.319Z',
@@ -27,5 +46,5 @@ export class ChangeReservationDto {
   })
   @IsOptional()
   @IsDate({ message: requestMessages.isDate('startDate') })
-  readonly endDate?: string;
+  readonly endDate?: Date;
 }

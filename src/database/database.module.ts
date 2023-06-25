@@ -35,6 +35,7 @@ import { TableReservation } from 'src/tables/models/reservation.model';
 import { TableReservationUser } from 'src/tables/models/reservation-user.model';
 import { SeatReservation } from 'src/seats/models/reservation.model';
 import { SeatReservationUser } from 'src/seats/models/reservation-user.model';
+import { TableReservationInvite } from 'src/tables/models/reservation-invite.model';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { SeatReservationUser } from 'src/seats/models/reservation-user.model';
       Table,
       TableReservation,
       TableReservationUser,
+      TableReservationInvite,
       Seat,
       SeatReservation,
       SeatReservationUser,

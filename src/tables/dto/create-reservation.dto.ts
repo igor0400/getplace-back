@@ -19,7 +19,7 @@ export class CreateReservationDto {
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('startDate') })
   @IsDate({ message: requestMessages.isDate('startDate') })
-  readonly startDate: string;
+  readonly startDate: Date;
 
   @ApiProperty({
     example: '2023-08-24T11:00:00.319Z',
@@ -27,5 +27,5 @@ export class CreateReservationDto {
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('endDate') })
   @IsDate({ message: requestMessages.isDate('startDate') })
-  readonly endDate: string;
+  readonly endDate: Date;
 }

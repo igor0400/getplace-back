@@ -12,6 +12,9 @@ import { CreateReservationDto } from './dto/create-reservation.dto';
 import { CustomReq } from 'src/libs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ChangeTableStatusDto } from './dto/change-table-status.dto';
+import { ChangeReservationDto } from './dto/change-reservation.dto';
+import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
+import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
 
 @ApiTags('Бронь столов')
 @WebSocketGateway(9090, { namespace: 'tables' })
@@ -28,11 +31,8 @@ export class TablesGateway implements OnModuleInit {
     });
   }
 
-  // сделать миграции (всё что связано с reservations)
-  // сделать изменение статуса стола
-  // сделать приглашение пользователя за стол
   // сделать заказ блюд за стол
-  // сделать оплату, общий чек и тд
+  // сделать оплату, общий чек и возможность его разделить и тд
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('changeTableState')
@@ -63,5 +63,63 @@ export class TablesGateway implements OnModuleInit {
       msg: 'Новое бронирование',
       content: reservation,
     });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('changeReservation')
+  async changeReservationStatus(
+    @MessageBody() dto: ChangeReservationDto,
+    @Req() req: CustomReq,
+  ) {
+    const reservation = await this.tablesService.changeReservation({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    this.server.emit('onChangeReservation', {
+      msg: 'Изменение брони',
+      content: reservation,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('inviteUser')
+  async inviteReservationUser(
+    @MessageBody() dto: InviteReservationUserDto,
+    @Req() req: CustomReq,
+  ) {
+    const invite = await this.tablesService.createReservationUserInvite({
+      ...dto,
+      inviterId: req.user.sub,
+    });
+
+    this.server.emit('onInviteUser', {
+      msg: 'Приглашение пользователя',
+      content: invite,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('replyToInvite')
+  async replyToReservationInvite(
+    @MessageBody() dto: ReplyReservationInviteDto,
+    @Req() req: CustomReq,
+  ) {
+    const invite = await this.tablesService.replyToReservationUserInvite({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    if (dto.solution === 'accept') {
+      this.server.emit('onAcceptInvite', {
+        msg: 'Пользователь принял приглашение',
+        content: invite,
+      });
+    } else {
+      this.server.emit('onRejectInvite', {
+        msg: 'Пользователь отклонил приглашение',
+        content: invite,
+      });
+    }
   }
 }
