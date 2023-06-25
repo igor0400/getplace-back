@@ -31,7 +31,8 @@ export class TablesGateway implements OnModuleInit {
     });
   }
 
-  // сделать заказ блюд за стол
+  // сделать заказ стола, и добавлять туда блюда, может каждый пользователь из reservationUsers
+  // сделать сиденья
   // сделать оплату, общий чек и возможность его разделить и тд
 
   @UseGuards(JwtAuthGuard)
