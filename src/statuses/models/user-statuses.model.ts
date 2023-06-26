@@ -14,10 +14,16 @@ export class UserStatuses extends AbstractModel<
   UserStatusesCreationArgs
 > {
   @ForeignKey(() => Status)
-  @Column({ type: DataType.STRING })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   statusId: string;
 
   @ForeignKey(() => User)
-  @Column({ type: DataType.STRING })
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
   userId: string;
 }

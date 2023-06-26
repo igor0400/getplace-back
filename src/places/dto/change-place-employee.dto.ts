@@ -17,7 +17,7 @@ export class ChangePlaceEmployeeDto {
     example: 'fygdwf76-dfdsfs-dfsf-fdsf',
     description: 'id заведения',
   })
-  @IsOptional({ message: requestMessages.isNotEmpty('placeId') })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('placeId') })
   @IsString({ message: requestMessages.isString('placeId') })
   readonly placeId: string;
 

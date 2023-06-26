@@ -7,7 +7,6 @@ import {
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { Table } from 'src/tables/models/table.model';
-import { SeatReservation } from './reservation.model';
 
 export interface SeatCreationArgs {
   tableId: string;
@@ -28,7 +27,4 @@ export class Seat extends AbstractModel<Seat, SeatCreationArgs> {
     allowNull: false,
   })
   number: string;
-
-  @HasMany(() => SeatReservation)
-  reservations: SeatReservation[];
 }

@@ -3,10 +3,15 @@ import { CreateSeatDto } from './dto/create-seat.dto';
 import { SeatRepository } from './repositories/seat.repository';
 import { ChangeSeatDto } from './dto/change-seat.dto';
 import { Op } from 'sequelize';
+import { CreateReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
+import { ReservationUserSeatRepository } from './repositories/reservation-user-seat.repository';
 
 @Injectable()
 export class SeatsService {
-  constructor(private readonly seatRepository: SeatRepository) {}
+  constructor(
+    private readonly seatRepository: SeatRepository,
+    private readonly reservationUserSeatRepositorys: ReservationUserSeatRepository,
+  ) {}
 
   async getAllSeats(limit: number, offset: number, search: string = '') {
     const seats = await this.seatRepository.findAll({
@@ -56,5 +61,17 @@ export class SeatsService {
     });
 
     return deletedCount;
+  }
+
+  async createReservationUserSeat(dto: CreateReservationUserSeatDto) {
+    const seat = await this.reservationUserSeatRepositorys.create(dto);
+    return seat;
+  }
+
+  async deleteReservationUserSeat(dto: CreateReservationUserSeatDto) {
+    const seat = await this.reservationUserSeatRepositorys.destroy({
+      where: { ...dto },
+    });
+    return seat;
   }
 }

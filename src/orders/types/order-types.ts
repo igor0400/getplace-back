@@ -1,0 +1,1 @@
+export type OrderTypes = 'reservation';

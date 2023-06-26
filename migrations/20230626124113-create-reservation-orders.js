@@ -3,7 +3,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable('seat_reservation_users', {
+    return queryInterface.createTable('reservation_orders', {
       id: {
         type: Sequelize.STRING(500),
         allowNull: false,
@@ -14,9 +14,13 @@ module.exports = {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
-      userId: {
+      orderId: {
         type: Sequelize.STRING(500),
         allowNull: false,
+      },
+      totalPrice: {
+        type: Sequelize.STRING(50),
+        defaultValue: '0',
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -32,6 +36,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    return queryInterface.dropTable('seat_reservation_users');
+    return queryInterface.dropTable('reservation_orders');
   },
 };

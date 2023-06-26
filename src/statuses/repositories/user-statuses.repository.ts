@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import {
   UserStatuses,
   UserStatusesCreationArgs,
-} from '../models/user-statuses';
+} from '../models/user-statuses.model';
 
 @Injectable()
 export class UserStatusesRepository extends AbstractRepository<

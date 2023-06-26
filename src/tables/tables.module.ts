@@ -14,6 +14,7 @@ import { TableReservationRepository } from './repositories/reservation.repositor
 import { TableReservationUserRepository } from './repositories/reservation-user.repository';
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
 import { TableReservationInvite } from './models/reservation-invite.model';
+import { OrdersModule } from 'src/orders/orders.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { TableReservationInvite } from './models/reservation-invite.model';
       },
     }),
     forwardRef(() => SeatsModule),
+    forwardRef(() => OrdersModule),
     EmployeesModule,
   ],
   providers: [
@@ -41,6 +43,6 @@ import { TableReservationInvite } from './models/reservation-invite.model';
     TableReservationInviteRepository,
   ],
   controllers: [TablesController],
-  exports: [TablesService],
+  exports: [TablesService, TableReservationUserRepository],
 })
 export class TablesModule {}

@@ -12,7 +12,7 @@ import { Role } from 'src/roles/models/roles.model';
 import { UserRoles } from 'src/roles/models/user-roles.model';
 import { UserSession } from 'src/sessions/models/user-session.model';
 import { Status } from 'src/statuses/models/status.model';
-import { UserStatuses } from 'src/statuses/models/user-statuses';
+import { UserStatuses } from 'src/statuses/models/user-statuses.model';
 
 export interface UserCreationArgs {
   password: string;
@@ -80,5 +80,5 @@ export class User extends AbstractModel<User, UserCreationArgs> {
   roles: Role[];
 
   @BelongsToMany(() => Status, () => UserStatuses)
-  status: Status[];
+  statuses: Status[];
 }

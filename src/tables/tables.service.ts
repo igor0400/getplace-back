@@ -18,6 +18,7 @@ import { ChangeReservationDto } from './dto/change-reservation.dto';
 import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
 import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
+import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
 
 const tablesInclude = [Seat];
 const reservationInclude = [{ model: TableReservationUser, include: [User] }];
@@ -201,5 +202,39 @@ export class TablesService {
     }
   }
 
-  
+  async createReservationUserSeat(dto: CreateTableReservationUserSeatDto) {
+    const { seatId } = dto;
+
+    const reservationUser = await this.reservationUserRepository.findOne({
+      where: { ...dto },
+    });
+    const seat = await this.seatsService.createReservationUserSeat({
+      reservationUserId: reservationUser.id,
+      seatId,
+    });
+
+    return seat;
+  }
+
+  async deleteReservationUserSeat(dto: CreateTableReservationUserSeatDto) {
+    const { seatId } = dto;
+
+    const reservationUser = await this.reservationUserRepository.findOne({
+      where: { ...dto },
+    });
+    const deleteCount = await this.seatsService.deleteReservationUserSeat({
+      reservationUserId: reservationUser.id,
+      seatId,
+    });
+
+    if (deleteCount > 0) {
+      return {
+        reservationUserId: reservationUser.id,
+        seatId,
+        isDeleted: true,
+      };
+    }
+
+    return false;
+  }
 }

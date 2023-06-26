@@ -10,29 +10,27 @@ import { Server } from 'socket.io';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { CustomReq } from 'src/libs/common';
-import { ApiTags } from '@nestjs/swagger';
 import { ChangeTableStatusDto } from './dto/change-table-status.dto';
 import { ChangeReservationDto } from './dto/change-reservation.dto';
 import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
 import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
+import { CreateReservationOrderDishDto } from 'src/orders/dto/create-reservation-order-dish.dto';
+import { ChangeReservationOrderDishDto } from 'src/orders/dto/change-reservation-order-dish.dto';
+import { DeleteReservationOrderDishDto } from 'src/orders/dto/delete-reservation-order-dish.dto';
+import { OrdersService } from 'src/orders/orders.service';
+import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
 
-@ApiTags('Бронь столов')
 @WebSocketGateway(9090, { namespace: 'tables' })
-export class TablesGateway implements OnModuleInit {
-  constructor(private readonly tablesService: TablesService) {}
+export class TablesGateway {
+  constructor(
+    private readonly tablesService: TablesService,
+    private readonly ordersService: OrdersService,
+  ) {}
 
   @WebSocketServer()
   private server: Server;
 
-  onModuleInit() {
-    this.server.on('connection', (socket) => {
-      console.log(socket.id);
-      console.log('Connected');
-    });
-  }
-
-  // сделать заказ стола, и добавлять туда блюда, может каждый пользователь из reservationUsers
-  // сделать сиденья
+  // сделать http получение всего о заказах, бронях
   // сделать оплату, общий чек и возможность его разделить и тд
 
   @UseGuards(JwtAuthGuard)
@@ -120,6 +118,95 @@ export class TablesGateway implements OnModuleInit {
       this.server.emit('onRejectInvite', {
         msg: 'Пользователь отклонил приглашение',
         content: invite,
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('createReservationDish')
+  async createReservationDish(
+    @MessageBody() dto: CreateReservationOrderDishDto,
+    @Req() req: CustomReq,
+  ) {
+    const dish = await this.ordersService.createReservationOrderDish({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    this.server.emit('onCreateReservationDish', {
+      msg: 'Пользователь добавил блюдо',
+      content: dish,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('changeReservationDish')
+  async changeReservationDish(
+    @MessageBody() dto: ChangeReservationOrderDishDto,
+    @Req() req: CustomReq,
+  ) {
+    const dish = await this.ordersService.changeReservationOrderDish({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    this.server.emit('onChangeReservationDish', {
+      msg: 'Пользователь изменил блюдо',
+      content: dish,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('deleteReservationDish')
+  async deleteReservationDish(
+    @MessageBody() dto: DeleteReservationOrderDishDto,
+    @Req() req: CustomReq,
+  ) {
+    const deleteInfo = await this.ordersService.changeReservationOrderDish({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    if (deleteInfo) {
+      this.server.emit('onDeleteReservationDish', {
+        msg: 'Пользователь удалил блюдо',
+        content: deleteInfo,
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('createReservationUserSeat')
+  async createReservationUserSeat(
+    @MessageBody() dto: CreateTableReservationUserSeatDto,
+    @Req() req: CustomReq,
+  ) {
+    const seat = await this.tablesService.createReservationUserSeat({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    this.server.emit('onСreateReservationUserSeat', {
+      msg: 'Пользователь создал место',
+      content: seat,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('deleteReservationUserSeat')
+  async deleteReservationUserSeat(
+    @MessageBody() dto: CreateTableReservationUserSeatDto,
+    @Req() req: CustomReq,
+  ) {
+    const deleteInfo = await this.tablesService.deleteReservationUserSeat({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    if (deleteInfo) {
+      this.server.emit('onDeleteReservationUserSeat', {
+        msg: 'Пользователь удалил место',
+        content: deleteInfo,
       });
     }
   }

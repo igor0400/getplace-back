@@ -4,12 +4,15 @@ import {
   DataType,
   ForeignKey,
   BelongsTo,
+  BelongsToMany,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { TableReservation } from './reservation.model';
 import { reservationUserRoles } from '../configs/reservation-user-roles';
 import { ReservationUserRoles } from '../types/reservation-user-roles';
 import { User } from 'src/users/models/user.model';
+import { Seat } from 'src/seats/models/seat.model';
+import { ReservationUserSeat } from 'src/seats/models/reservation-user-seat.model';
 
 export interface TableReservationUserCreationArgs {
   reservationId: string;
@@ -44,4 +47,7 @@ export class TableReservationUser extends AbstractModel<
 
   @BelongsTo(() => User)
   userData: User;
+
+  @BelongsToMany(() => Seat, () => ReservationUserSeat)
+  seats: Seat[];
 }

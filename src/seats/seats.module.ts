@@ -1,6 +1,5 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { SeatsService } from './seats.service';
-import { SeatsGateway } from './seats.gateway';
 import { SeatsController } from './seats.controller';
 import { SeatRepository } from './repositories/seat.repository';
 import { DatabaseModule } from 'src/libs/common';
@@ -8,10 +7,12 @@ import { Seat } from './models/seat.model';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
 import { TablesModule } from 'src/tables/tables.module';
+import { ReservationUserSeatRepository } from './repositories/reservation-user-seat.repository';
+import { ReservationUserSeat } from './models/reservation-user-seat.model';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([Seat]),
+    DatabaseModule.forFeature([Seat, ReservationUserSeat]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -21,7 +22,7 @@ import { TablesModule } from 'src/tables/tables.module';
     forwardRef(() => TablesModule),
     EmployeesModule,
   ],
-  providers: [SeatsGateway, SeatsService, SeatRepository],
+  providers: [SeatsService, SeatRepository, ReservationUserSeatRepository],
   controllers: [SeatsController],
   exports: [SeatsService],
 })
