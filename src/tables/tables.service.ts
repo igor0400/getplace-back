@@ -19,9 +19,13 @@ import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
 import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
 import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
+import { ReservationOrder } from 'src/orders/models/reservation-order.model';
 
 const tablesInclude = [Seat];
-const reservationInclude = [{ model: TableReservationUser, include: [User] }];
+const reservationInclude = [
+  { model: TableReservationUser, include: [User, Seat] },
+  ReservationOrder,
+];
 
 @Injectable()
 export class TablesService {
@@ -49,10 +53,11 @@ export class TablesService {
   }
 
   async getTableById(id: string) {
-    const seat = await this.tableRepository.findByPk(id, {
+    const table = await this.tableRepository.findByPk(id, {
       include: tablesInclude,
     });
-    return seat;
+
+    return table;
   }
 
   async createTable(dto: CreateTableDto) {
@@ -96,6 +101,16 @@ export class TablesService {
     }
 
     return deletedCount;
+  }
+
+  async getAllReservations(limit: number, offset: number) {
+    const reservations = await this.reservationRepository.findAll({
+      offset: offset || 0,
+      limit: limit || 20,
+      include: reservationInclude,
+    });
+
+    return reservations;
   }
 
   async getReservationById(id: string) {

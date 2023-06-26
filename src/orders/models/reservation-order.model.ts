@@ -26,10 +26,4 @@ export class ReservationOrder extends AbstractModel<
     allowNull: false,
   })
   orderId: string;
-
-  @Column({
-    type: DataType.STRING,
-    defaultValue: '0',
-  })
-  totalPrice: string;
 }

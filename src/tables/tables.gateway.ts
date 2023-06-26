@@ -30,7 +30,6 @@ export class TablesGateway {
   @WebSocketServer()
   private server: Server;
 
-  // сделать http получение всего о заказах, бронях
   // сделать оплату, общий чек и возможность его разделить и тд
 
   @UseGuards(JwtAuthGuard)

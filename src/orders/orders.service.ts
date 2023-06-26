@@ -12,6 +12,11 @@ import { CreateReservationOrderDishDto } from './dto/create-reservation-order-di
 import { TableReservationUserRepository } from 'src/tables/repositories/reservation-user.repository';
 import { ChangeReservationOrderDishDto } from './dto/change-reservation-order-dish.dto';
 import { DeleteReservationOrderDishDto } from './dto/delete-reservation-order-dish.dto';
+import { DishesService } from 'src/dishes/dishes.service';
+import { Status } from 'src/statuses/models/status.model';
+import { ReservationOrder } from './models/reservation-order.model';
+
+const ordersInclude = [Status, ReservationOrder];
 
 @Injectable()
 export class OrdersService {
@@ -20,7 +25,26 @@ export class OrdersService {
     private readonly reservationOrderRepository: ReservationOrderRepository,
     private readonly reservationOrderDishRepository: ReservationOrderDishRepository,
     private readonly tableReservationUserRepository: TableReservationUserRepository,
+    private readonly dishesService: DishesService,
   ) {}
+
+  async getAllOrders(limit: number, offset: number) {
+    const tables = await this.orderRepository.findAll({
+      offset: offset || 0,
+      limit: limit || 20,
+      include: ordersInclude,
+    });
+
+    return tables;
+  }
+
+  async getOrderById(id: string) {
+    const order = await this.orderRepository.findByPk(id, {
+      include: ordersInclude,
+    });
+
+    return order;
+  }
 
   async createOrder(dto: CreateOrderDto) {
     const args = {
@@ -71,6 +95,10 @@ export class OrdersService {
     const reservationOrder = await this.findOrCreateReservationOrder(
       reservationId,
     );
+    const dish = await this.dishesService.getDishById(dishId);
+    const order = await this.orderRepository.findByPk(reservationOrder.orderId);
+    order.totalPrice = String(+order.totalPrice + +dish.cost);
+    order.save();
 
     const reservationOrderDish =
       await this.reservationOrderDishRepository.create({
@@ -115,6 +143,12 @@ export class OrdersService {
       'У вас не достаточно прав на удаление блюда',
     );
 
+    const { order, dish } = await this.getDishAndOrderByDishId(
+      reservationOrderDishId,
+    );
+    order.totalPrice = String(+order.totalPrice - +dish.cost);
+    order.save();
+
     const deleteCount = await this.reservationOrderDishRepository.destroy({
       where: {
         id: reservationOrderDishId,
@@ -139,6 +173,22 @@ export class OrdersService {
     }
 
     return false;
+  }
+
+  private async getDishAndOrderByDishId(reservationOrderDishId: string) {
+    const reservationOrderDish =
+      await this.reservationOrderDishRepository.findByPk(
+        reservationOrderDishId,
+      );
+    const dish = await this.dishesService.getDishById(
+      reservationOrderDish.dishId,
+    );
+    const { orderId } = await this.reservationOrderRepository.findByPk(
+      reservationOrderDish.reservationOrderId,
+    );
+    const order = await this.orderRepository.findByPk(orderId);
+
+    return { dish, order };
   }
 
   private async isUserCanChangeDish(

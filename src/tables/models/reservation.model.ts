@@ -4,12 +4,14 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { Table } from './table.model';
 import { TableReservationUser } from './reservation-user.model';
 import { reservationStatuses } from '../configs/reservation-statuses';
 import { ReservationStatuses } from '../types/reservation-statuses';
+import { ReservationOrder } from 'src/orders/models/reservation-order.model';
 
 export interface TableReservationCreationArgs {
   tableId: string;
@@ -50,4 +52,7 @@ export class TableReservation extends AbstractModel<
 
   @HasMany(() => TableReservationUser)
   users: TableReservationUser[];
+
+  @HasOne(() => ReservationOrder)
+  order: ReservationOrder;
 }

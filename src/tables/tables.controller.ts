@@ -104,4 +104,37 @@ export class TablesController {
   deleteTable(@Param('id') id: string) {
     return this.tablesService.deleteTableById(id);
   }
+
+  @ApiDefaultResponse({
+    description: 'Получение всех бронирований',
+  })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Ограничение колличества',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'offset',
+    description: 'Отступ от начала',
+    required: false,
+  })
+  @Get('reservations')
+  getAllReservations(
+    @Query('limit') limit: string,
+    @Query('offset') offset: string,
+  ) {
+    return this.tablesService.getAllReservations(+limit, +offset);
+  }
+
+  @ApiDefaultResponse({
+    description: 'Получение бронирования по id',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id бронирования',
+  })
+  @Get('reservations/:id')
+  getReservationById(@Param('id') id: string) {
+    return this.tablesService.getReservationById(id);
+  }
 }
