@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
-import { RoomsGateway } from './rooms.gateway';
 import { RoomsController } from './rooms.controller';
 import { RoomRepository } from './repositories/room.repository';
 import { TablesModule } from 'src/tables/tables.module';
@@ -21,7 +20,7 @@ import { JwtModule } from '@nestjs/jwt';
     }),
     EmployeesModule,
   ],
-  providers: [RoomsGateway, RoomsService, RoomRepository],
+  providers: [RoomsService, RoomRepository],
   controllers: [RoomsController],
   exports: [RoomsService],
 })
