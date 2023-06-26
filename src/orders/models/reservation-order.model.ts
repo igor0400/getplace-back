@@ -1,7 +1,15 @@
-import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+  HasMany,
+} from 'sequelize-typescript';
 import { AbstractModel } from 'src/libs/common';
 import { TableReservation } from 'src/tables/models/reservation.model';
 import { Order } from './order.model';
+import { ReservationOrderDish } from './reservation-order-dish.model';
 
 export interface ReservationOrderCreationArgs {
   reservationId: string;
@@ -26,4 +34,10 @@ export class ReservationOrder extends AbstractModel<
     allowNull: false,
   })
   orderId: string;
+
+  @HasMany(() => ReservationOrderDish)
+  dishes: ReservationOrderDish[];
+
+  @BelongsTo(() => Order)
+  orderData: Order;
 }

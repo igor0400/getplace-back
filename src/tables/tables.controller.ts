@@ -53,18 +53,6 @@ export class TablesController {
   }
 
   @ApiDefaultResponse({
-    description: 'Получение стола по id',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'id стола',
-  })
-  @Get(':id')
-  getTableById(@Param('id') id: string) {
-    return this.tablesService.getTableById(id);
-  }
-
-  @ApiDefaultResponse({
     description: 'Создание стола (только с ролью SEATS или OWNER)',
   })
   @ApiSecurity('Only SEATS or OWNER roles')
@@ -136,5 +124,17 @@ export class TablesController {
   @Get('reservations/:id')
   getReservationById(@Param('id') id: string) {
     return this.tablesService.getReservationById(id);
+  }
+
+  @ApiDefaultResponse({
+    description: 'Получение стола по id',
+  })
+  @ApiParam({
+    name: 'id',
+    description: 'id стола',
+  })
+  @Get(':id')
+  getTableById(@Param('id') id: string) {
+    return this.tablesService.getTableById(id);
   }
 }

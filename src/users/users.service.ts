@@ -24,6 +24,7 @@ import { StatusesService } from 'src/statuses/statuses.service';
 import { AddStatusDto } from './dto/add-status.dto';
 import { UserStatusesRepository } from 'src/statuses/repositories/user-statuses.repository';
 import { Status } from 'src/statuses/models/status.model';
+import { TableReservationInvite } from 'src/tables/models/reservation-invite.model';
 
 export const usersInclude = [
   { model: Role },
@@ -34,6 +35,13 @@ export const usersInclude = [
     include: [
       { model: User, as: 'inviter' },
       { model: User, as: 'invitedUsers' },
+    ],
+  },
+  {
+    model: TableReservationInvite,
+    include: [
+      { model: User, as: 'inviterData' },
+      { model: User, as: 'friendData' },
     ],
   },
 ];

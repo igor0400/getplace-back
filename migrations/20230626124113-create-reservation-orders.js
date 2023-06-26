@@ -18,10 +18,6 @@ module.exports = {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
-      totalPrice: {
-        type: Sequelize.STRING(50),
-        defaultValue: '0',
-      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),

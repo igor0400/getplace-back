@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { DishesController } from './dishes.controller';
 import { DishesService } from './dishes.service';
 import { DatabaseModule } from 'src/libs/common';
 import { Dish } from './models/dish.model';
@@ -17,7 +16,6 @@ import { FilesModule } from 'src/files/files.module';
     DatabaseModule.forFeature([Dish, DishDrink, DishFood, DishImages]),
     FilesModule,
   ],
-  controllers: [DishesController],
   providers: [
     DishesService,
     DishRepository,

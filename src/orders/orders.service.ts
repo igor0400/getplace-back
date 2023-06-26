@@ -10,7 +10,6 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { CreateReservationOrderDto } from './dto/create-reservation-order.dto';
 import { CreateReservationOrderDishDto } from './dto/create-reservation-order-dish.dto';
 import { TableReservationUserRepository } from 'src/tables/repositories/reservation-user.repository';
-import { ChangeReservationOrderDishDto } from './dto/change-reservation-order-dish.dto';
 import { DeleteReservationOrderDishDto } from './dto/delete-reservation-order-dish.dto';
 import { DishesService } from 'src/dishes/dishes.service';
 import { Status } from 'src/statuses/models/status.model';
@@ -49,7 +48,7 @@ export class OrdersService {
   async createOrder(dto: CreateOrderDto) {
     const args = {
       ...dto,
-      number: String(1000000000 + Math.floor(Math.random() * 10000000000)),
+      number: String(1000000000 + Math.floor(Math.random() * 1000000000)),
     };
     const order = await this.orderRepository.create(args);
 
@@ -109,29 +108,6 @@ export class OrdersService {
       });
 
     return reservationOrderDish;
-  }
-
-  async changeReservationOrderDish(dto: ChangeReservationOrderDishDto) {
-    const { reservationOrderDishId, userId } = dto;
-
-    await this.isUserCanChangeDish(
-      reservationOrderDishId,
-      userId,
-      'У вас не достаточно прав на изменение блюда',
-    );
-
-    const reservationOrderDish =
-      await this.reservationOrderDishRepository.findByPk(
-        reservationOrderDishId,
-      );
-
-    for (let item in dto) {
-      if (reservationOrderDish[item]) {
-        reservationOrderDish[item] = dto[item];
-      }
-    }
-
-    return reservationOrderDish.save();
   }
 
   async deleteReservationOrderDishById(dto: DeleteReservationOrderDishDto) {

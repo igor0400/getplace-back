@@ -15,7 +15,6 @@ import { ChangeReservationDto } from './dto/change-reservation.dto';
 import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
 import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
 import { CreateReservationOrderDishDto } from 'src/orders/dto/create-reservation-order-dish.dto';
-import { ChangeReservationOrderDishDto } from 'src/orders/dto/change-reservation-order-dish.dto';
 import { DeleteReservationOrderDishDto } from 'src/orders/dto/delete-reservation-order-dish.dto';
 import { OrdersService } from 'src/orders/orders.service';
 import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
@@ -139,29 +138,12 @@ export class TablesGateway {
   }
 
   @UseGuards(JwtAuthGuard)
-  @SubscribeMessage('changeReservationDish')
-  async changeReservationDish(
-    @MessageBody() dto: ChangeReservationOrderDishDto,
-    @Req() req: CustomReq,
-  ) {
-    const dish = await this.ordersService.changeReservationOrderDish({
-      ...dto,
-      userId: req.user.sub,
-    });
-
-    this.server.emit('onChangeReservationDish', {
-      msg: 'Пользователь изменил блюдо',
-      content: dish,
-    });
-  }
-
-  @UseGuards(JwtAuthGuard)
   @SubscribeMessage('deleteReservationDish')
   async deleteReservationDish(
     @MessageBody() dto: DeleteReservationOrderDishDto,
     @Req() req: CustomReq,
   ) {
-    const deleteInfo = await this.ordersService.changeReservationOrderDish({
+    const deleteInfo = await this.ordersService.deleteReservationOrderDishById({
       ...dto,
       userId: req.user.sub,
     });

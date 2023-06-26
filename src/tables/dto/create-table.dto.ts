@@ -30,7 +30,7 @@ export class CreateTableDto {
   readonly number: string;
 
   @ApiProperty({
-    example: 2000,
+    example: '2000',
     description: 'Цена',
   })
   @IsOptional()

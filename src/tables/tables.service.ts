@@ -20,11 +20,21 @@ import { TableReservationInviteRepository } from './repositories/reservation-inv
 import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
 import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
 import { ReservationOrder } from 'src/orders/models/reservation-order.model';
+import { TableReservation } from './models/reservation.model';
+import { Order } from 'src/orders/models/order.model';
+import { ReservationOrderDish } from 'src/orders/models/reservation-order-dish.model';
+import { Dish } from 'src/dishes/models/dish.model';
 
-const tablesInclude = [Seat];
+const tablesInclude = [Seat, TableReservation];
 const reservationInclude = [
   { model: TableReservationUser, include: [User, Seat] },
-  ReservationOrder,
+  {
+    model: ReservationOrder,
+    include: [
+      Order,
+      { model: ReservationOrderDish, include: [TableReservationUser, Dish] },
+    ],
+  },
 ];
 
 @Injectable()
@@ -218,10 +228,10 @@ export class TablesService {
   }
 
   async createReservationUserSeat(dto: CreateTableReservationUserSeatDto) {
-    const { seatId } = dto;
+    const { seatId, userId, reservationId } = dto;
 
     const reservationUser = await this.reservationUserRepository.findOne({
-      where: { ...dto },
+      where: { userId, reservationId },
     });
     const seat = await this.seatsService.createReservationUserSeat({
       reservationUserId: reservationUser.id,
@@ -232,10 +242,10 @@ export class TablesService {
   }
 
   async deleteReservationUserSeat(dto: CreateTableReservationUserSeatDto) {
-    const { seatId } = dto;
+    const { seatId, userId, reservationId } = dto;
 
     const reservationUser = await this.reservationUserRepository.findOne({
-      where: { ...dto },
+      where: { userId, reservationId },
     });
     const deleteCount = await this.seatsService.deleteReservationUserSeat({
       reservationUserId: reservationUser.id,

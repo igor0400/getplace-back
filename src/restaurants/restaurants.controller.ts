@@ -43,8 +43,6 @@ export class RestaurantsController {
     @Body() dto: CreateRestaurantDishDto,
     @UploadedFiles() files: { image: Express.Multer.File[] },
   ) {
-    console.log(dto);
-
     return this.restaurantsService.createDish(dto, files.image);
   }
 

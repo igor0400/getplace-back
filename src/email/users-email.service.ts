@@ -26,7 +26,7 @@ export class UsersEmailService {
       throw new UnauthorizedException('Данный email уже используется');
     }
 
-    const verifyCode = String(1000 + Math.floor(Math.random() * 10000));
+    const verifyCode = String(1000 + Math.floor(Math.random() * 1000));
     await this.redisService.set(email, verifyCode);
 
     return await this.mailerService
