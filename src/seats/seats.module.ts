@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { SeatsService } from './seats.service';
 import { SeatsController } from './seats.controller';
 import { SeatRepository } from './repositories/seat.repository';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { Seat } from './models/seat.model';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';

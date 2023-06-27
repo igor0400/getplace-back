@@ -6,7 +6,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class CreateInitialDataDto {
   @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })

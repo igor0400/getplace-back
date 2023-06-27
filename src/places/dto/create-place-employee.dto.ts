@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsArray, IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 import { roleTypes } from 'src/roles/configs/roles';
 import { RoleTypes } from 'src/roles/types/roles';
 

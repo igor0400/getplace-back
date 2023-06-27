@@ -5,7 +5,7 @@ import {
   ForeignKey,
   HasMany,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Table } from 'src/tables/models/table.model';
 
 export interface SeatCreationArgs {

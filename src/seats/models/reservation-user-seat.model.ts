@@ -1,5 +1,5 @@
 import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Seat } from 'src/seats/models/seat.model';
 import { TableReservationUser } from 'src/tables/models/reservation-user.model';
 

@@ -1,5 +1,5 @@
 import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Status } from './status.model';
 import { Order } from 'src/orders/models/order.model';
 

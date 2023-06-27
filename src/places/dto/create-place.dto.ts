@@ -8,7 +8,7 @@ import {
   IsString,
   MaxLength,
 } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 import { PlaceTypes } from '../types/place-types';
 import { placeTypes } from '../configs/place-types';
 import { Days } from '../types/days';

@@ -10,7 +10,7 @@ import {
   Patch,
   Req,
 } from '@nestjs/common';
-import { CustomReq } from 'src/libs/common';
+import { CustomReq } from 'src/common';
 import { AddRoleDto } from './dto/add-role.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ChangeUserDto } from './dto/change-user.dto';

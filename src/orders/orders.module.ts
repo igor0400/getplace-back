@@ -2,7 +2,7 @@ import { Module, forwardRef } from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { OrderRepository } from './repositories/order.repository';
 import { ReservationOrderRepository } from './repositories/reservation-order.repository';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { Order } from './models/order.model';
 import { ReservationOrder } from './models/reservation-order.model';
 import { ReservationOrderDish } from './models/reservation-order-dish.model';

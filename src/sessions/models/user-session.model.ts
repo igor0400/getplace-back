@@ -6,7 +6,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { User } from '../../users/models/user.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 
 export interface UserSessionCreationArgs {
   userId: string;

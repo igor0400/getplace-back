@@ -9,7 +9,7 @@ import { TablesService } from './tables.service';
 import { Server } from 'socket.io';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { CustomReq } from 'src/libs/common';
+import { CustomReq } from 'src/common';
 import { ChangeTableStatusDto } from './dto/change-table-status.dto';
 import { ChangeReservationDto } from './dto/change-reservation.dto';
 import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';

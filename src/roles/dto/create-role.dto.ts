@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class CreateRoleDto {
   @ApiProperty({ example: 'USER', description: 'Название' })

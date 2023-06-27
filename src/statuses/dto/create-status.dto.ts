@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class CreateStatusDto {
   @ApiProperty({ example: 'PREMIUM', description: 'Название', maxLength: 50 })

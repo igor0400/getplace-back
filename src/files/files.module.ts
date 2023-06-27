@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { FileRepository } from './repositories/file.repository';
 import { File } from './models/file.model';
 import { FilesController } from './files.controller';

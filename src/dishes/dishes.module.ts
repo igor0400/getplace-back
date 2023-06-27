@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DishesService } from './dishes.service';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { Dish } from './models/dish.model';
 import { DishDrink } from './models/drink.model';
 import { DishFood } from './models/food.model';

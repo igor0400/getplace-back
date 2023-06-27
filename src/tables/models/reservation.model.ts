@@ -6,7 +6,7 @@ import {
   HasMany,
   HasOne,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Table } from './table.model';
 import { TableReservationUser } from './reservation-user.model';
 import { reservationStatuses } from '../configs/reservation-statuses';

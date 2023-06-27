@@ -7,7 +7,7 @@ import {
   IsOptional,
   MaxLength,
 } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class UsersLoginRequest {
   @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })

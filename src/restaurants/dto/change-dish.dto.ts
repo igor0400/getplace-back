@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { ChangeDishDto } from 'src/dishes/dto/change-dish.dto';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class ChangeRestaurantDishDto extends ChangeDishDto {
   @ApiProperty({

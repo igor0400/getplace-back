@@ -6,7 +6,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 import { ReservationStatuses } from '../types/reservation-statuses';
 import { reservationStatuses } from '../configs/reservation-statuses';
 

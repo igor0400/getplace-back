@@ -2,7 +2,7 @@ import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { PlaceWork } from './work.model';
 import { Days } from '../types/days';
 import { days } from '../configs/days';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 
 export interface WorkDaysCreationArgs {
   workId: string;

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { JwtModule } from '@nestjs/jwt';
 import { forwardRef } from '@nestjs/common/utils';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { RolesController } from './roles.controller';
 import { EmployeePlaceRoles } from './models/employee-place-roles.model';
 import { EmployeeRoles } from './models/employee-roles.model';

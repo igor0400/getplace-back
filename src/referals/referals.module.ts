@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { ReferalsService } from './referals.service';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { ReferalsController } from './referals.controller';
 import { Referals } from './models/referal.model';
 import { ReferalInviters } from './models/inviters.model';

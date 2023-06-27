@@ -5,7 +5,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { User } from 'src/users/models/user.model';
 import { Dish } from 'src/dishes/models/dish.model';
 import { ReservationOrder } from './reservation-order.model';

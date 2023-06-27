@@ -1,6 +1,6 @@
 import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 import { User } from '../../users/models/user.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Status } from './status.model';
 
 export interface UserStatusesCreationArgs {

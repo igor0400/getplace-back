@@ -1,4 +1,4 @@
-import { AbstractRepository } from 'src/libs/common';
+import { AbstractRepository } from 'src/common';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Room, RoomCreationArgs } from '../models/room.model';

@@ -9,7 +9,7 @@ import {
 import { Place } from './place.model';
 import { WorkDays } from './work-days.model';
 import { WorkTime } from './work-time.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 
 export interface PlaceWorkCreationArgs {
   placeId: string;

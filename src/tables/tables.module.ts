@@ -5,7 +5,7 @@ import { TablesController } from './tables.controller';
 import { SeatsModule } from 'src/seats/seats.module';
 import { TableRepository } from './repositories/table.repository';
 import { Table } from './models/table.model';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
 import { TableReservation } from './models/reservation.model';

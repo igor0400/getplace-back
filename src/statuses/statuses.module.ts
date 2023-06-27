@@ -3,7 +3,7 @@ import { StatusesService } from './statuses.service';
 import { StatusesController } from './statuses.controller';
 import { UserStatusesRepository } from './repositories/user-statuses.repository';
 import { StatusRepository } from './repositories/statuses.repository';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { Status } from './models/status.model';
 import { UserStatuses } from './models/user-statuses.model';
 import { JwtModule } from '@nestjs/jwt';

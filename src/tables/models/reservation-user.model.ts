@@ -6,7 +6,7 @@ import {
   BelongsTo,
   BelongsToMany,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { TableReservation } from './reservation.model';
 import { reservationUserRoles } from '../configs/reservation-user-roles';
 import { ReservationUserRoles } from '../types/reservation-user-roles';

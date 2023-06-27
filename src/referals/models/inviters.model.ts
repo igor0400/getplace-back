@@ -1,6 +1,6 @@
 import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { Referals } from './referal.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { User } from 'src/users/models/user.model';
 
 export interface ReferalInvitersCreationArgs {

@@ -1,6 +1,6 @@
 import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 import { Role } from './roles.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { PlaceEmployees } from 'src/places/models/employees.model';
 
 export interface EmployeePlaceRolesCreationArgs {

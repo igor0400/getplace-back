@@ -5,7 +5,7 @@ import {
   HasMany,
   ForeignKey,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Table } from '../../tables/models/table.model';
 import { Place } from 'src/places/models/place.model';
 

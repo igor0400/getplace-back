@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Req, UseGuards } from '@nestjs/common';
-import { CustomReq } from 'src/libs/common';
+import { CustomReq } from 'src/common';
 import { EmailVerifyDto } from './dto/email-verify.dto';
 import { UsersEmailService } from './users-email.service';
 import { ApiBearerAuth, ApiDefaultResponse, ApiTags } from '@nestjs/swagger';

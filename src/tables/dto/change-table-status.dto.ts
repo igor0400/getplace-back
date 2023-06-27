@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { tableStates } from '../configs/table-states';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 import { TableStates } from '../types/table-states';
 
 export class ChangeTableStatusDto {

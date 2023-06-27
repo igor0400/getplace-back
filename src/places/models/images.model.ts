@@ -1,6 +1,6 @@
 import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { Place } from './place.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { File } from 'src/files/models/file.model';
 
 export interface PlaceImagesCreationArgs {

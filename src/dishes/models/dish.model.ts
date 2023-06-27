@@ -9,7 +9,7 @@ import { DishImages } from './images.model';
 import { DishTypes } from '../types/dish-types';
 import { DishFood } from './food.model';
 import { DishDrink } from './drink.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { dishTypes } from '../configs/dish-types';
 import { File } from 'src/files/models/file.model';
 

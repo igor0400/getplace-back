@@ -1,4 +1,4 @@
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Column, Table, DataType } from 'sequelize-typescript';
 
 export interface FileCreationArgs {

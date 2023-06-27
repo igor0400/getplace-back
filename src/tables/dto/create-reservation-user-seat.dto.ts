@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 import { CreateReservationUserSeatDto } from 'src/seats/dto/create-reservation-user-seat.dto';
 
 export class CreateTableReservationUserSeatDto extends CreateReservationUserSeatDto {

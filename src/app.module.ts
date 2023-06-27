@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validationSchema } from './libs/common';
+import { validationSchema, LoggerModule } from './common';
 import { DatabaseModule } from './database/database.module';
-import { LoggerModule } from './libs/common';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { EmployeesModule } from './employees/employees.module';

@@ -5,7 +5,7 @@ import {
   BelongsToMany,
   HasOne,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { orderTypes } from '../configs/order-types';
 import { OrderTypes } from '../types/order-types';
 import { Status } from 'src/statuses/models/status.model';

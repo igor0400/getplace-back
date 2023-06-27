@@ -6,7 +6,7 @@ import {
   BelongsToMany,
   HasOne,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Referals } from 'src/referals/models/referal.model';
 import { Role } from 'src/roles/models/roles.model';
 import { UserRoles } from 'src/roles/models/user-roles.model';

@@ -4,7 +4,7 @@ import { RoomsController } from './rooms.controller';
 import { RoomRepository } from './repositories/room.repository';
 import { TablesModule } from 'src/tables/tables.module';
 import { Room } from './models/room.model';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { EmployeesModule } from 'src/employees/employees.module';
 import { JwtModule } from '@nestjs/jwt';
 

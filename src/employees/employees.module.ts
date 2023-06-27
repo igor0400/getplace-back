@@ -3,7 +3,7 @@ import { Employee } from './models/employee.model';
 import { EmployeesController } from './employees.controller';
 import { EmployeesService } from './employees.service';
 import { EmployeesRepository } from './repositories/employees.repository';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { RolesModule } from '../roles/roles.module';
 import { AuthModule } from '../auth/auth.module';
 import { EmailModule } from '../email/email.module';

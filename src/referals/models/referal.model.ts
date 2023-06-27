@@ -7,7 +7,7 @@ import {
 } from 'sequelize-typescript';
 import { ReferalInviters } from './inviters.model';
 import { ReferalInvitedUsers } from './invited-users.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { User } from 'src/users/models/user.model';
 
 export interface ReferalsCreationArgs {

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule as AppDatabaseModule } from 'src/libs/common';
+import { DatabaseModule as AppDatabaseModule } from 'src/common';
 import { Dish } from '../dishes/models/dish.model';
 import { DishDrink } from '../dishes/models/drink.model';
 import { DishFood } from '../dishes/models/food.model';

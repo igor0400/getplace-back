@@ -24,7 +24,7 @@ import { ApiDefaultResponse } from '@nestjs/swagger';
 import { UseGuards, Post, Body, Get } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { ModeratePlaceDto } from './dto/moderate-place.dto';
-import { CustomReq } from 'src/libs/common';
+import { CustomReq } from 'src/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { EmployeesRoles } from '../roles/decorators/employees-roles.decorator';
 import { EmployeeRolesGuard } from '../roles/guards/employee-roles.guard';

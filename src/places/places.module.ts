@@ -3,7 +3,7 @@ import { PlacesController } from './places.controller';
 import { PlacesService } from './places.service';
 import { Place } from './models/place.model';
 import { JwtModule } from '@nestjs/jwt';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { PlaceAddress } from './models/address.model';
 import { PlaceEmployees } from './models/employees.model';
 import { FavouritePlaces } from './models/favourite-places.model';

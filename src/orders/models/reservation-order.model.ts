@@ -6,7 +6,7 @@ import {
   BelongsTo,
   HasMany,
 } from 'sequelize-typescript';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { TableReservation } from 'src/tables/models/reservation.model';
 import { Order } from './order.model';
 import { ReservationOrderDish } from './reservation-order-dish.model';

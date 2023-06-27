@@ -1,7 +1,7 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { RestaurantsController } from './restaurants.controller';
 import { RestaurantsService } from './restaurants.service';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { RestaurantRepository } from './repositories/restaurants.repository';
 import { Restaurant } from './models/restaurant.model';
 import { JwtModule } from '@nestjs/jwt';

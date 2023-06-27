@@ -1,7 +1,7 @@
 import { Column, DataType, ForeignKey, Table } from 'sequelize-typescript';
 import { User } from '../../users/models/user.model';
 import { Role } from './roles.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 
 export interface UserRolesCreationArgs {
   roleId: string;

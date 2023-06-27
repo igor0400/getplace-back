@@ -13,7 +13,7 @@ import { PlaceImages } from './images.model';
 import { placeTypes } from '../configs/place-types';
 import { PlaceTypes } from '../types/place-types';
 import { PlaceEmployees } from './employees.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Employee } from 'src/employees/models/employee.model';
 import { Restaurant } from 'src/restaurants/models/restaurant.model';
 import { File } from 'src/files/models/file.model';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { EmployeesSessionsService } from './employees-sessions.service';
-import { DatabaseModule } from 'src/libs/common';
+import { DatabaseModule } from 'src/common';
 import { UsersSessionsService } from './users-sessions.service';
 import { EmployeeSession } from './models/employee-session.model';
 import { UserSession } from './models/user-session.model';

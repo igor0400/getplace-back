@@ -1,6 +1,6 @@
 import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { Dish } from './dish.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { File } from 'src/files/models/file.model';
 
 export interface DishImagesCreationArgs {

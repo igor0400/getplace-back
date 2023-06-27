@@ -7,7 +7,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Place } from './place.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { Employee } from 'src/employees/models/employee.model';
 import { Role } from 'src/roles/models/roles.model';
 import { EmployeePlaceRoles } from 'src/roles/models/employee-place-roles.model';

@@ -6,7 +6,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Place } from './place.model';
-import { AbstractModel } from 'src/libs/common';
+import { AbstractModel } from 'src/common';
 import { User } from 'src/users/models/user.model';
 
 export interface FavouritePlacesCreationArgs {

@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 import { CreateDishDto } from 'src/dishes/dto/create-dish.dto';
-import { requestMessages } from 'src/libs/common';
+import { requestMessages } from 'src/common';
 
 export class CreateRestaurantDishDto extends CreateDishDto {
   @ApiProperty({
