@@ -41,7 +41,7 @@ export class StatusesController {
     if (status) {
       return status;
     } else {
-      return `Статус с id: ${statusId} не найдена`;
+      return `Статус с id: ${statusId} не найден`;
     }
   }
 

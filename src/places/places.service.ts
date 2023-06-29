@@ -40,6 +40,7 @@ import { PlaceImagesRepository } from './repositories/images.repository';
 import { Room } from 'src/rooms/models/room.model';
 import { Table } from 'src/tables/models/table.model';
 import { Seat } from 'src/seats/models/seat.model';
+import { Boost } from 'src/boosts/models/boost.model';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -47,10 +48,11 @@ const placesInclude = [
     model: Restaurant,
     include: [{ model: Dish, include: [DishFood, DishDrink, File] }],
   },
-  { model: File },
   { model: PlaceEmployees, include: [Role, Employee] },
   { model: Room, include: [{ model: Table, include: [Seat] }] },
+  File,
   PlaceAddress,
+  Boost,
 ];
 
 @Injectable()

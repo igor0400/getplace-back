@@ -13,6 +13,10 @@ export class StorageService {
   private readonly bucketName = this.configService.get('AWS_BUCKET_NAME');
   private readonly s3Client = new S3Client({
     region: this.configService.getOrThrow('AWS_S3_REGION'),
+    credentials: {
+      accessKeyId: this.configService.getOrThrow('AWS_ACCESS_KEY_ID'),
+      secretAccessKey: this.configService.getOrThrow('AWS_SECRET_ACCESS_KEY'),
+    },
   });
 
   async upload(fileName: string, file: Buffer) {

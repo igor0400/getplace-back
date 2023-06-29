@@ -18,6 +18,8 @@ import { Employee } from 'src/employees/models/employee.model';
 import { Restaurant } from 'src/restaurants/models/restaurant.model';
 import { File } from 'src/files/models/file.model';
 import { Room } from 'src/rooms/models/room.model';
+import { Boost } from 'src/boosts/models/boost.model';
+import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
 
 export interface PlaceCreationArgs {
   employeeId: string;
@@ -94,4 +96,7 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
 
   @HasMany(() => Room)
   rooms: Room[];
+
+  @BelongsToMany(() => Boost, () => PlaceBoosts)
+  boosts: Boost[];
 }

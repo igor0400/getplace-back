@@ -1,0 +1,21 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: onyx-back
+  name: onyx-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onyx-back
+  template:
+    metadata:
+      labels:
+        app: onyx-back
+    spec:
+      containers:
+      - image: igor0400/onyx-back
+        name: onyx-back
+        ports:
+            - containerPort: 8080

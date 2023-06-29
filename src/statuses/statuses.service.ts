@@ -36,8 +36,7 @@ export class StatusesService {
 
     if (status) return status;
 
-    const newStatus = await this.createStatus(dto);
-    return newStatus;
+    return this.createStatus(dto);
   }
 
   async changeStatus(dto: ChangeStatusDto) {

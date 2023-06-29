@@ -20,12 +20,14 @@ import { RoomsModule } from './rooms/rooms.module';
 import { SeatsModule } from './seats/seats.module';
 import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
+import { AppController } from './app.controller';
+import { BoostsModule } from './boosts/boosts.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema,
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `env/.${process.env.NODE_ENV}.env`,
       isGlobal: true,
     }),
     LoggerModule,
@@ -48,6 +50,8 @@ import { PaymentsModule } from './payments/payments.module';
     SeatsModule,
     OrdersModule,
     PaymentsModule,
+    BoostsModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

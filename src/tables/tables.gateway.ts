@@ -1,4 +1,4 @@
-import { OnModuleInit, Req, UseGuards } from '@nestjs/common';
+import { Req, UseGuards } from '@nestjs/common';
 import {
   WebSocketGateway,
   SubscribeMessage,
@@ -19,7 +19,13 @@ import { DeleteReservationOrderDishDto } from 'src/orders/dto/delete-reservation
 import { OrdersService } from 'src/orders/orders.service';
 import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
 
-@WebSocketGateway(9090, { namespace: 'tables' })
+@WebSocketGateway(9090, {
+  namespace: 'tables',
+  cors: {
+    credentials: true,
+    origin: '*',
+  },
+})
 export class TablesGateway {
   constructor(
     private readonly tablesService: TablesService,
@@ -28,8 +34,6 @@ export class TablesGateway {
 
   @WebSocketServer()
   private server: Server;
-
-  // сделать оплату, общий чек и возможность его разделить и тд
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('changeTableState')

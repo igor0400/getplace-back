@@ -35,8 +35,7 @@ export class RolesService {
 
     if (role) return role;
 
-    const newRole = await this.createRole(dto);
-    return newRole;
+    return this.createRole(dto);
   }
 
   async changeRole(dto: ChangeRoleDto) {

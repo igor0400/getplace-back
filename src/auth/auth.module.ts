@@ -24,7 +24,7 @@ import { ReferalsModule } from '../referals/referals.module';
   ],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `env/.${process.env.NODE_ENV}.env`,
     }),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,

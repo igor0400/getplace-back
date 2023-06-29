@@ -23,11 +23,15 @@ import { PlaceAddressRepository } from './repositories/address.repository';
 import { WorkDaysRepository } from './repositories/work-days.repository';
 import { WorkTimeRepository } from './repositories/work-time.repository';
 import { FilesModule } from 'src/files/files.module';
+import { PlaceBoostsController } from './place-boosts.controller';
+import { PlaceBoostsService } from './place-boosts.service';
+import { BoostsModule } from 'src/boosts/boosts.module';
 
 @Module({
-  controllers: [PlacesController],
+  controllers: [PlaceBoostsController, PlacesController],
   providers: [
     PlacesService,
+    PlaceBoostsService,
     PlaceRepository,
     PlaceWorkRepository,
     PlaceEmployeesRepository,
@@ -58,6 +62,7 @@ import { FilesModule } from 'src/files/files.module';
     forwardRef(() => EmployeesModule),
     forwardRef(() => RolesModule),
     FilesModule,
+    BoostsModule,
   ],
   exports: [PlacesService],
 })

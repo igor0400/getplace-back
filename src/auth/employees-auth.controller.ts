@@ -18,6 +18,9 @@ export class EmployeesAuthController {
   constructor(private authService: EmployeesAuthService) {}
 
   @ApiDefaultResponse({ description: 'Регистрация' })
+  @ApiBody({
+    type: EmployeesRegisterRequest,
+  })
   @Post('register')
   public async register(
     @Body() registerRequest: EmployeesRegisterRequest,

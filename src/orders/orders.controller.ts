@@ -1,7 +1,8 @@
 import { Controller, Get, Query, Param } from '@nestjs/common';
 import { OrdersService } from './orders.service';
-import { ApiDefaultResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiDefaultResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Заказы')
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) {}

@@ -16,7 +16,7 @@ import { EmployeesModule } from '../employees/employees.module';
   providers: [UsersEmailService, EmployeesEmailService],
   imports: [
     ConfigModule.forRoot({
-      envFilePath: `.${process.env.NODE_ENV}.env`,
+      envFilePath: `env/.${process.env.NODE_ENV}.env`,
     }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],
