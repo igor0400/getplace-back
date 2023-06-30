@@ -41,6 +41,9 @@ import { OrderStatuses } from 'src/statuses/models/order-statuses.model';
 import { ReservationUserSeat } from 'src/seats/models/reservation-user-seat.model';
 import { Boost } from 'src/boosts/models/boost.model';
 import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
+import { PlaceStat } from 'src/stats/models/place-stat.model';
+import { PlaceGuests } from 'src/stats/models/place-guests.model';
+import { PlaceStatItem } from 'src/stats/models/place-stat-item.model';
 
 @Module({
   imports: [
@@ -86,6 +89,9 @@ import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
       ReservationUserSeat,
       Boost,
       PlaceBoosts,
+      PlaceStat,
+      PlaceGuests,
+      PlaceStatItem,
     ]),
   ],
 })

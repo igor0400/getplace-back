@@ -1,33 +1,56 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Op } from 'sequelize';
-import { TableReservationRepository } from 'src/tables/repositories/reservation.repository';
 import { Periods } from './types/periods';
-import { PlacesService } from 'src/places/places.service';
-import { RoomsService } from 'src/rooms/rooms.service';
-import { TablesService } from 'src/tables/tables.service';
 import { EmployeesService } from 'src/employees/employees.service';
-import { TableReservationUser } from 'src/tables/models/reservation-user.model';
-import { User } from 'src/users/models/user.model';
+import { GetAllItemsGuestsValues } from './types/guests-values';
+import { PlaceStatRepository } from './repositories/place-stat.repository';
+import { PlaceGuestsRepository } from './repositories/place-guests.repository';
+import { Place } from 'src/places/models/place.model';
+import { PlaceStatItemRepository } from './repositories/place-stat-item.repository';
 
 @Injectable()
 export class StatsService {
   constructor(
-    private readonly tableReservationRepository: TableReservationRepository,
-    private readonly placesService: PlacesService,
-    private readonly roomsService: RoomsService,
-    private readonly tablesService: TablesService,
+    private readonly placeStatRepository: PlaceStatRepository,
+    private readonly placeGuestsRepository: PlaceGuestsRepository,
+    private readonly placeStatItemRepository: PlaceStatItemRepository,
     private readonly employeesService: EmployeesService,
   ) {}
 
-  async getAllPalcesGuests(period: Periods = 'day', employeeId: string) {
+  async getAllPalcesGuests(dto: GetAllItemsGuestsValues) {
+    const { employeeId, limit, offset, period } = dto;
     const employeePlaces = await this.getEmployeeValidPlaces(employeeId);
     const places = [];
 
     for (let place of employeePlaces) {
-      const placeGuests = await this.getPalceGuests(period, place.id);
+      const { from, till } = this.getPeriodValues(period);
+      const placeStat = await this.placeStatRepository.findOne({
+        where: {
+          placeId: place.id,
+        },
+        include: [Place],
+      });
+      const placeGuests = await this.placeGuestsRepository.findAll({
+        limit: limit || 20,
+        offset: offset || 0,
+        where: {
+          placeId: place.id,
+          startDate: {
+            [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
+          },
+        },
+      });
+      const placeGuestsInfo = await this.placeStatItemRepository.findOne({
+        where: {
+          placeStatId: placeStat.id,
+          title: 'GUESTS_INFO',
+        },
+      });
+      const placeGuestsCount = placeGuestsInfo[`${period}Count`];
+
       places.push({
-        placeData: place,
-        guestsCount: placeGuests.length,
+        placeData: placeStat.placeData,
+        guestsCount: placeGuestsCount,
         guestsList: placeGuests,
       });
     }
@@ -35,70 +58,108 @@ export class StatsService {
     return places;
   }
 
-  async getPalceGuests(period: Periods, placeId: string) {
-    const place = await this.placesService.getPlaceById(placeId);
-    let allGuests = [];
+  // async getAllPalcesGuests(dto: GetAllItemsGuestsValues) {
+  //   const { employeeId, limit, offset, period } = dto;
+  //   const employeePlaces = await this.getEmployeeValidPlaces(employeeId);
+  //   const places = [];
 
-    if (!place)
-      throw new UnauthorizedException(`Заведение с id: ${placeId} не найдено`);
+  //   for (let place of employeePlaces) {
+  //     const placeGuests = await this.getPalceGuests({
+  //       itemId: place.id,
+  //       limit,
+  //       offset,
+  //       period,
+  //     });
+  //     places.push({
+  //       placeData: place,
+  //       guestsCount: placeGuests.length,
+  //       guestsList: placeGuests,
+  //     });
+  //   }
 
-    for (let room of place.rooms) {
-      const roomGuests = await this.getRoomGuests(period, room.id);
-      allGuests = [...allGuests, ...roomGuests];
-    }
+  //   return places;
+  // }
 
-    return allGuests;
-  }
+  // async getPalceGuests(dto: GetItemGuestsValues) {
+  //   const { itemId } = dto;
+  //   const place = await this.placesService.getPlaceById(itemId);
+  //   let allGuests = [];
 
-  async getRoomGuests(period: Periods, roomId: string) {
-    const room = await this.roomsService.getRoomById(roomId);
-    let allGuests = [];
+  //   if (!place)
+  //     throw new UnauthorizedException(`Заведение с id: ${itemId} не найдено`);
 
-    if (!room) throw new UnauthorizedException(`Зал с id: ${roomId} не найден`);
+  //   for (let room of place.rooms) {
+  //     const roomGuests = await this.getRoomGuests({
+  //       ...dto,
+  //       itemId: room.id,
+  //     });
+  //     allGuests = [...allGuests, ...roomGuests];
+  //   }
 
-    for (let table of room.tables) {
-      const tableGuests = await this.getTablesGuests(period, table.id);
-      allGuests = [...allGuests, ...tableGuests];
-    }
+  //   return allGuests;
+  // }
 
-    return allGuests;
-  }
+  // async getRoomGuests(dto: GetItemGuestsValues) {
+  //   const { itemId } = dto;
+  //   const room = await this.roomsService.getRoomById(itemId);
+  //   let allGuests = [];
 
-  async getTablesGuests(period: Periods, tableId: string) {
-    const { from, till } = this.getPeriodValues(period);
-    let allGuests = [];
+  //   if (!room) throw new UnauthorizedException(`Зал с id: ${itemId} не найден`);
 
-    const reservations = await this.tableReservationRepository.findAll({
-      where: {
-        tableId,
-        startDate: {
-          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-        },
-      },
-      include: [{ model: TableReservationUser, include: [User] }],
-    });
+  //   for (let table of room.tables) {
+  //     const tableGuests = await this.getTablesGuests({
+  //       ...dto,
+  //       itemId: table.id,
+  //     });
+  //     allGuests = [...allGuests, ...tableGuests];
+  //   }
 
-    for (let reservation of reservations) {
-      allGuests = [...allGuests, ...reservation?.users];
-    }
+  //   return allGuests;
+  // }
 
-    return allGuests;
-  }
+  // async getTablesGuests(dto: GetItemGuestsValues) {
+  //   const { period, itemId, limit, offset } = dto;
+  //   const { from, till } = this.getPeriodValues(period);
+  //   let allGuests = [];
 
-  async getTablesReservations(period: Periods, tableId: string) {
-    const { from, till } = this.getPeriodValues(period);
+  //   const reservations = await this.tableReservationRepository.findAll({
+  //     limit: limit || 20,
+  //     offset: offset || 0,
+  //     where: {
+  //       tableId: itemId,
+  //       startDate: {
+  //         [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
+  //       },
+  //     },
+  //     include: [{ model: TableReservationUser, include: [User] }],
+  //   });
 
-    const reservations = await this.tableReservationRepository.findAll({
-      where: {
-        tableId,
-        startDate: {
-          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-        },
-      },
-    });
+  //   console.log('RES COUNT: ', reservations.length);
 
-    return reservations;
-  }
+  //   for (let reservation of reservations) {
+  //     allGuests = [...allGuests, ...reservation?.users];
+  //   }
+
+  //   return allGuests;
+  // }
+
+  // async getTablesReservations(dto: GetItemGuestsValues) {
+  //   const { period, itemId, limit, offset } = dto;
+  //   const { from, till } = this.getPeriodValues(period);
+
+  //   const reservations = await this.tableReservationRepository.findAll({
+  //     limit: limit || 20,
+  //     offset: offset || 0,
+  //     where: {
+  //       tableId: itemId,
+  //       startDate: {
+  //         [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
+  //       },
+  //     },
+  //   });
+
+  //   return reservations;
+  // }
 
   private getPeriodValues(period: Periods) {
     const from = new Date();

@@ -19,16 +19,41 @@ export class StatsController {
     required: false,
     enum: periods,
   })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Ограничение колличества',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'offset',
+    description: 'Отступ от начала',
+    required: false,
+  })
   @Get('places/guests')
-  getAllPalcesGuests(@Query('period') period: Periods, @Req() req: CustomReq) {
-    return this.statsService.getAllPalcesGuests(period, req.user.sub);
+  getAllPalcesGuests(
+    @Query('period') period: Periods,
+    @Query('limit') limit: string,
+    @Query('offset') offset: string,
+    @Req() req: CustomReq,
+  ) {
+    return this.statsService.getAllPalcesGuests({
+      period,
+      employeeId: req.user.sub,
+      limit: +limit,
+      offset: +offset,
+    });
   }
 
-  // адаптировать статистику под большое кол-во данных
+  // звписывать общее кол-во гостей в модель статистики
+  // создавать модель гостей заведения при создании брони и при приглашении в бронь
+  // полностью проверить получение гостей заведения
+
+  // сделать эмитацию оплаты
   // средний чек
   // общая сумма заказов
-  // периоды: день, неделя, месяц, год, все время
+  // самые продаваемые позиции, по дням недели (при продаже записывать в отдельную табличку)
+
   // сделать сравнение статистики в процентах
-  // график посещаемости
-  // самые продаваемые позиции, по дням (при кродаже записывать в отдельную табличку)
+
+  // график посещаемости (при добпалении пользователя)
 }
