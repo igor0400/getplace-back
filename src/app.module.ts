@@ -22,6 +22,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PaymentsModule } from './payments/payments.module';
 import { AppController } from './app.controller';
 import { BoostsModule } from './boosts/boosts.module';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { BoostsModule } from './boosts/boosts.module';
     OrdersModule,
     PaymentsModule,
     BoostsModule,
+    StatsModule,
   ],
   controllers: [AppController],
 })

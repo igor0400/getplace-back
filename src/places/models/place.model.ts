@@ -79,6 +79,11 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
   })
   color: string;
 
+  // @Column({
+  //   type: DataType.INTEGER,
+  // })
+  // freeTables: number;
+
   @HasOne(() => PlaceWork)
   work: PlaceWork;
 

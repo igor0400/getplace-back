@@ -14,7 +14,8 @@ import { EmployeeRolesGuard } from 'src/roles/guards/employee-roles.guard';
 import { CreateBoostDto } from './dto/create-boost.dto';
 import { ChangeBoostDto } from './dto/change-boost.dto';
 
-@ApiTags('Продвижение')
+@ApiTags('Продвижение (только с глобальной ролью ADMIN)')
+@ApiSecurity('ADMIN only')
 @EmployeesRoles('ADMIN')
 @UseGuards(EmployeeRolesGuard)
 @Controller('boosts')
@@ -22,18 +23,16 @@ export class BoostsController {
   constructor(private readonly boostsService: BoostsService) {}
 
   @ApiDefaultResponse({
-    description: 'Получение всех бустов (только с глобальной ролью ADMIN)',
+    description: 'Получение всех бустов',
   })
-  @ApiSecurity('ADMIN only')
   @Get()
   getAllBoosts() {
     return this.boostsService.getAllBoosts();
   }
 
   @ApiDefaultResponse({
-    description: 'Получение буста по id (только с глобальной ролью ADMIN)',
+    description: 'Получение буста по id',
   })
-  @ApiSecurity('ADMIN only')
   @Get(':id')
   getBoostById(@Param('id') boostId: string) {
     const boost = this.boostsService.getBoostById(boostId);
@@ -46,18 +45,16 @@ export class BoostsController {
   }
 
   @ApiDefaultResponse({
-    description: 'Создание буста (только с глобальной ролью ADMIN)',
+    description: 'Создание буста',
   })
-  @ApiSecurity('ADMIN only')
   @Post()
   createBoost(@Body() dto: CreateBoostDto) {
     return this.boostsService.createBoost(dto);
   }
 
   @ApiDefaultResponse({
-    description: 'Изменение буста по id (только с глобальной ролью ADMIN)',
+    description: 'Изменение буста по id',
   })
-  @ApiSecurity('ADMIN only')
   @Patch(':id')
   changeBoost(@Body() dto: ChangeBoostDto, @Param('id') boostId: string) {
     return this.boostsService.changeBoost({ ...dto, boostId });

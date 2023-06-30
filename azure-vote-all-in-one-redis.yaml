@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onyx-back
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onyx-back
+  template:
+    metadata:
+      labels:
+        app: onyx-back
+    spec:
+      nodeSelector:
+        'beta.kubernetes.io/os': linux
+      containers:
+        - name: onyx-back
+          image: mcr.microsoft.com/oss/bitnami/redis:6.0.8
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: 'yes'
+          ports:
+            - containerPort: 6379
+              name: redis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onyx-back
+spec:
+  ports:
+    - port: 6379
+  selector:
+    app: onyx-back

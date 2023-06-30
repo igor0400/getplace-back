@@ -14,11 +14,12 @@ import { EmployeeSessionRepository } from '../sessions/repositories/employee-ses
 import { RolesService } from '../roles/roles.service';
 import { EmployeesEmailService } from '../email/employees-email.service';
 import { Employee } from './models/employee.model';
+import { Place } from 'src/places/models/place.model';
 
 export const employeesInclude = [
   Role,
   EmployeeSession,
-  { model: PlaceEmployees, include: [Role] },
+  { model: PlaceEmployees, include: [Role, Place] },
 ];
 
 @Injectable()

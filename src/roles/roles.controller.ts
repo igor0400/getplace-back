@@ -14,7 +14,8 @@ import { ApiDefaultResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { EmployeesRoles } from './decorators/employees-roles.decorator';
 import { EmployeeRolesGuard } from './guards/employee-roles.guard';
 
-@ApiTags('Роли')
+@ApiTags('Роли (только с глобальной ролью ADMIN)')
+@ApiSecurity('ADMIN only')
 @EmployeesRoles('ADMIN')
 @UseGuards(EmployeeRolesGuard)
 @Controller('roles')
@@ -22,18 +23,16 @@ export class RolesController {
   constructor(private roleService: RolesService) {}
 
   @ApiDefaultResponse({
-    description: 'Получение всех ролей (только с глобальной ролью ADMIN)',
+    description: 'Получение всех ролей',
   })
-  @ApiSecurity('ADMIN only')
   @Get()
   getAllRoles() {
     return this.roleService.getAllRoles();
   }
 
   @ApiDefaultResponse({
-    description: 'Получение роли по id (только с глобальной ролью ADMIN)',
+    description: 'Получение роли по id',
   })
-  @ApiSecurity('ADMIN only')
   @Get(':id')
   getRoleById(@Param('id') roleId: string) {
     const role = this.roleService.getRoleById(roleId);
@@ -46,23 +45,18 @@ export class RolesController {
   }
 
   @ApiDefaultResponse({
-    description: 'Создание роли (только с глобальной ролью ADMIN)',
+    description: 'Создание роли ',
   })
-  @ApiSecurity('ADMIN only')
   @Post()
   create(@Body() dto: CreateRoleDto) {
     return this.roleService.createRole(dto);
   }
 
   @ApiDefaultResponse({
-    description: 'Изменение роли по id (только с глобальной ролью ADMIN)',
+    description: 'Изменение роли по id',
   })
-  @ApiSecurity('ADMIN only')
   @Patch(':id')
-  changeRole(
-    @Body() dto: ChangeRoleDto,
-    @Param('id') roleId: string,
-  ) {
+  changeRole(@Body() dto: ChangeRoleDto, @Param('id') roleId: string) {
     return this.roleService.changeRole({ ...dto, roleId });
   }
 }

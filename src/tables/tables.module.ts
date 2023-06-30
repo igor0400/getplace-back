@@ -43,6 +43,10 @@ import { OrdersModule } from 'src/orders/orders.module';
     TableReservationInviteRepository,
   ],
   controllers: [TablesController],
-  exports: [TablesService, TableReservationUserRepository],
+  exports: [
+    TablesService,
+    TableReservationRepository,
+    TableReservationUserRepository,
+  ],
 })
 export class TablesModule {}
