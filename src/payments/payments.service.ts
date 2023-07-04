@@ -129,7 +129,7 @@ export class PaymentsService {
       const bonusesAmount = Math.floor((referalProcent * +amount) / 100);
 
       // начислять реферальные бонусы при оплате
-      // сделать bonuses модуль и начислять туда как валюту приложения bonusesAmount
+      // сделать bonuses модуль и начислять туда как валюту приложения bonusesAmount (если надо передавать строкой)
     }
   }
 }
