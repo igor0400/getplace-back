@@ -7,6 +7,7 @@ import { User } from 'src/users/models/user.model';
 export interface ReservationOrderPaymentUserCreationArgs {
   reservationOrderPaymentId: string;
   paymentId: string;
+  userId: string;
 }
 
 @Table({ tableName: 'reservation_order_payment_users' })

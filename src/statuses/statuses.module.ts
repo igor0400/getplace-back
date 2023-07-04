@@ -8,12 +8,10 @@ import { Status } from './models/status.model';
 import { UserStatuses } from './models/user-statuses.model';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
-import { OrderStatusesRepository } from './repositories/order-statuses.repository';
-import { OrderStatuses } from './models/order-statuses.model';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([Status, UserStatuses, OrderStatuses]),
+    DatabaseModule.forFeature([Status, UserStatuses]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -23,12 +21,7 @@ import { OrderStatuses } from './models/order-statuses.model';
     forwardRef(() => EmployeesModule),
   ],
   controllers: [StatusesController],
-  providers: [
-    StatusesService,
-    UserStatusesRepository,
-    StatusRepository,
-    OrderStatusesRepository,
-  ],
+  providers: [StatusesService, UserStatusesRepository, StatusRepository],
   exports: [StatusesService, UserStatusesRepository],
 })
 export class StatusesModule {}

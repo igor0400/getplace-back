@@ -3,28 +3,25 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable('orders', {
+    return queryInterface.createTable('payments', {
       id: {
         type: Sequelize.STRING(500),
         allowNull: false,
         unique: true,
         primaryKey: true,
       },
-      number: {
-        type: Sequelize.STRING(50),
+      shortId: {
+        type: Sequelize.STRING(500),
+        unique: true,
         allowNull: false,
       },
-      type: {
+      amount: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      status: {
-        type: Sequelize.STRING(100),
-        defaultValue: 'CREATED',
-      },
-      totalPrice: {
+      currency: {
         type: Sequelize.STRING(50),
-        defaultValue: '0',
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -40,6 +37,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    return queryInterface.dropTable('orders');
+    return queryInterface.dropTable('payments');
   },
 };

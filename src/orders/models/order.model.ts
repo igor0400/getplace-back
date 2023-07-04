@@ -1,16 +1,9 @@
-import {
-  Column,
-  Table,
-  DataType,
-  BelongsToMany,
-  HasOne,
-} from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { orderTypes } from '../configs/order-types';
 import { OrderTypes } from '../types/order-types';
-import { Status } from 'src/statuses/models/status.model';
-import { OrderStatuses } from 'src/statuses/models/order-statuses.model';
-import { ReservationOrder } from './reservation-order.model';
+import { orderStatuses } from '../configs/order-statuses';
+import { OrderStatuses } from '../types/order-statuses';
 
 export interface OrderCreationArgs {
   number: string;
@@ -32,14 +25,14 @@ export class Order extends AbstractModel<Order, OrderCreationArgs> {
   type: OrderTypes;
 
   @Column({
+    type: DataType.ENUM(...orderStatuses),
+    defaultValue: 'CREATED',
+  })
+  status: OrderStatuses;
+
+  @Column({
     type: DataType.STRING,
     defaultValue: '0',
   })
   totalPrice: string;
-
-  @BelongsToMany(() => Status, () => OrderStatuses)
-  statuses: Status[];
-
-  @HasOne(() => ReservationOrder)
-  reservationData: ReservationOrder;
 }

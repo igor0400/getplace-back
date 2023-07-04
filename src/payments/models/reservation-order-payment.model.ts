@@ -12,12 +12,9 @@ import { ReservationOrderPaymentTypes } from '../types/reservation-order-payment
 import { reservationOrderPaymentTypes } from '../configs/reservation-order-payment-types';
 
 export interface ReservationOrderPaymentCreationArgs {
-  paymentId: string;
   reservationOrderId: string;
   type?: ReservationOrderPaymentTypes;
 }
-
-// сделать миграции всех моделей в payments
 
 @Table({ tableName: 'reservation_order_payments' })
 export class ReservationOrderPayment extends AbstractModel<

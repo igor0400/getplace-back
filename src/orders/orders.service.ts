@@ -2,6 +2,8 @@ import {
   Injectable,
   BadRequestException,
   BadGatewayException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { OrderRepository } from './repositories/order.repository';
 import { ReservationOrderRepository } from './repositories/reservation-order.repository';
@@ -12,10 +14,19 @@ import { CreateReservationOrderDishDto } from './dto/create-reservation-order-di
 import { DeleteReservationOrderDishDto } from './dto/delete-reservation-order-dish.dto';
 import { DishesService } from 'src/dishes/dishes.service';
 import { Status } from 'src/statuses/models/status.model';
-import { ReservationOrder } from './models/reservation-order.model';
 import { TableReservationUserRepository } from 'src/reservations/repositories/reservation-user.repository';
+import { ReservationOrderDish } from './models/reservation-order-dish.model';
+import { Order } from './models/order.model';
+import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
+import { PaymentsService } from 'src/payments/payments.service';
+import { PayReservationOrderDto } from 'src/payments/dto/pay-reservation-order.dto';
 
-const ordersInclude = [Status, ReservationOrder];
+const ordersInclude = [Status];
+const reservationOrdersInclude = [
+  ReservationOrderDish,
+  { model: Order, include: [Status] },
+  ReservationOrderPayment,
+];
 
 @Injectable()
 export class OrdersService {
@@ -25,6 +36,8 @@ export class OrdersService {
     private readonly reservationOrderDishRepository: ReservationOrderDishRepository,
     private readonly tableReservationUserRepository: TableReservationUserRepository,
     private readonly dishesService: DishesService,
+    @Inject(forwardRef(() => PaymentsService))
+    private readonly paymentsService: PaymentsService,
   ) {}
 
   async getAllOrders(limit: number, offset: number) {
@@ -40,6 +53,14 @@ export class OrdersService {
   async getOrderById(id: string) {
     const order = await this.orderRepository.findByPk(id, {
       include: ordersInclude,
+    });
+
+    return order;
+  }
+
+  async getReservationOrderById(id: string) {
+    const order = await this.reservationOrderRepository.findByPk(id, {
+      include: reservationOrdersInclude,
     });
 
     return order;
@@ -108,6 +129,32 @@ export class OrdersService {
       });
 
     return reservationOrderDish;
+  }
+
+  async payReservationOrder(dto: PayReservationOrderDto) {
+    const { reservationOrderId, userId } = dto;
+    const reservationOrder = await this.getReservationOrderById(
+      reservationOrderId,
+    );
+    const owner = await this.tableReservationUserRepository.findOne({
+      where: {
+        userId,
+        reservationId: reservationOrder.reservationId,
+        role: 'owner',
+      },
+    });
+
+    if (!owner) {
+      throw new BadRequestException('У вас нет прав на оплату заказа');
+    }
+
+    const orderPayment = await this.paymentsService.payReservationOrder(dto);
+    const order = await this.getOrderById(reservationOrder.orderId);
+
+    order.status = 'PAID';
+    order.save();
+
+    return orderPayment;
   }
 
   async deleteReservationOrderDishById(dto: DeleteReservationOrderDishDto) {

@@ -34,7 +34,6 @@ import { Seat } from 'src/seats/models/seat.model';
 import { Order } from 'src/orders/models/order.model';
 import { ReservationOrder } from 'src/orders/models/reservation-order.model';
 import { ReservationOrderDish } from 'src/orders/models/reservation-order-dish.model';
-import { OrderStatuses } from 'src/statuses/models/order-statuses.model';
 import { ReservationUserSeat } from 'src/seats/models/reservation-user-seat.model';
 import { Boost } from 'src/boosts/models/boost.model';
 import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
@@ -88,7 +87,6 @@ import { ReservationOrderPayment } from 'src/payments/models/reservation-order-p
       Order,
       ReservationOrder,
       ReservationOrderDish,
-      OrderStatuses,
       ReservationUserSeat,
       Boost,
       PlaceBoosts,

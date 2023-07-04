@@ -39,6 +39,7 @@ services:
     command: ['redis-server', '--bind', 'redis', '--port', '6379']
 
   db:
+    container_name: 'db'
     image: mysql:8.0
     restart: always
     environment:

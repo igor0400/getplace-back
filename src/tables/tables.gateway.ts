@@ -20,6 +20,7 @@ import { InviteReservationUserDto } from 'src/reservations/dto/invite-reservatio
 import { ReplyReservationInviteDto } from 'src/reservations/dto/reply-reservation-invite.dto';
 import { CreateTableReservationUserSeatDto } from 'src/reservations/dto/create-reservation-user-seat.dto';
 import { CancelReservationDto } from 'src/reservations/dto/cancel-reservation.dto';
+import { PayReservationOrderDto } from 'src/payments/dto/pay-reservation-order.dto';
 
 @WebSocketGateway(9090, {
   namespace: 'tables',
@@ -214,6 +215,25 @@ export class TablesGateway {
       this.server.emit('onDeleteReservationUserSeat', {
         msg: 'Пользователь удалил место',
         content: deleteInfo,
+      });
+    }
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('payReservationOrder')
+  async payReservationOrder(
+    @MessageBody() dto: PayReservationOrderDto,
+    @Req() req: CustomReq,
+  ) {
+    const orderPayment = await this.ordersService.payReservationOrder({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    if (orderPayment) {
+      this.server.emit('onPayReservationOrder', {
+        msg: 'Заказ брони оплачен',
+        content: orderPayment,
       });
     }
   }

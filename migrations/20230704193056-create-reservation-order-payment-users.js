@@ -3,28 +3,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    return queryInterface.createTable('orders', {
+    return queryInterface.createTable('reservation_order_payment_users', {
       id: {
         type: Sequelize.STRING(500),
         allowNull: false,
         unique: true,
         primaryKey: true,
       },
-      number: {
-        type: Sequelize.STRING(50),
+      reservationOrderPaymentId: {
+        type: Sequelize.STRING(500),
         allowNull: false,
       },
-      type: {
-        type: Sequelize.STRING(100),
+      paymentId: {
+        type: Sequelize.STRING(500),
         allowNull: false,
       },
-      status: {
-        type: Sequelize.STRING(100),
-        defaultValue: 'CREATED',
-      },
-      totalPrice: {
-        type: Sequelize.STRING(50),
-        defaultValue: '0',
+      userId: {
+        type: Sequelize.STRING(500),
+        allowNull: false,
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -40,6 +36,6 @@ module.exports = {
   },
 
   async down(queryInterface) {
-    return queryInterface.dropTable('orders');
+    return queryInterface.dropTable('reservation_order_payment_users');
   },
 };
