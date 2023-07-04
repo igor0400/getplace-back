@@ -46,6 +46,7 @@ export class ReservationsService {
       offset: offset || 0,
       limit: limit || 20,
       include: reservationInclude,
+      order: ['createdAt'],
     });
 
     return reservations;

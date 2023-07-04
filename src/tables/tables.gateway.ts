@@ -19,6 +19,7 @@ import { ReservationsService } from 'src/reservations/reservations.service';
 import { InviteReservationUserDto } from 'src/reservations/dto/invite-reservation-user.dto';
 import { ReplyReservationInviteDto } from 'src/reservations/dto/reply-reservation-invite.dto';
 import { CreateTableReservationUserSeatDto } from 'src/reservations/dto/create-reservation-user-seat.dto';
+import { CancelReservationDto } from 'src/reservations/dto/cancel-reservation.dto';
 
 @WebSocketGateway(9090, {
   namespace: 'tables',
@@ -88,7 +89,7 @@ export class TablesGateway {
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('cancelReservation')
   async cancelReservation(
-    @MessageBody() dto: ChangeReservationDto,
+    @MessageBody() dto: CancelReservationDto,
     @Req() req: CustomReq,
   ) {
     const reservation = await this.reservationsService.cancelReservation({

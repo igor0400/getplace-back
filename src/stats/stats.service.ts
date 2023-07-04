@@ -1,15 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { Periods } from './types/periods';
 import { EmployeesService } from 'src/employees/employees.service';
 import { GetAllItemsGuestsValues } from './types/guests-values';
 import { PlaceStatRepository } from './repositories/place-stat.repository';
 import { PlaceGuestsRepository } from './repositories/place-guests.repository';
-import { Place } from 'src/places/models/place.model';
 import { PlaceStatItemRepository } from './repositories/place-stat-item.repository';
 import { CreatePlaceGuestDto } from './dto/create-place-guest.dto';
 import { ChangePlaceStatItemDto } from './dto/change-place-stat-item.dto';
-import { DeletePlaceGuestDto } from './dto/delete-place-guest.dto';
+import { User } from 'src/users/models/user.model';
 
 @Injectable()
 export class StatsService {
@@ -21,7 +20,7 @@ export class StatsService {
   ) {}
 
   async getAllPalcesGuests(dto: GetAllItemsGuestsValues) {
-    const { employeeId, limit, offset, period } = dto;
+    const { employeeId, limit, offset, period = 'day' } = dto;
     const employeePlaces = await this.getEmployeeValidPlaces(employeeId);
     const places = [];
 
@@ -31,11 +30,15 @@ export class StatsService {
         where: {
           placeId: place.id,
         },
-        include: [Place],
       });
 
       if (!placeStat) {
-        throw new NotFoundException('Модель статистики заведения не найдена');
+        places.push({
+          placeData: place,
+          guestsCount: 0,
+          guestsList: [],
+        });
+        continue;
       }
 
       const placeGuests = await this.placeGuestsRepository.findAll({
@@ -47,6 +50,7 @@ export class StatsService {
             [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
           },
         },
+        include: [User],
       });
 
       const placeGuestsInfo = await this.placeStatItemRepository.findOne({
@@ -57,15 +61,13 @@ export class StatsService {
       });
 
       if (!placeGuestsInfo) {
-        throw new NotFoundException(
-          'Модель статистики гостей заведения не найдена',
-        );
+        continue;
       }
 
       const placeGuestsCount = placeGuestsInfo[`${period}Count`];
 
       places.push({
-        placeData: placeStat.placeData,
+        placeData: place,
         guestsCount: placeGuestsCount,
         guestsList: placeGuests,
       });
@@ -101,11 +103,13 @@ export class StatsService {
       where: { ...dto },
     });
 
-    await this.changePlaceStatItem({
-      placeId,
-      title: 'GUESTS_INFO',
-      type: 'dec',
-    });
+    for (let i = 0; i < deleteCount; i++) {
+      await this.changePlaceStatItem({
+        placeId,
+        title: 'GUESTS_INFO',
+        type: 'dec',
+      });
+    }
 
     return deleteCount;
   }
