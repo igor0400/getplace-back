@@ -1,12 +1,4 @@
-import {
-  Column,
-  Table,
-  DataType,
-  ForeignKey,
-  HasOne,
-  BelongsToMany,
-  HasMany,
-} from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 
 export interface PaymentCreationArgs {

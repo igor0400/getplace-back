@@ -45,6 +45,8 @@ import { TableReservation } from 'src/reservations/model/table-reservation.model
 import { TableReservationUser } from 'src/reservations/model/table-reservation-user.model';
 import { TableReservationInvite } from 'src/reservations/model/table-reservation-invite.model';
 import { Payment } from 'src/payments/models/payment.model';
+import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
+import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 
 @Module({
   imports: [
@@ -94,6 +96,8 @@ import { Payment } from 'src/payments/models/payment.model';
       PlaceGuests,
       PlaceStatItem,
       Payment,
+      ReservationOrderPayment,
+      ReservationOrderPaymentUser,
     ]),
   ],
 })

@@ -5,11 +5,13 @@ import {
   ForeignKey,
   BelongsTo,
   HasMany,
+  HasOne,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { Order } from './order.model';
 import { ReservationOrderDish } from './reservation-order-dish.model';
 import { TableReservation } from 'src/reservations/model/table-reservation.model';
+import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 
 export interface ReservationOrderCreationArgs {
   reservationId: string;
@@ -40,4 +42,7 @@ export class ReservationOrder extends AbstractModel<
 
   @BelongsTo(() => Order)
   orderData: Order;
+
+  @HasOne(() => ReservationOrderPayment)
+  payment: ReservationOrderPayment;
 }
