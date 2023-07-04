@@ -4,6 +4,12 @@ import { ReferalsRepository } from './repositories/referals.repository';
 import { ReferalsInvitersRepository } from './repositories/inviters.repository';
 import { ReferalsInvitedUsersRepository } from './repositories/invited-users.repository';
 import { User } from '../users/models/user.model';
+import { Referals } from './models/referal.model';
+
+const referalsInclude = [
+  { model: User, as: 'inviter', include: [Referals] },
+  { model: User, as: 'invitedUsers' },
+];
 
 @Injectable()
 export class ReferalsService {
@@ -13,6 +19,15 @@ export class ReferalsService {
     private readonly referalInvitedUsersRepository: ReferalsInvitedUsersRepository,
     private usersService: UsersService,
   ) {}
+
+  async getReferalsByUserId(userId: string) {
+    const referals = await this.referalsRepository.findOne({
+      where: { userId },
+      include: referalsInclude,
+    });
+
+    return referals;
+  }
 
   async createUserReferals(inviterCode: string, userId: string) {
     const inviter = await this.usersService.getUserByReferalCode(inviterCode);

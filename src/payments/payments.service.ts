@@ -14,6 +14,7 @@ import { ReservationsService } from 'src/reservations/reservations.service';
 import { OrdersService } from 'src/orders/orders.service';
 import { TableReservationUserRepository } from 'src/reservations/repositories/reservation-user.repository';
 import { ReservationOrderPaymentUser } from './models/reservation-order-payment-user.model';
+import { ReferalsService } from 'src/referals/referals.service';
 
 const reservationOrderPaymentInclude = [ReservationOrderPaymentUser];
 
@@ -27,6 +28,7 @@ export class PaymentsService {
     private readonly reservationsService: ReservationsService,
     @Inject(forwardRef(() => OrdersService))
     private readonly ordersService: OrdersService,
+    private readonly referalsService: ReferalsService,
   ) {}
 
   async createPayment(dto: CreatePaymentDto) {
@@ -120,5 +122,14 @@ export class PaymentsService {
       reservationOrderPaymentId: orderPaymentId,
       paymentId: payment.id,
     });
+
+    const userReferals = await this.referalsService.getReferalsByUserId(userId);
+    if (userReferals) {
+      const referalProcent = userReferals?.inviter[0]?.referals?.referalProcent;
+      const bonusesAmount = Math.floor((referalProcent * +amount) / 100);
+
+      // начислять реферальные бонусы при оплате
+      // сделать bonuses модуль и начислять туда как валюту приложения bonusesAmount
+    }
   }
 }
