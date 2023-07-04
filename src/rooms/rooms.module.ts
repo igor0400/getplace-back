@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { RoomsController } from './rooms.controller';
 import { RoomRepository } from './repositories/room.repository';
@@ -10,7 +10,6 @@ import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    TablesModule,
     DatabaseModule.forFeature([Room]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
@@ -18,6 +17,7 @@ import { JwtModule } from '@nestjs/jwt';
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
     }),
+    forwardRef(() => TablesModule),
     EmployeesModule,
   ],
   providers: [RoomsService, RoomRepository],

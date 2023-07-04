@@ -10,12 +10,14 @@ import { ReservationOrderDishRepository } from './repositories/reservation-order
 import { TablesModule } from 'src/tables/tables.module';
 import { DishesModule } from 'src/dishes/dishes.module';
 import { OrdersController } from './orders.controller';
+import { ReservationsModule } from 'src/reservations/reservations.module';
 
 @Module({
   imports: [
     DatabaseModule.forFeature([Order, ReservationOrder, ReservationOrderDish]),
     forwardRef(() => TablesModule),
-    DishesModule,
+    forwardRef(() => DishesModule),
+    forwardRef(() => ReservationsModule),
   ],
   providers: [
     OrdersService,

@@ -9,11 +9,11 @@ import { ReservationOrderDishRepository } from './repositories/reservation-order
 import { CreateOrderDto } from './dto/create-order.dto';
 import { CreateReservationOrderDto } from './dto/create-reservation-order.dto';
 import { CreateReservationOrderDishDto } from './dto/create-reservation-order-dish.dto';
-import { TableReservationUserRepository } from 'src/tables/repositories/reservation-user.repository';
 import { DeleteReservationOrderDishDto } from './dto/delete-reservation-order-dish.dto';
 import { DishesService } from 'src/dishes/dishes.service';
 import { Status } from 'src/statuses/models/status.model';
 import { ReservationOrder } from './models/reservation-order.model';
+import { TableReservationUserRepository } from 'src/reservations/repositories/reservation-user.repository';
 
 const ordersInclude = [Status, ReservationOrder];
 

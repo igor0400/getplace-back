@@ -53,7 +53,13 @@ export abstract class AbstractRepository<
   }
 
   async findOrCreate(options: FindOrCreateOptions<TModel, TModelCreation>) {
-    const documents = await this.model.findOrCreate(options);
+    const documents = await this.model.findOrCreate({
+      ...options,
+      defaults: {
+        ...options?.defaults,
+        id: getUId(),
+      },
+    });
 
     return documents[0] as TModel;
   }

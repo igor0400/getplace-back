@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Op } from 'sequelize';
 import { Periods } from './types/periods';
 import { EmployeesService } from 'src/employees/employees.service';
@@ -7,6 +7,9 @@ import { PlaceStatRepository } from './repositories/place-stat.repository';
 import { PlaceGuestsRepository } from './repositories/place-guests.repository';
 import { Place } from 'src/places/models/place.model';
 import { PlaceStatItemRepository } from './repositories/place-stat-item.repository';
+import { CreatePlaceGuestDto } from './dto/create-place-guest.dto';
+import { ChangePlaceStatItemDto } from './dto/change-place-stat-item.dto';
+import { DeletePlaceGuestDto } from './dto/delete-place-guest.dto';
 
 @Injectable()
 export class StatsService {
@@ -30,6 +33,11 @@ export class StatsService {
         },
         include: [Place],
       });
+
+      if (!placeStat) {
+        throw new NotFoundException('Модель статистики заведения не найдена');
+      }
+
       const placeGuests = await this.placeGuestsRepository.findAll({
         limit: limit || 20,
         offset: offset || 0,
@@ -40,12 +48,20 @@ export class StatsService {
           },
         },
       });
+
       const placeGuestsInfo = await this.placeStatItemRepository.findOne({
         where: {
           placeStatId: placeStat.id,
           title: 'GUESTS_INFO',
         },
       });
+
+      if (!placeGuestsInfo) {
+        throw new NotFoundException(
+          'Модель статистики гостей заведения не найдена',
+        );
+      }
+
       const placeGuestsCount = placeGuestsInfo[`${period}Count`];
 
       places.push({
@@ -58,108 +74,125 @@ export class StatsService {
     return places;
   }
 
-  // async getAllPalcesGuests(dto: GetAllItemsGuestsValues) {
-  //   const { employeeId, limit, offset, period } = dto;
-  //   const employeePlaces = await this.getEmployeeValidPlaces(employeeId);
-  //   const places = [];
+  async createPlaceGuest(dto: CreatePlaceGuestDto) {
+    const { placeId } = dto;
+    const placeStat = await this.placeStatRepository.findOrCreate({
+      where: {
+        placeId,
+      },
+    });
+    const placeGuest = await this.placeGuestsRepository.create({
+      ...dto,
+      placeStatId: placeStat.id,
+    });
 
-  //   for (let place of employeePlaces) {
-  //     const placeGuests = await this.getPalceGuests({
-  //       itemId: place.id,
-  //       limit,
-  //       offset,
-  //       period,
-  //     });
-  //     places.push({
-  //       placeData: place,
-  //       guestsCount: placeGuests.length,
-  //       guestsList: placeGuests,
-  //     });
-  //   }
+    await this.changePlaceStatItem({
+      placeId,
+      title: 'GUESTS_INFO',
+      type: 'inc',
+    });
 
-  //   return places;
-  // }
+    return placeGuest;
+  }
 
-  // async getPalceGuests(dto: GetItemGuestsValues) {
-  //   const { itemId } = dto;
-  //   const place = await this.placesService.getPlaceById(itemId);
-  //   let allGuests = [];
+  async deletePlaceGuest(dto: CreatePlaceGuestDto) {
+    const { placeId } = dto;
+    const deleteCount = await this.placeGuestsRepository.destroy({
+      where: { ...dto },
+    });
 
-  //   if (!place)
-  //     throw new UnauthorizedException(`Заведение с id: ${itemId} не найдено`);
+    await this.changePlaceStatItem({
+      placeId,
+      title: 'GUESTS_INFO',
+      type: 'dec',
+    });
 
-  //   for (let room of place.rooms) {
-  //     const roomGuests = await this.getRoomGuests({
-  //       ...dto,
-  //       itemId: room.id,
-  //     });
-  //     allGuests = [...allGuests, ...roomGuests];
-  //   }
+    return deleteCount;
+  }
 
-  //   return allGuests;
-  // }
+  async changePlaceStatItem(dto: ChangePlaceStatItemDto) {
+    const { title, placeId, type } = dto;
+    const placeStat = await this.placeStatRepository.findOrCreate({
+      where: {
+        placeId,
+      },
+    });
+    const placeStatItem = await this.placeStatItemRepository.findOrCreate({
+      where: {
+        placeStatId: placeStat.id,
+        title,
+      },
+    });
 
-  // async getRoomGuests(dto: GetItemGuestsValues) {
-  //   const { itemId } = dto;
-  //   const room = await this.roomsService.getRoomById(itemId);
-  //   let allGuests = [];
+    const {
+      daysLastClearDate,
+      weeksLastClearDate,
+      monthsLastClearDate,
+      yearsLastClearDate,
+    } = placeStatItem;
+    const daysDifference = this.getTimeDifference(daysLastClearDate);
+    const weeksDifference = this.getTimeDifference(weeksLastClearDate);
 
-  //   if (!room) throw new UnauthorizedException(`Зал с id: ${itemId} не найден`);
+    function changeCount(item: any) {
+      if (type === 'inc') {
+        placeStatItem[item] += 1;
+      } else {
+        if (placeStatItem[item] > 0) placeStatItem[item] -= 1;
+      }
+    }
 
-  //   for (let table of room.tables) {
-  //     const tableGuests = await this.getTablesGuests({
-  //       ...dto,
-  //       itemId: table.id,
-  //     });
-  //     allGuests = [...allGuests, ...tableGuests];
-  //   }
+    function resetCount(item: any) {
+      if (type === 'inc') {
+        placeStatItem[item] = 1;
+      } else {
+        placeStatItem[item] = 0;
+      }
+    }
 
-  //   return allGuests;
-  // }
+    changeCount('allTimeCount');
 
-  // async getTablesGuests(dto: GetItemGuestsValues) {
-  //   const { period, itemId, limit, offset } = dto;
-  //   const { from, till } = this.getPeriodValues(period);
-  //   let allGuests = [];
+    if (daysDifference < 1000 * 60 * 60 * 24) {
+      changeCount('dayCount');
+    } else {
+      resetCount('dayCount');
+      placeStatItem.daysLastClearDate = new Date();
+    }
 
-  //   const reservations = await this.tableReservationRepository.findAll({
-  //     limit: limit || 20,
-  //     offset: offset || 0,
-  //     where: {
-  //       tableId: itemId,
-  //       startDate: {
-  //         [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-  //       },
-  //     },
-  //     include: [{ model: TableReservationUser, include: [User] }],
-  //   });
+    if (weeksDifference < 1000 * 60 * 60 * 24 * 7) {
+      changeCount('weekCount');
+    } else {
+      resetCount('weekCount');
+      placeStatItem.weeksLastClearDate = new Date();
+    }
 
-  //   console.log('RES COUNT: ', reservations.length);
+    if (
+      new Date().getUTCMonth() === new Date(monthsLastClearDate).getUTCMonth()
+    ) {
+      changeCount('monthCount');
+    } else {
+      resetCount('monthCount');
+      placeStatItem.monthsLastClearDate = new Date();
+    }
 
-  //   for (let reservation of reservations) {
-  //     allGuests = [...allGuests, ...reservation?.users];
-  //   }
+    if (
+      new Date().getUTCFullYear() ===
+      new Date(yearsLastClearDate).getUTCFullYear()
+    ) {
+      changeCount('yearCount');
+    } else {
+      resetCount('yearCount');
+      placeStatItem.yearsLastClearDate = new Date();
+    }
 
-  //   return allGuests;
-  // }
+    return placeStatItem.save();
+  }
 
-  // async getTablesReservations(dto: GetItemGuestsValues) {
-  //   const { period, itemId, limit, offset } = dto;
-  //   const { from, till } = this.getPeriodValues(period);
-
-  //   const reservations = await this.tableReservationRepository.findAll({
-  //     limit: limit || 20,
-  //     offset: offset || 0,
-  //     where: {
-  //       tableId: itemId,
-  //       startDate: {
-  //         [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-  //       },
-  //     },
-  //   });
-
-  //   return reservations;
-  // }
+  private getTimeDifference(date: Date) {
+    return (
+      Date.parse(new Date().toISOString()) -
+      Date.parse(new Date(date).toISOString())
+    );
+  }
 
   private getPeriodValues(period: Periods) {
     const from = new Date();

@@ -23,6 +23,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { AppController } from './app.controller';
 import { BoostsModule } from './boosts/boosts.module';
 import { StatsModule } from './stats/stats.module';
+import { ReservationsModule } from './reservations/reservations.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { StatsModule } from './stats/stats.module';
     PaymentsModule,
     BoostsModule,
     StatsModule,
+    ReservationsModule,
   ],
   controllers: [AppController],
 })

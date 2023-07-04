@@ -31,9 +31,6 @@ import { UserStatuses } from 'src/statuses/models/user-statuses.model';
 import { Room } from 'src/rooms/models/room.model';
 import { Table } from 'src/tables/models/table.model';
 import { Seat } from 'src/seats/models/seat.model';
-import { TableReservation } from 'src/tables/models/reservation.model';
-import { TableReservationUser } from 'src/tables/models/reservation-user.model';
-import { TableReservationInvite } from 'src/tables/models/reservation-invite.model';
 import { Order } from 'src/orders/models/order.model';
 import { ReservationOrder } from 'src/orders/models/reservation-order.model';
 import { ReservationOrderDish } from 'src/orders/models/reservation-order-dish.model';
@@ -44,6 +41,9 @@ import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
 import { PlaceStat } from 'src/stats/models/place-stat.model';
 import { PlaceGuests } from 'src/stats/models/place-guests.model';
 import { PlaceStatItem } from 'src/stats/models/place-stat-item.model';
+import { TableReservation } from 'src/reservations/model/table-reservation.model';
+import { TableReservationUser } from 'src/reservations/model/table-reservation-user.model';
+import { TableReservationInvite } from 'src/reservations/model/table-reservation-invite.model';
 
 @Module({
   imports: [

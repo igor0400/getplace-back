@@ -8,16 +8,17 @@ import {
 import { TablesService } from './tables.service';
 import { Server } from 'socket.io';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { CreateReservationDto } from './dto/create-reservation.dto';
 import { CustomReq } from 'src/common';
 import { ChangeTableStatusDto } from './dto/change-table-status.dto';
-import { ChangeReservationDto } from './dto/change-reservation.dto';
-import { InviteReservationUserDto } from './dto/invite-reservation-user.dto';
-import { ReplyReservationInviteDto } from './dto/reply-reservation-invite.dto';
+import { ChangeReservationDto } from '../reservations/dto/change-reservation.dto';
 import { CreateReservationOrderDishDto } from 'src/orders/dto/create-reservation-order-dish.dto';
 import { DeleteReservationOrderDishDto } from 'src/orders/dto/delete-reservation-order-dish.dto';
 import { OrdersService } from 'src/orders/orders.service';
-import { CreateTableReservationUserSeatDto } from './dto/create-reservation-user-seat.dto';
+import { CreateReservationDto } from 'src/reservations/dto/create-reservation.dto';
+import { ReservationsService } from 'src/reservations/reservations.service';
+import { InviteReservationUserDto } from 'src/reservations/dto/invite-reservation-user.dto';
+import { ReplyReservationInviteDto } from 'src/reservations/dto/reply-reservation-invite.dto';
+import { CreateTableReservationUserSeatDto } from 'src/reservations/dto/create-reservation-user-seat.dto';
 
 @WebSocketGateway(9090, {
   namespace: 'tables',
@@ -30,6 +31,7 @@ export class TablesGateway {
   constructor(
     private readonly tablesService: TablesService,
     private readonly ordersService: OrdersService,
+    private readonly reservationsService: ReservationsService,
   ) {}
 
   @WebSocketServer()
@@ -55,7 +57,7 @@ export class TablesGateway {
     @MessageBody() dto: CreateReservationDto,
     @Req() req: CustomReq,
   ) {
-    const reservation = await this.tablesService.createReservation({
+    const reservation = await this.reservationsService.createReservation({
       ...dto,
       userId: req.user.sub,
     });
@@ -68,11 +70,11 @@ export class TablesGateway {
 
   @UseGuards(JwtAuthGuard)
   @SubscribeMessage('changeReservation')
-  async changeReservationStatus(
+  async changeReservation(
     @MessageBody() dto: ChangeReservationDto,
     @Req() req: CustomReq,
   ) {
-    const reservation = await this.tablesService.changeReservation({
+    const reservation = await this.reservationsService.changeReservation({
       ...dto,
       userId: req.user.sub,
     });
@@ -84,12 +86,29 @@ export class TablesGateway {
   }
 
   @UseGuards(JwtAuthGuard)
+  @SubscribeMessage('cancelReservation')
+  async cancelReservation(
+    @MessageBody() dto: ChangeReservationDto,
+    @Req() req: CustomReq,
+  ) {
+    const reservation = await this.reservationsService.cancelReservation({
+      ...dto,
+      userId: req.user.sub,
+    });
+
+    this.server.emit('onCancelReservation', {
+      msg: 'Отмена брони',
+      content: reservation,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
   @SubscribeMessage('inviteUser')
   async inviteReservationUser(
     @MessageBody() dto: InviteReservationUserDto,
     @Req() req: CustomReq,
   ) {
-    const invite = await this.tablesService.createReservationUserInvite({
+    const invite = await this.reservationsService.createReservationUserInvite({
       ...dto,
       inviterId: req.user.sub,
     });
@@ -106,7 +125,7 @@ export class TablesGateway {
     @MessageBody() dto: ReplyReservationInviteDto,
     @Req() req: CustomReq,
   ) {
-    const invite = await this.tablesService.replyToReservationUserInvite({
+    const invite = await this.reservationsService.replyToReservationUserInvite({
       ...dto,
       userId: req.user.sub,
     });
@@ -166,7 +185,7 @@ export class TablesGateway {
     @MessageBody() dto: CreateTableReservationUserSeatDto,
     @Req() req: CustomReq,
   ) {
-    const seat = await this.tablesService.createReservationUserSeat({
+    const seat = await this.reservationsService.createReservationUserSeat({
       ...dto,
       userId: req.user.sub,
     });
@@ -183,10 +202,12 @@ export class TablesGateway {
     @MessageBody() dto: CreateTableReservationUserSeatDto,
     @Req() req: CustomReq,
   ) {
-    const deleteInfo = await this.tablesService.deleteReservationUserSeat({
-      ...dto,
-      userId: req.user.sub,
-    });
+    const deleteInfo = await this.reservationsService.deleteReservationUserSeat(
+      {
+        ...dto,
+        userId: req.user.sub,
+      },
+    );
 
     if (deleteInfo) {
       this.server.emit('onDeleteReservationUserSeat', {

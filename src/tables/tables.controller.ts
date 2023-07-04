@@ -21,11 +21,15 @@ import { PlacesRoles } from 'src/roles/decorators/places-roles.decorator';
 import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { CreateTableDto } from './dto/create-table.dto';
 import { ChangeTableDto } from './dto/change-table.dto';
+import { ReservationsService } from 'src/reservations/reservations.service';
 
 @ApiTags('Столы')
 @Controller('tables')
 export class TablesController {
-  constructor(private readonly tablesService: TablesService) {}
+  constructor(
+    private readonly tablesService: TablesService,
+    private readonly reservationsService: ReservationsService,
+  ) {}
 
   @ApiDefaultResponse({ description: 'Получение всех столов' })
   @ApiQuery({
@@ -111,7 +115,7 @@ export class TablesController {
     @Query('limit') limit: string,
     @Query('offset') offset: string,
   ) {
-    return this.tablesService.getAllReservations(+limit, +offset);
+    return this.reservationsService.getAllReservations(+limit, +offset);
   }
 
   @ApiDefaultResponse({
@@ -123,7 +127,7 @@ export class TablesController {
   })
   @Get('reservations/:id')
   getReservationById(@Param('id') id: string) {
-    return this.tablesService.getReservationById(id);
+    return this.reservationsService.getReservationById(id);
   }
 
   @ApiDefaultResponse({

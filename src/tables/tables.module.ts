@@ -8,22 +8,12 @@ import { Table } from './models/table.model';
 import { DatabaseModule } from 'src/common';
 import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
-import { TableReservation } from './models/reservation.model';
-import { TableReservationUser } from './models/reservation-user.model';
-import { TableReservationRepository } from './repositories/reservation.repository';
-import { TableReservationUserRepository } from './repositories/reservation-user.repository';
-import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
-import { TableReservationInvite } from './models/reservation-invite.model';
 import { OrdersModule } from 'src/orders/orders.module';
+import { ReservationsModule } from 'src/reservations/reservations.module';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([
-      Table,
-      TableReservation,
-      TableReservationUser,
-      TableReservationInvite,
-    ]),
+    DatabaseModule.forFeature([Table]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -32,21 +22,11 @@ import { OrdersModule } from 'src/orders/orders.module';
     }),
     forwardRef(() => SeatsModule),
     forwardRef(() => OrdersModule),
-    EmployeesModule,
+    forwardRef(() => EmployeesModule),
+    forwardRef(() => ReservationsModule),
   ],
-  providers: [
-    TablesGateway,
-    TablesService,
-    TableRepository,
-    TableReservationRepository,
-    TableReservationUserRepository,
-    TableReservationInviteRepository,
-  ],
+  providers: [TablesGateway, TablesService, TableRepository],
   controllers: [TablesController],
-  exports: [
-    TablesService,
-    TableReservationRepository,
-    TableReservationUserRepository,
-  ],
+  exports: [TablesService],
 })
 export class TablesModule {}

@@ -9,7 +9,7 @@ import { AbstractModel } from 'src/common';
 import { User } from 'src/users/models/user.model';
 import { Dish } from 'src/dishes/models/dish.model';
 import { ReservationOrder } from './reservation-order.model';
-import { TableReservationUser } from 'src/tables/models/reservation-user.model';
+import { TableReservationUser } from 'src/reservations/model/table-reservation-user.model';
 
 export interface ReservationOrderDishCreationArgs {
   reservationOrderId: string;

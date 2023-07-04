@@ -7,9 +7,9 @@ import {
   HasMany,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
-import { TableReservation } from 'src/tables/models/reservation.model';
 import { Order } from './order.model';
 import { ReservationOrderDish } from './reservation-order-dish.model';
+import { TableReservation } from 'src/reservations/model/table-reservation.model';
 
 export interface ReservationOrderCreationArgs {
   reservationId: string;

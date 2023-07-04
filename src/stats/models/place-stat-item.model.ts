@@ -60,6 +60,26 @@ export class PlaceStatItem extends AbstractModel<
   yearCount: number;
 
   @Column({
+    type: DataType.DATE,
+  })
+  daysLastClearDate: Date;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  weeksLastClearDate: Date;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  monthsLastClearDate: Date;
+
+  @Column({
+    type: DataType.DATE,
+  })
+  yearsLastClearDate: Date;
+
+  @Column({
     type: DataType.INTEGER,
     defaultValue: 0,
   })

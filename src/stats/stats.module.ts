@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { StatsService } from './stats.service';
 import { StatsController } from './stats.controller';
 import { JwtModule } from '@nestjs/jwt';
@@ -24,10 +24,10 @@ import { PlaceStatItemRepository } from './repositories/place-stat-item.reposito
       },
     }),
     EmployeesModule,
-    TablesModule,
-    PlacesModule,
-    RoomsModule,
-    TablesModule,
+    forwardRef(() => TablesModule),
+    forwardRef(() => PlacesModule),
+    forwardRef(() => RoomsModule),
+    forwardRef(() => TablesModule),
   ],
   controllers: [StatsController],
   providers: [
@@ -37,6 +37,7 @@ import { PlaceStatItemRepository } from './repositories/place-stat-item.reposito
     PlaceStatItemRepository,
   ],
   exports: [
+    StatsService,
     PlaceStatRepository,
     PlaceGuestsRepository,
     PlaceStatItemRepository,

@@ -41,6 +41,8 @@ import { Room } from 'src/rooms/models/room.model';
 import { Table } from 'src/tables/models/table.model';
 import { Seat } from 'src/seats/models/seat.model';
 import { Boost } from 'src/boosts/models/boost.model';
+import { RoomsService } from 'src/rooms/rooms.service';
+import { TablesService } from 'src/tables/tables.service';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -70,6 +72,8 @@ export class PlacesService {
     private readonly rolesService: RolesService,
     private readonly employeesService: EmployeesService,
     private readonly filesService: FilesService,
+    private readonly roomsService: RoomsService,
+    private readonly tablesService: TablesService,
   ) {}
 
   async getAllPlaces(
@@ -105,6 +109,20 @@ export class PlacesService {
       where: { id },
       include: placesInclude,
     });
+
+    return place;
+  }
+
+  async getPlaceByRoomId(roomId: string) {
+    const room = await this.roomsService.getRoomById(roomId);
+    const place = await this.getPlaceById(room.placeId);
+
+    return place;
+  }
+
+  async getPlaceByTableId(tableId: string) {
+    const table = await this.tablesService.getTableById(tableId);
+    const place = await this.getPlaceByRoomId(table.roomId);
 
     return place;
   }

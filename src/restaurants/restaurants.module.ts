@@ -26,7 +26,7 @@ import { PlacesModule } from 'src/places/places.module';
         expiresIn: process.env.JWT_EXPIRES_IN,
       },
     }),
-    EmployeesModule,
+    forwardRef(() => EmployeesModule),
     forwardRef(() => DishesModule),
     forwardRef(() => PlacesModule),
   ],

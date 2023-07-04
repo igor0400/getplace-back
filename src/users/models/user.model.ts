@@ -13,7 +13,7 @@ import { UserRoles } from 'src/roles/models/user-roles.model';
 import { UserSession } from 'src/sessions/models/user-session.model';
 import { Status } from 'src/statuses/models/status.model';
 import { UserStatuses } from 'src/statuses/models/user-statuses.model';
-import { TableReservationInvite } from 'src/tables/models/reservation-invite.model';
+import { TableReservationInvite } from 'src/reservations/model/table-reservation-invite.model';
 
 export interface UserCreationArgs {
   password: string;

@@ -7,8 +7,6 @@ import {
   IsString,
 } from 'class-validator';
 import { requestMessages } from 'src/common';
-import { ReservationStatuses } from '../types/reservation-statuses';
-import { reservationStatuses } from '../configs/reservation-statuses';
 
 export class ChangeReservationDto {
   readonly userId: string;
@@ -24,13 +22,13 @@ export class ChangeReservationDto {
   @ApiProperty({
     example: 'CONFIRMED',
     description: 'Статус брони',
-    enum: reservationStatuses,
+    enum: ['CONFIRMED'],
   })
   @IsOptional()
-  @IsEnum(reservationStatuses, {
-    message: requestMessages.isEnum('status', reservationStatuses),
+  @IsEnum(['CONFIRMED'], {
+    message: requestMessages.isEnum('status', ['CONFIRMED']),
   })
-  readonly status?: ReservationStatuses;
+  readonly status?: 'CONFIRMED';
 
   @ApiProperty({
     example: '2023-08-24T10:00:00.319Z',

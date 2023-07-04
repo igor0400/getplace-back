@@ -7,11 +7,11 @@ import {
   HasOne,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
-import { Table } from './table.model';
-import { TableReservationUser } from './reservation-user.model';
+import { TableReservationUser } from './table-reservation-user.model';
 import { reservationStatuses } from '../configs/reservation-statuses';
 import { ReservationStatuses } from '../types/reservation-statuses';
 import { ReservationOrder } from 'src/orders/models/reservation-order.model';
+import { Table } from 'src/tables/models/table.model';
 
 export interface TableReservationCreationArgs {
   tableId: string;

@@ -26,6 +26,8 @@ import { FilesModule } from 'src/files/files.module';
 import { PlaceBoostsController } from './place-boosts.controller';
 import { PlaceBoostsService } from './place-boosts.service';
 import { BoostsModule } from 'src/boosts/boosts.module';
+import { RoomsModule } from 'src/rooms/rooms.module';
+import { TablesModule } from 'src/tables/tables.module';
 
 @Module({
   controllers: [PlaceBoostsController, PlacesController],
@@ -61,8 +63,10 @@ import { BoostsModule } from 'src/boosts/boosts.module';
     forwardRef(() => RestaurantsModule),
     forwardRef(() => EmployeesModule),
     forwardRef(() => RolesModule),
-    FilesModule,
-    BoostsModule,
+    forwardRef(() => FilesModule),
+    forwardRef(() => BoostsModule),
+    forwardRef(() => RoomsModule),
+    forwardRef(() => TablesModule),
   ],
   exports: [PlacesService],
 })

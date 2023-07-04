@@ -6,7 +6,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
-import { TableReservation } from './reservation.model';
+import { TableReservation } from './table-reservation.model';
 import { User } from 'src/users/models/user.model';
 
 export interface TableReservationInviteCreationArgs {
