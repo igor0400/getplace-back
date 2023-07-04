@@ -24,6 +24,7 @@ import { AppController } from './app.controller';
 import { BoostsModule } from './boosts/boosts.module';
 import { StatsModule } from './stats/stats.module';
 import { ReservationsModule } from './reservations/reservations.module';
+import { PdfModule } from './pdf/pdf.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ReservationsModule } from './reservations/reservations.module';
     BoostsModule,
     StatsModule,
     ReservationsModule,
+    PdfModule,
   ],
   controllers: [AppController],
 })
