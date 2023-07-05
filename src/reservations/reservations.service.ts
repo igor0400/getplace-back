@@ -18,6 +18,8 @@ import { SeatsService } from 'src/seats/seats.service';
 import { StatsService } from 'src/stats/stats.service';
 import { PlacesService } from 'src/places/places.service';
 import { CancelReservationDto } from './dto/cancel-reservation.dto';
+import { Op } from 'sequelize';
+import { getPeriodValues } from 'src/common';
 
 const reservationInclude = [
   { model: TableReservationUser, include: [User, Seat] },
@@ -63,6 +65,9 @@ export class ReservationsService {
   async createReservation(dto: CreateReservationDto) {
     const { tableId, userId, startDate, endDate } = dto;
     const place = await this.placesService.getPlaceByTableId(tableId);
+
+    await this.validateReservationDate(tableId, startDate, endDate);
+
     const reservation = await this.reservationRepository.create(dto);
     await this.reservationUserRepository.create({
       reservationId: reservation.id,
@@ -96,7 +101,25 @@ export class ReservationsService {
 
     for (let item in dto) {
       if (reservation[item]) {
-        reservation[item] = dto[item];
+        if (item === 'startDate') {
+          await this.validateReservationDate(
+            reservation.tableId,
+            dto[item],
+            reservation.endDate,
+            reservation.id,
+          );
+          reservation[item] = dto[item];
+        } else if (item == 'endDate') {
+          await this.validateReservationDate(
+            reservation.tableId,
+            reservation.startDate,
+            dto[item],
+            reservation.id,
+          );
+          reservation[item] = dto[item];
+        } else {
+          reservation[item] = dto[item];
+        }
       }
     }
 
@@ -245,5 +268,95 @@ export class ReservationsService {
     }
 
     return false;
+  }
+
+  private async validateReservationDate(
+    tableId: string,
+    startDate: Date,
+    endDate: Date,
+    reservationId?: string,
+  ) {
+    const nowParseDate = Date.parse(new Date().toISOString());
+    const startParseDate = Date.parse(new Date(startDate).toISOString());
+    const endParseDate = Date.parse(new Date(endDate).toISOString());
+    const datesDifference = endParseDate - startParseDate;
+    const minReservationMinutes = 30;
+    const maxReservationHours = 24;
+
+    if (
+      startParseDate - nowParseDate <= 0 ||
+      endParseDate - nowParseDate <= 0
+    ) {
+      throw new BadRequestException(`Некорректно указано время брони`);
+    }
+
+    if (datesDifference < 1000 * 60 * minReservationMinutes) {
+      throw new BadRequestException(
+        `Минимально время брони ${minReservationMinutes} минут`,
+      );
+    }
+
+    if (datesDifference > 1000 * 60 * 60 * maxReservationHours) {
+      throw new BadRequestException(
+        `Максимальное время брони ${maxReservationHours} часа`,
+      );
+    }
+
+    const { from, till } = getPeriodValues('day', startDate, endDate);
+
+    const whereOptions = reservationId
+      ? {
+          id: {
+            [Op.not]: reservationId,
+          },
+        }
+      : {};
+
+    const reservations = await this.reservationRepository.findAll({
+      where: {
+        ...whereOptions,
+
+        tableId,
+        startDate: {
+          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
+        },
+        status: {
+          [Op.not]: 'CANCELLED',
+        },
+      },
+    });
+
+    for (let reservstion of reservations) {
+      const resStartParseDate = Date.parse(
+        new Date(reservstion.startDate).toISOString(),
+      );
+      const resEndParseDate = Date.parse(
+        new Date(reservstion.endDate).toISOString(),
+      );
+      const startsDifference = startParseDate - resStartParseDate;
+      const endsDifference = endParseDate - resEndParseDate;
+
+      if (startsDifference === 0 || endsDifference === 0) {
+        throw new BadRequestException(
+          `На это время уже назначена бронь c id: ${reservstion.id}`,
+        );
+      }
+
+      if (startsDifference < 0) {
+        if (endParseDate - resStartParseDate > 0) {
+          throw new BadRequestException(
+            `На это время уже назначена бронь c id: ${reservstion.id}`,
+          );
+        }
+      } else {
+        if (resEndParseDate - startParseDate > 0) {
+          throw new BadRequestException(
+            `На это время уже назначена бронь c id: ${reservstion.id}`,
+          );
+        }
+      }
+    }
+
+    return true;
   }
 }

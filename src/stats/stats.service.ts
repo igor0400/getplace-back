@@ -9,6 +9,7 @@ import { PlaceStatItemRepository } from './repositories/place-stat-item.reposito
 import { CreatePlaceGuestDto } from './dto/create-place-guest.dto';
 import { ChangePlaceStatItemDto } from './dto/change-place-stat-item.dto';
 import { User } from 'src/users/models/user.model';
+import { getPeriodValues } from 'src/common';
 
 @Injectable()
 export class StatsService {
@@ -25,7 +26,7 @@ export class StatsService {
     const places = [];
 
     for (let place of employeePlaces) {
-      const { from, till } = this.getPeriodValues(period);
+      const { from, till } = getPeriodValues(period);
       const placeStat = await this.placeStatRepository.findOne({
         where: {
           placeId: place.id,
@@ -196,50 +197,6 @@ export class StatsService {
       Date.parse(new Date().toISOString()) -
       Date.parse(new Date(date).toISOString())
     );
-  }
-
-  private getPeriodValues(period: Periods) {
-    const from = new Date();
-    const till = new Date();
-
-    switch (period) {
-      case 'day':
-        from.setUTCHours(0, 0, 0, 0);
-        till.setUTCHours(23, 59, 59, 999);
-        break;
-      case 'week':
-        const curr = new Date();
-        const first = curr.getUTCDate() - curr.getUTCDay() + 1;
-        const last = first + 6;
-
-        from.setUTCDate(first);
-        till.setUTCDate(last);
-        from.setUTCHours(0, 0, 0, 0);
-        till.setUTCHours(23, 59, 59, 999);
-        break;
-      case 'month':
-        from.setUTCDate(1);
-        till.setUTCMonth(till.getUTCMonth() + 1, 1);
-        from.setUTCHours(0, 0, 0, 0);
-        till.setUTCHours(0, 0, 0, 0);
-        break;
-      case 'year':
-        from.setUTCHours(0, 0, 0, 0);
-        till.setUTCHours(0, 0, 0, 0);
-        from.setUTCMonth(0, 1);
-        till.setUTCMonth(0, 1);
-        till.setUTCFullYear(till.getUTCFullYear() + 1);
-        break;
-      case 'allTime':
-        from.setTime(0);
-        till.setUTCFullYear(till.getUTCFullYear() + 1000);
-        break;
-    }
-
-    return {
-      from,
-      till,
-    };
   }
 
   private async getEmployeeValidPlaces(employeeId: string) {

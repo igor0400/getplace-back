@@ -22,4 +22,22 @@ export class CreateBoostDto {
   @IsString({ message: requestMessages.isString('description') })
   @MaxLength(300, { message: requestMessages.maxLength('description', 300) })
   readonly description: string;
+
+  @ApiProperty({
+    example: '1000',
+    description: 'Цена',
+  })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('price') })
+  @IsString({ message: requestMessages.isString('price') })
+  @MaxLength(100, { message: requestMessages.maxLength('price', 100) })
+  readonly price: string;
+
+  @ApiProperty({
+    example: 'KZT',
+    description: 'Валюта',
+  })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('currency') })
+  @IsString({ message: requestMessages.isString('currency') })
+  @MaxLength(50, { message: requestMessages.maxLength('currency', 50) })
+  readonly currency: string;
 }
