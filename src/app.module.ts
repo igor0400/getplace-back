@@ -25,6 +25,7 @@ import { BoostsModule } from './boosts/boosts.module';
 import { StatsModule } from './stats/stats.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { PdfModule } from './pdf/pdf.module';
+import { BonusesModule } from './bonuses/bonuses.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { PdfModule } from './pdf/pdf.module';
     StatsModule,
     ReservationsModule,
     PdfModule,
+    BonusesModule,
   ],
   controllers: [AppController],
 })

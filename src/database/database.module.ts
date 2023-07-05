@@ -46,6 +46,7 @@ import { TableReservationInvite } from 'src/reservations/model/table-reservation
 import { Payment } from 'src/payments/models/payment.model';
 import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
+import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
 
 @Module({
   imports: [
@@ -96,6 +97,7 @@ import { ReservationOrderPayment } from 'src/payments/models/reservation-order-p
       Payment,
       ReservationOrderPayment,
       ReservationOrderPaymentUser,
+      UserBonuses,
     ]),
   ],
 })

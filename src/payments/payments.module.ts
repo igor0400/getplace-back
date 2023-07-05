@@ -10,6 +10,7 @@ import { ReservationOrderPaymentUserRepository } from './repositories/reservatio
 import { ReservationsModule } from 'src/reservations/reservations.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import { ReferalsModule } from 'src/referals/referals.module';
+import { BonusesModule } from 'src/bonuses/bonuses.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ReferalsModule } from 'src/referals/referals.module';
     forwardRef(() => ReservationsModule),
     forwardRef(() => OrdersModule),
     ReferalsModule,
+    BonusesModule,
   ],
   providers: [
     PaymentsService,

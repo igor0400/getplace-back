@@ -14,6 +14,7 @@ import { UserSession } from 'src/sessions/models/user-session.model';
 import { Status } from 'src/statuses/models/status.model';
 import { UserStatuses } from 'src/statuses/models/user-statuses.model';
 import { TableReservationInvite } from 'src/reservations/model/table-reservation-invite.model';
+import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
 
 export interface UserCreationArgs {
   password: string;
@@ -85,4 +86,7 @@ export class User extends AbstractModel<User, UserCreationArgs> {
 
   @HasMany(() => TableReservationInvite, 'inviterId')
   reservationInvites: TableReservationInvite[];
+
+  @HasOne(() => UserBonuses)
+  bonuses: UserBonuses;
 }
