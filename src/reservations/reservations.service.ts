@@ -374,7 +374,20 @@ export class ReservationsService {
   async changeFreeTables(tableId: string) {
     const place = await this.placesService.getPlaceByTableId(tableId);
 
-    // Просматривать все времена брони заведения и если все на день занято менять freeTables
+    const { from, till } = getPeriodValues('day');
+    const reservations = await this.reservationRepository.findAll({
+      where: {
+        tableId,
+        startDate: {
+          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
+        },
+        status: {
+          [Op.not]: 'CANCELLED',
+        },
+      },
+    });
+
+    // Просматривать все reservations и если все на день занято менять freeTables
     // вызывать эту функцию после создания, изменения и отмены брони (продумать отмену)
 
     return place.save();
