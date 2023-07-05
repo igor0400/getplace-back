@@ -368,6 +368,7 @@ export class ReservationsService {
     const place = await this.placesService.getPlaceByTableId(tableId);
 
     // Просматривать все времена брони заведения и если все на день занято менять freeTables
+    // вызывать эту функцию после создания, изменения и отмены брони (продумать отмену)
 
     return place.save();
   }
