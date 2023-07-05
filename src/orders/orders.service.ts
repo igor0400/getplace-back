@@ -13,7 +13,6 @@ import { CreateReservationOrderDto } from './dto/create-reservation-order.dto';
 import { CreateReservationOrderDishDto } from './dto/create-reservation-order-dish.dto';
 import { DeleteReservationOrderDishDto } from './dto/delete-reservation-order-dish.dto';
 import { DishesService } from 'src/dishes/dishes.service';
-import { Status } from 'src/statuses/models/status.model';
 import { TableReservationUserRepository } from 'src/reservations/repositories/reservation-user.repository';
 import { ReservationOrderDish } from './models/reservation-order-dish.model';
 import { Order } from './models/order.model';
@@ -21,10 +20,9 @@ import { ReservationOrderPayment } from 'src/payments/models/reservation-order-p
 import { PaymentsService } from 'src/payments/payments.service';
 import { PayReservationOrderDto } from 'src/payments/dto/pay-reservation-order.dto';
 
-const ordersInclude = [Status];
 const reservationOrdersInclude = [
   ReservationOrderDish,
-  { model: Order, include: [Status] },
+  { model: Order },
   ReservationOrderPayment,
 ];
 
@@ -44,16 +42,13 @@ export class OrdersService {
     const tables = await this.orderRepository.findAll({
       offset: offset || 0,
       limit: limit || 20,
-      include: ordersInclude,
     });
 
     return tables;
   }
 
   async getOrderById(id: string) {
-    const order = await this.orderRepository.findByPk(id, {
-      include: ordersInclude,
-    });
+    const order = await this.orderRepository.findByPk(id);
 
     return order;
   }

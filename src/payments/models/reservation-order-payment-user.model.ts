@@ -1,4 +1,10 @@
-import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { ReservationOrderPayment } from './reservation-order-payment.model';
 import { Payment } from './payment.model';
@@ -35,4 +41,7 @@ export class ReservationOrderPaymentUser extends AbstractModel<
     allowNull: false,
   })
   userId: string;
+
+  @BelongsTo(() => Payment)
+  paymentData: Payment;
 }

@@ -1,4 +1,4 @@
-export const employeesRoles = [
+export const roles = [
   {
     value: 'ADMIN',
     description: 'Администратор',

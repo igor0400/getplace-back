@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { requestMessages } from 'src/common';
 
 export class ChangeRoomDto {
@@ -19,5 +19,21 @@ export class ChangeRoomDto {
   })
   @IsOptional()
   @IsString({ message: requestMessages.isString('title') })
-  readonly title: string;
+  readonly title?: string;
+
+  @ApiProperty({
+    example: 6,
+    description: 'Максимальное кол-во столов по оси X',
+  })
+  @IsOptional()
+  @IsNumber({}, { message: requestMessages.isNumber('maxPositionsX') })
+  readonly maxPositionsX?: number;
+
+  @ApiProperty({
+    example: 5,
+    description: 'Максимальное кол-во столов по оси Y',
+  })
+  @IsOptional()
+  @IsNumber({}, { message: requestMessages.isNumber('maxPositionsY') })
+  readonly maxPositionsY?: number;
 }

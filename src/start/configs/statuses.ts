@@ -1,4 +1,4 @@
-export const usersStatuses = [
+export const statuses = [
   {
     value: 'DEFAULT',
     description: 'Обычный пользователь',

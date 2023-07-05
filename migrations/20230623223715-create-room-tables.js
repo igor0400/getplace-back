@@ -18,6 +18,14 @@ module.exports = {
         type: Sequelize.STRING(50),
         allowNull: false,
       },
+      positionX: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      positionY: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       state: {
         type: Sequelize.STRING(100),
         defaultValue: 'free',

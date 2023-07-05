@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { requestMessages } from 'src/common';
 import { tableStates } from '../configs/table-states';
 import { TableStates } from '../types/table-states';
@@ -28,6 +34,22 @@ export class CreateTableDto {
   @IsNotEmpty({ message: requestMessages.isNotEmpty('number') })
   @IsString({ message: requestMessages.isString('number') })
   readonly number: string;
+
+  @ApiProperty({
+    example: 3,
+    description: 'Расположение стола стола по оси X',
+  })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('positionX') })
+  @IsNumber({}, { message: requestMessages.isNumber('positionX') })
+  readonly positionX: number;
+
+  @ApiProperty({
+    example: 3,
+    description: 'Расположение стола стола по оси Y',
+  })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('positionY') })
+  @IsNumber({}, { message: requestMessages.isNumber('positionY') })
+  readonly positionY: number;
 
   @ApiProperty({
     example: '2000',

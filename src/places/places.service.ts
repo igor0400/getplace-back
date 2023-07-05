@@ -115,6 +115,9 @@ export class PlacesService {
 
   async getPlaceByRoomId(roomId: string) {
     const room = await this.roomsService.getRoomById(roomId);
+
+    if (!room) throw new BadRequestException('Зал не найден');
+
     const place = await this.getPlaceById(room.placeId);
 
     return place;
@@ -122,6 +125,9 @@ export class PlacesService {
 
   async getPlaceByTableId(tableId: string) {
     const table = await this.tablesService.getTableById(tableId);
+
+    if (!table) throw new BadRequestException('Стол не найден');
+
     const place = await this.getPlaceByRoomId(table.roomId);
 
     return place;

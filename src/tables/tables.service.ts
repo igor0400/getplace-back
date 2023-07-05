@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { TableRepository } from './repositories/table.repository';
 import { SeatsService } from 'src/seats/seats.service';
@@ -40,6 +44,20 @@ export class TablesService {
   }
 
   async createTable(dto: CreateTableDto) {
+    const isTableCreated = await this.tableRepository.findOne({
+      where: {
+        roomId: dto.roomId,
+        positionX: dto.positionX,
+        positionY: dto.positionY,
+      },
+    });
+
+    if (isTableCreated) {
+      throw new BadRequestException(
+        'Стол с таким же расположением уже существует',
+      );
+    }
+
     const table = await this.tableRepository.create(dto);
     return table;
   }

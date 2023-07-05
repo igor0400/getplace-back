@@ -15,6 +15,8 @@ import { TableReservation } from 'src/reservations/model/table-reservation.model
 export interface TableCreationArgs {
   roomId: string;
   number: string;
+  positionX: number;
+  positionY: number;
   price?: string;
   state?: TableStates;
 }
@@ -33,6 +35,18 @@ export class Table extends AbstractModel<Table, TableCreationArgs> {
     allowNull: false,
   })
   number: string;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  positionX: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  positionY: number;
 
   @Column({
     type: DataType.STRING,

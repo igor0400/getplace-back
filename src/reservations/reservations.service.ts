@@ -20,6 +20,9 @@ import { PlacesService } from 'src/places/places.service';
 import { CancelReservationDto } from './dto/cancel-reservation.dto';
 import { Op } from 'sequelize';
 import { getPeriodValues } from 'src/common';
+import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
+import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
+import { Payment } from 'src/payments/models/payment.model';
 
 const reservationInclude = [
   { model: TableReservationUser, include: [User, Seat] },
@@ -28,6 +31,10 @@ const reservationInclude = [
     include: [
       Order,
       { model: ReservationOrderDish, include: [TableReservationUser, Dish] },
+      {
+        model: ReservationOrderPayment,
+        include: [{ model: ReservationOrderPaymentUser, include: [Payment] }],
+      },
     ],
   },
 ];

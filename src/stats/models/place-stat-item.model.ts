@@ -6,6 +6,7 @@ import {
 } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { PlaceStat } from './place-stat.model';
+import { Sequelize } from 'sequelize';
 
 export interface PlaceStatItemCreationArgs {
   placeStatId: string;
@@ -60,28 +61,32 @@ export class PlaceStatItem extends AbstractModel<
   yearCount: number;
 
   @Column({
+    type: DataType.INTEGER,
+    defaultValue: 0,
+  })
+  allTimeCount: number;
+
+  @Column({
     type: DataType.DATE,
+    defaultValue: DataType.NOW(),
   })
   daysLastClearDate: Date;
 
   @Column({
     type: DataType.DATE,
+    defaultValue: DataType.NOW(),
   })
   weeksLastClearDate: Date;
 
   @Column({
     type: DataType.DATE,
+    defaultValue: DataType.NOW(),
   })
   monthsLastClearDate: Date;
 
   @Column({
     type: DataType.DATE,
+    defaultValue: DataType.NOW(),
   })
   yearsLastClearDate: Date;
-
-  @Column({
-    type: DataType.INTEGER,
-    defaultValue: 0,
-  })
-  allTimeCount: number;
 }

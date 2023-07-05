@@ -18,6 +18,14 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
+      maxPositionsX: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      maxPositionsY: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       createdAt: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
