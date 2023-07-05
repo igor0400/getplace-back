@@ -270,6 +270,10 @@ export class ReservationsService {
     return false;
   }
 
+  test() {
+    return this.changeFreeTables('5d21b6ec0e-d21b6ec0e3-21b6ec0e3e-1b6ec0e3ec');
+  }
+
   private async validateReservationDate(
     tableId: string,
     startDate: Date,
@@ -358,5 +362,13 @@ export class ReservationsService {
     }
 
     return true;
+  }
+
+  async changeFreeTables(tableId: string) {
+    const place = await this.placesService.getPlaceByTableId(tableId);
+
+    // Просматривать все времена брони заведения и если все на день занято менять freeTables
+
+    return place.save();
   }
 }

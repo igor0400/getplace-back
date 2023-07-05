@@ -14,6 +14,9 @@ export class EmployeesStartService {
     private employeesService: EmployeesService,
   ) {}
 
+  // Сделать все в один сервис
+  // Сделать запрос test с создание тестового заведения, столов, сидений, броней и тд (данные для них просто захардкодить)
+
   async createInitialData(
     dto: CreateInitialDataDto,
     response: Response,

@@ -11,6 +11,7 @@ import { TableReservationInvite } from './model/table-reservation-invite.model';
 import { SeatsModule } from 'src/seats/seats.module';
 import { PlacesModule } from 'src/places/places.module';
 import { StatsModule } from 'src/stats/stats.module';
+import { TablesModule } from 'src/tables/tables.module';
 
 @Module({
   imports: [

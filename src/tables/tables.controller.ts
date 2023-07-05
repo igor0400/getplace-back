@@ -141,4 +141,9 @@ export class TablesController {
   getTableById(@Param('id') id: string) {
     return this.tablesService.getTableById(id);
   }
+
+  @Get('test/test')
+  test() {
+    return this.reservationsService.test();
+  }
 }
