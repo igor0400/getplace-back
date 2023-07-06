@@ -23,6 +23,7 @@ import { getPeriodValues } from 'src/common';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
 import { Payment } from 'src/payments/models/payment.model';
+import { ValidationsService } from './validations.service';
 
 const reservationInclude = [
   { model: TableReservationUser, include: [User, Seat] },
@@ -48,6 +49,7 @@ export class ReservationsService {
     private readonly seatsService: SeatsService,
     private readonly statsService: StatsService,
     private readonly placesService: PlacesService,
+    private readonly validationsService: ValidationsService,
   ) {}
 
   async getAllReservations(limit: number, offset: number) {
@@ -73,7 +75,11 @@ export class ReservationsService {
     const { tableId, userId, startDate, endDate } = dto;
     const place = await this.placesService.getPlaceByTableId(tableId);
 
-    await this.validateReservationDate(tableId, startDate, endDate);
+    await this.validationsService.validateReservationDate(
+      tableId,
+      startDate,
+      endDate,
+    );
 
     const reservation = await this.reservationRepository.create(dto);
     await this.reservationUserRepository.create({
@@ -109,7 +115,7 @@ export class ReservationsService {
     for (let item in dto) {
       if (reservation[item]) {
         if (item === 'startDate') {
-          await this.validateReservationDate(
+          await this.validationsService.validateReservationDate(
             reservation.tableId,
             dto[item],
             reservation.endDate,
@@ -117,7 +123,7 @@ export class ReservationsService {
           );
           reservation[item] = dto[item];
         } else if (item == 'endDate') {
-          await this.validateReservationDate(
+          await this.validationsService.validateReservationDate(
             reservation.tableId,
             reservation.startDate,
             dto[item],
@@ -278,118 +284,8 @@ export class ReservationsService {
   }
 
   test() {
-    return this.changeFreeTables('5d21b6ec0e-d21b6ec0e3-21b6ec0e3e-1b6ec0e3ec');
-  }
-
-  private async validateReservationDate(
-    tableId: string,
-    startDate: Date,
-    endDate: Date,
-    reservationId?: string,
-  ) {
-    const nowParseDate = Date.parse(new Date().toISOString());
-    const startParseDate = Date.parse(new Date(startDate).toISOString());
-    const endParseDate = Date.parse(new Date(endDate).toISOString());
-    const datesDifference = endParseDate - startParseDate;
-    const minReservationMinutes = 30;
-    const maxReservationHours = 24;
-
-    if (
-      startParseDate - nowParseDate <= 0 ||
-      endParseDate - nowParseDate <= 0
-    ) {
-      throw new BadRequestException(`Некорректно указано время брони`);
-    }
-
-    if (datesDifference < 1000 * 60 * minReservationMinutes) {
-      throw new BadRequestException(
-        `Минимально время брони ${minReservationMinutes} минут`,
-      );
-    }
-
-    if (datesDifference > 1000 * 60 * 60 * maxReservationHours) {
-      throw new BadRequestException(
-        `Максимальное время брони ${maxReservationHours} часа`,
-      );
-    }
-
-    const { from, till } = getPeriodValues('day', startDate, endDate);
-
-    const whereOptions = reservationId
-      ? {
-          id: {
-            [Op.not]: reservationId,
-          },
-        }
-      : {};
-
-    const reservations = await this.reservationRepository.findAll({
-      where: {
-        ...whereOptions,
-
-        tableId,
-        startDate: {
-          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-        },
-        status: {
-          [Op.not]: 'CANCELLED',
-        },
-      },
-    });
-
-    for (let reservstion of reservations) {
-      const resStartParseDate = Date.parse(
-        new Date(reservstion.startDate).toISOString(),
-      );
-      const resEndParseDate = Date.parse(
-        new Date(reservstion.endDate).toISOString(),
-      );
-      const startsDifference = startParseDate - resStartParseDate;
-      const endsDifference = endParseDate - resEndParseDate;
-
-      if (startsDifference === 0 || endsDifference === 0) {
-        throw new BadRequestException(
-          `На это время уже назначена бронь c id: ${reservstion.id}`,
-        );
-      }
-
-      if (startsDifference < 0) {
-        if (endParseDate - resStartParseDate > 0) {
-          throw new BadRequestException(
-            `На это время уже назначена бронь c id: ${reservstion.id}`,
-          );
-        }
-      } else {
-        if (resEndParseDate - startParseDate > 0) {
-          throw new BadRequestException(
-            `На это время уже назначена бронь c id: ${reservstion.id}`,
-          );
-        }
-      }
-    }
-
-    return true;
-  }
-
-  async changeFreeTables(tableId: string) {
-    const place = await this.placesService.getPlaceByTableId(tableId);
-
-    const { from, till } = getPeriodValues('day');
-    const reservations = await this.reservationRepository.findAll({
-      where: {
-        tableId,
-        startDate: {
-          [Op.and]: [{ [Op.gte]: from }, { [Op.lte]: till }],
-        },
-        status: {
-          [Op.not]: 'CANCELLED',
-        },
-      },
-    });
-
-    // Просматривать все reservations и если все на день занято менять freeTables
-    // вызывать эту функцию после создания, изменения и отмены брони (продумать отмену)
-
-    return place.save();
+    return this.validationsService.changeFreeTables(
+      '5d21b6ec0e-d21b6ec0e3-21b6ec0e3e-1b6ec0e3ec',
+    );
   }
 }

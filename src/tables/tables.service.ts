@@ -2,6 +2,8 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { CreateTableDto } from './dto/create-table.dto';
 import { TableRepository } from './repositories/table.repository';
@@ -10,6 +12,8 @@ import { Seat } from 'src/seats/models/seat.model';
 import { ChangeTableDto } from './dto/change-table.dto';
 import { Op } from 'sequelize';
 import { TableReservation } from 'src/reservations/model/table-reservation.model';
+import { PlacesService } from 'src/places/places.service';
+import { FreeTableRepository } from './repositories/free-table.repository';
 
 const tablesInclude = [Seat, TableReservation];
 
@@ -17,7 +21,10 @@ const tablesInclude = [Seat, TableReservation];
 export class TablesService {
   constructor(
     private readonly tableRepository: TableRepository,
+    private readonly freeTableRepository: FreeTableRepository,
     private readonly seatsService: SeatsService,
+    @Inject(forwardRef(() => PlacesService))
+    private readonly placesService: PlacesService,
   ) {}
 
   async getAllTables(limit: number, offset: number, search: string = '') {
@@ -59,6 +66,16 @@ export class TablesService {
     }
 
     const table = await this.tableRepository.create(dto);
+
+    const place = await this.placesService.getPlaceById(dto.placeId);
+    place.freeTables += 1;
+    place.save();
+
+    await this.freeTableRepository.create({
+      placeId: dto.placeId,
+      tableId: table.id,
+    });
+
     return table;
   }
 

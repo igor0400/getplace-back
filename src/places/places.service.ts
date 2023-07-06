@@ -2,9 +2,11 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
+  forwardRef,
 } from '@nestjs/common';
 import { CreatePlaceDto } from './dto/create-place.dto';
 import { Op } from 'sequelize';
@@ -55,6 +57,7 @@ const placesInclude = [
   File,
   PlaceAddress,
   Boost,
+  Table,
 ];
 
 @Injectable()
@@ -73,6 +76,7 @@ export class PlacesService {
     private readonly employeesService: EmployeesService,
     private readonly filesService: FilesService,
     private readonly roomsService: RoomsService,
+    @Inject(forwardRef(() => TablesService))
     private readonly tablesService: TablesService,
   ) {}
 

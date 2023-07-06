@@ -10,10 +10,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { EmployeesModule } from 'src/employees/employees.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import { ReservationsModule } from 'src/reservations/reservations.module';
+import { FreeTable } from './models/free-table.model';
+import { FreeTableRepository } from './repositories/free-table.repository';
+import { PlacesModule } from 'src/places/places.module';
 
 @Module({
   imports: [
-    DatabaseModule.forFeature([Table]),
+    DatabaseModule.forFeature([Table, FreeTable]),
     JwtModule.register({
       secret: process.env.PRIVATE_KEY,
       signOptions: {
@@ -24,9 +27,15 @@ import { ReservationsModule } from 'src/reservations/reservations.module';
     forwardRef(() => OrdersModule),
     forwardRef(() => EmployeesModule),
     forwardRef(() => ReservationsModule),
+    forwardRef(() => PlacesModule),
   ],
-  providers: [TablesGateway, TablesService, TableRepository],
+  providers: [
+    TablesGateway,
+    TablesService,
+    TableRepository,
+    FreeTableRepository,
+  ],
   controllers: [TablesController],
-  exports: [TablesService],
+  exports: [TablesService, FreeTableRepository],
 })
 export class TablesModule {}

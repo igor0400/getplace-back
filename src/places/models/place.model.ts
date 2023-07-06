@@ -1,6 +1,6 @@
 import {
   Column,
-  Table,
+  Table as NestTable,
   DataType,
   ForeignKey,
   HasOne,
@@ -20,6 +20,8 @@ import { File } from 'src/files/models/file.model';
 import { Room } from 'src/rooms/models/room.model';
 import { Boost } from 'src/boosts/models/boost.model';
 import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
+import { Table } from 'src/tables/models/table.model';
+import { FreeTable } from 'src/tables/models/free-table.model';
 
 export interface PlaceCreationArgs {
   employeeId: string;
@@ -30,7 +32,7 @@ export interface PlaceCreationArgs {
   color?: string;
 }
 
-@Table({ tableName: 'places' })
+@NestTable({ tableName: 'places' })
 export class Place extends AbstractModel<Place, PlaceCreationArgs> {
   @ForeignKey(() => Employee)
   @Column({
@@ -105,4 +107,7 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
 
   @BelongsToMany(() => Boost, () => PlaceBoosts)
   boosts: Boost[];
+
+  @BelongsToMany(() => Table, () => FreeTable)
+  freeTablesList: Table[];
 }

@@ -47,6 +47,7 @@ import { Payment } from 'src/payments/models/payment.model';
 import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
+import { FreeTable } from 'src/tables/models/free-table.model';
 
 @Module({
   imports: [
@@ -98,6 +99,7 @@ import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
       ReservationOrderPayment,
       ReservationOrderPaymentUser,
       UserBonuses,
+      FreeTable,
     ]),
   ],
 })

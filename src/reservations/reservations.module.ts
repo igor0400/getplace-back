@@ -11,6 +11,7 @@ import { TableReservationInvite } from './model/table-reservation-invite.model';
 import { SeatsModule } from 'src/seats/seats.module';
 import { PlacesModule } from 'src/places/places.module';
 import { StatsModule } from 'src/stats/stats.module';
+import { ValidationsService } from './validations.service';
 import { TablesModule } from 'src/tables/tables.module';
 
 @Module({
@@ -24,9 +25,11 @@ import { TablesModule } from 'src/tables/tables.module';
     forwardRef(() => SeatsModule),
     forwardRef(() => StatsModule),
     forwardRef(() => PlacesModule),
+    forwardRef(() => TablesModule),
   ],
   providers: [
     ReservationsService,
+    ValidationsService,
     TableReservationRepository,
     TableReservationUserRepository,
     TableReservationInviteRepository,
