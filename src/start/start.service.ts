@@ -23,6 +23,7 @@ import testDtos from './configs/test-dtos';
 import { TableReservationUserRepository } from 'src/reservations/repositories/reservation-user.repository';
 import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { OrdersService } from 'src/orders/orders.service';
+import { ReviewsService } from 'src/reviews/reviews.service';
 
 @Injectable()
 export class StartService {
@@ -41,6 +42,7 @@ export class StartService {
     private readonly reservationUserRepository: TableReservationUserRepository,
     private readonly restaurantsService: RestaurantsService,
     private readonly ordersService: OrdersService,
+    private readonly reviewsService: ReviewsService,
   ) {}
 
   async createInitialData(
@@ -156,42 +158,6 @@ export class StartService {
       testDtos.reservation(user.id, table.id),
     );
 
-    const reservationsStartDate = new Date();
-    const reservationsEndDate = new Date();
-    reservationsStartDate.setUTCHours(19, 0, 0, 0);
-    reservationsEndDate.setUTCHours(20, 0, 0, 0);
-
-    await this.reservationsService.createReservation(
-      testDtos.reservation(
-        user.id,
-        table.id,
-        reservationsStartDate,
-        reservationsEndDate,
-      ),
-    );
-
-    reservationsStartDate.setUTCHours(20, 0, 0, 0);
-    reservationsEndDate.setUTCHours(21, 0, 0, 0);
-    await this.reservationsService.createReservation(
-      testDtos.reservation(
-        user.id,
-        table.id,
-        reservationsStartDate,
-        reservationsEndDate,
-      ),
-    );
-
-    reservationsStartDate.setUTCHours(21, 0, 0, 0);
-    reservationsEndDate.setUTCHours(22, 0, 0, 0);
-    await this.reservationsService.createReservation(
-      testDtos.reservation(
-        user.id,
-        table.id,
-        reservationsStartDate,
-        reservationsEndDate,
-      ),
-    );
-
     const reservationUser = await this.reservationUserRepository.findOne({
       where: {
         reservationId: reservation.id,
@@ -224,6 +190,10 @@ export class StartService {
       userId: user.id,
       reservationOrderId: reservationOrder.id,
     });
+
+    await this.reviewsService.createPlaceReview(
+      testDtos.review(place.id, user.id),
+    );
 
     return this.placesService.getPlaceById(place.id);
   }

@@ -11,6 +11,7 @@ import { ReservationsModule } from 'src/reservations/reservations.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import { ReferalsModule } from 'src/referals/referals.module';
 import { BonusesModule } from 'src/bonuses/bonuses.module';
+import { PlacesModule } from 'src/places/places.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { BonusesModule } from 'src/bonuses/bonuses.module';
     ]),
     forwardRef(() => ReservationsModule),
     forwardRef(() => OrdersModule),
+    forwardRef(() => PlacesModule),
     ReferalsModule,
     BonusesModule,
   ],
@@ -30,6 +32,6 @@ import { BonusesModule } from 'src/bonuses/bonuses.module';
     ReservationOrderPaymentRepository,
     ReservationOrderPaymentUserRepository,
   ],
-  exports: [PaymentsService],
+  exports: [PaymentsService, ReservationOrderPaymentUserRepository],
 })
 export class PaymentsModule {}

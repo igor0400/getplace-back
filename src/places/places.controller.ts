@@ -75,7 +75,7 @@ export class PlacesController {
     @Query('accepted') accepted: boolean,
     @Query('notAccepted') notAccepted: boolean,
   ) {
-    return this.placesService.getAllPlaces(
+    return this.placesService.getAllUpdatedPlaces(
       +limit,
       +offset,
       search,
@@ -155,7 +155,7 @@ export class PlacesController {
   })
   @Get(':id')
   async getPlaceById(@Param('id') id: string) {
-    const employee = await this.placesService.getPlaceById(id);
+    const employee = await this.placesService.getUpdatedPlaceById(id);
 
     if (employee) {
       return employee;

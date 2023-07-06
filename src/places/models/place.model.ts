@@ -22,6 +22,8 @@ import { Boost } from 'src/boosts/models/boost.model';
 import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
 import { Table } from 'src/tables/models/table.model';
 import { FreeTable } from 'src/tables/models/free-table.model';
+import { Review } from 'src/reviews/models/review.model';
+import { PlaceReview } from 'src/reviews/models/place-review.model';
 
 export interface PlaceCreationArgs {
   employeeId: string;
@@ -110,4 +112,7 @@ export class Place extends AbstractModel<Place, PlaceCreationArgs> {
 
   @BelongsToMany(() => Table, () => FreeTable)
   freeTablesList: Table[];
+
+  @BelongsToMany(() => Review, () => PlaceReview)
+  reviews: Review[];
 }

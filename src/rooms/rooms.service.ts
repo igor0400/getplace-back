@@ -18,7 +18,7 @@ export class RoomsService {
   async getAllRooms(limit: number, offset: number, search: string = '') {
     const rooms = await this.roomRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       include: roomsInclude,
       where: {
         title: {

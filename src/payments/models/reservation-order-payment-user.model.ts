@@ -9,9 +9,11 @@ import { AbstractModel } from 'src/common';
 import { ReservationOrderPayment } from './reservation-order-payment.model';
 import { Payment } from './payment.model';
 import { User } from 'src/users/models/user.model';
+import { Place } from 'src/places/models/place.model';
 
 export interface ReservationOrderPaymentUserCreationArgs {
   reservationOrderPaymentId: string;
+  placeId: string;
   paymentId: string;
   userId: string;
 }
@@ -27,6 +29,13 @@ export class ReservationOrderPaymentUser extends AbstractModel<
     allowNull: false,
   })
   reservationOrderPaymentId: string;
+
+  @ForeignKey(() => Place)
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  placeId: string;
 
   @ForeignKey(() => Payment)
   @Column({

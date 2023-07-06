@@ -13,6 +13,7 @@ import { ReservationsModule } from 'src/reservations/reservations.module';
 import { TablesModule } from 'src/tables/tables.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import { RestaurantsModule } from 'src/restaurants/restaurants.module';
+import { ReviewsModule } from 'src/reviews/reviews.module';
 
 @Module({
   controllers: [StartController],
@@ -30,6 +31,7 @@ import { RestaurantsModule } from 'src/restaurants/restaurants.module';
     ReservationsModule,
     RestaurantsModule,
     OrdersModule,
+    ReviewsModule,
   ],
 })
 export class StartModule {}

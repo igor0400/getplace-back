@@ -30,7 +30,7 @@ export class TablesService {
   async getAllTables(limit: number, offset: number, search: string = '') {
     const tables = await this.tableRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       include: tablesInclude,
       where: {
         number: {

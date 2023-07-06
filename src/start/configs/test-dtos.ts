@@ -2,6 +2,7 @@ import { CreatePlaceDto } from 'src/places/dto/create-place.dto';
 import { CreateTableReservationUserSeatDto } from 'src/reservations/dto/create-reservation-user-seat.dto';
 import { CreateReservationDto } from 'src/reservations/dto/create-reservation.dto';
 import { CreateRestaurantDishDto } from 'src/restaurants/dto/create-dish.dto';
+import { CreatePlaceReviewDto } from 'src/reviews/dto/create-place-review.dto';
 import { CreateRoomDto } from 'src/rooms/dto/create-room.dto';
 import { CreateSeatDto } from 'src/seats/dto/create-seat.dto';
 import { CreateTableDto } from 'src/tables/dto/create-table.dto';
@@ -85,5 +86,11 @@ export default {
     cost: '400',
     position: '1',
     weight: '800',
+  }),
+  review: (placeId: string, userId: string): CreatePlaceReviewDto => ({
+    placeId,
+    userId,
+    text: 'Хорошее заведение',
+    rating: 4,
   }),
 };

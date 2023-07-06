@@ -19,7 +19,7 @@ export class FilesService {
   async getAllFiles(limit: number, offset: number, search: string = '') {
     return this.fileRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       where: {
         name: {
           [Op.like]: `%${search}%`,

@@ -16,7 +16,7 @@ export class SeatsService {
   async getAllSeats(limit: number, offset: number, search: string = '') {
     const seats = await this.seatRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       where: {
         number: {
           [Op.like]: `%${search}%`,

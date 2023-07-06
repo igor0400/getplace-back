@@ -1,15 +1,22 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  forwardRef,
+  Inject,
+} from '@nestjs/common';
 import { TableReservationRepository } from './repositories/reservation.repository';
 import { PlacesService } from 'src/places/places.service';
 import { Op } from 'sequelize';
 import { getPeriodValues } from 'src/common';
 import { FreeTableRepository } from 'src/tables/repositories/free-table.repository';
+import { Place } from 'src/places/models/place.model';
 
 @Injectable()
 export class ValidationsService {
   constructor(
     private readonly reservationRepository: TableReservationRepository,
     private readonly freeTableRepository: FreeTableRepository,
+    @Inject(forwardRef(() => PlacesService))
     private readonly placesService: PlacesService,
   ) {}
 
@@ -103,10 +110,18 @@ export class ValidationsService {
     return true;
   }
 
+  async changeFreeTablesByPlaceData(place: Place) {
+    for (let room of place.rooms) {
+      for (let table of room.tables) {
+        await this.changeFreeTables(table.id);
+      }
+    }
+  }
+
   async changeFreeTables(tableId: string) {
     const place = await this.placesService.getPlaceByTableId(tableId);
 
-    const isTableFree = this.isTableFree(tableId);
+    const isTableFree = await this.isTableFree(tableId);
 
     if (isTableFree) {
       const freeTable = await this.freeTableRepository.findOne({
@@ -140,9 +155,22 @@ export class ValidationsService {
   }
 
   async isTableFree(tableId: string) {
+    const place = await this.placesService.getPlaceByTableId(tableId);
+
     const from = new Date();
     const till = new Date();
-    till.setUTCHours(23, 59, 59, 999);
+
+    const placeStartWorkTime = place?.work?.time?.from;
+    const placeEndWorkTime = place?.work?.time?.till;
+    const startWorkTimeHours = +placeStartWorkTime.split(':')[0];
+    const endWorkTimeHours = +placeEndWorkTime.split(':')[0];
+    const endWorkTimeMinutes = +placeEndWorkTime.split(':')[1];
+
+    if (endWorkTimeHours <= startWorkTimeHours) {
+      till.setUTCHours(24 + endWorkTimeHours, endWorkTimeMinutes, 0, 0);
+    } else {
+      till.setUTCHours(endWorkTimeHours, endWorkTimeMinutes, 0, 0);
+    }
 
     const reservations = await this.reservationRepository.findAll({
       where: {
@@ -156,19 +184,11 @@ export class ValidationsService {
       },
     });
 
-    const place = await this.placesService.getPlaceByTableId(tableId);
-
     const fromParseDate = Date.parse(from.toISOString());
-
-    const palceEndWorkDate = new Date();
-    const placeEndWorkTime = place?.work?.time?.till;
-    const workTimeHours = +placeEndWorkTime.split(':')[0];
-    const workTimeMinutes = +placeEndWorkTime.split(':')[1];
-    palceEndWorkDate.setUTCHours(workTimeHours, workTimeMinutes, 0, 0);
-    const parsePlaceEndWorkTime = Date.parse(palceEndWorkDate.toISOString());
+    const tillParseDate = Date.parse(till.toISOString());
 
     let totalDatesMilliseconds = 0;
-    const maxTotalMilliseconds = parsePlaceEndWorkTime - fromParseDate;
+    const maxTotalMilliseconds = tillParseDate - fromParseDate;
 
     for (let reservation of reservations) {
       const parseReservationStartDate = Date.parse(

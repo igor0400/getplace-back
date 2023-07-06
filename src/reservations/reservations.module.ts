@@ -36,6 +36,7 @@ import { TablesModule } from 'src/tables/tables.module';
   ],
   exports: [
     ReservationsService,
+    ValidationsService,
     TableReservationRepository,
     TableReservationUserRepository,
   ],

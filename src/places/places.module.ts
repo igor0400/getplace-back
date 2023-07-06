@@ -28,9 +28,16 @@ import { PlaceBoostsService } from './place-boosts.service';
 import { BoostsModule } from 'src/boosts/boosts.module';
 import { RoomsModule } from 'src/rooms/rooms.module';
 import { TablesModule } from 'src/tables/tables.module';
+import { ReviewsModule } from 'src/reviews/reviews.module';
+import { PlaceReviewsController } from './place-reviews.controller';
+import { ReservationsModule } from 'src/reservations/reservations.module';
 
 @Module({
-  controllers: [PlaceBoostsController, PlacesController],
+  controllers: [
+    PlaceReviewsController,
+    PlaceBoostsController,
+    PlacesController,
+  ],
   providers: [
     PlacesService,
     PlaceBoostsService,
@@ -67,6 +74,8 @@ import { TablesModule } from 'src/tables/tables.module';
     forwardRef(() => BoostsModule),
     forwardRef(() => RoomsModule),
     forwardRef(() => TablesModule),
+    forwardRef(() => ReviewsModule),
+    forwardRef(() => ReservationsModule),
   ],
   exports: [PlacesService],
 })

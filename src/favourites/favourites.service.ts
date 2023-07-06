@@ -15,7 +15,7 @@ export class FavouritesService {
   ) {
     const favourites = await this.userFavouritePlaceRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       where: { userId },
     });
 

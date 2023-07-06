@@ -13,6 +13,8 @@ import { reservationOrderPaymentTypes } from '../configs/reservation-order-payme
 
 export interface ReservationOrderPaymentCreationArgs {
   reservationOrderId: string;
+  totalAmount: string;
+  currency: string;
   type?: ReservationOrderPaymentTypes;
 }
 
@@ -27,6 +29,18 @@ export class ReservationOrderPayment extends AbstractModel<
     allowNull: false,
   })
   reservationOrderId: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  totalAmount: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  currency: string;
 
   @Column({
     type: DataType.ENUM(...reservationOrderPaymentTypes),

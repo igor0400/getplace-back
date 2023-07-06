@@ -16,6 +16,7 @@ import { TableReservationUserRepository } from 'src/reservations/repositories/re
 import { ReservationOrderPaymentUser } from './models/reservation-order-payment-user.model';
 import { ReferalsService } from 'src/referals/referals.service';
 import { BonusesService } from 'src/bonuses/bonuses.service';
+import { PlacesService } from 'src/places/places.service';
 
 const reservationOrderPaymentInclude = [ReservationOrderPaymentUser];
 
@@ -31,6 +32,7 @@ export class PaymentsService {
     private readonly ordersService: OrdersService,
     private readonly referalsService: ReferalsService,
     private readonly bonusesService: BonusesService,
+    private readonly placesService: PlacesService,
   ) {}
 
   async createPayment(dto: CreatePaymentDto) {
@@ -67,10 +69,17 @@ export class PaymentsService {
     const reservation = await this.reservationsService.getReservationById(
       reservationOrder.reservationId,
     );
-
-    const orderPayment = await this.reservationOrderPaymentRepository.create(
-      dto,
+    const place = await this.placesService.getPlaceByTableId(
+      reservation.tableId,
     );
+
+    const totalAmount = +reservationOrder?.orderData?.totalPrice;
+
+    const orderPayment = await this.reservationOrderPaymentRepository.create({
+      ...dto,
+      totalAmount: String(totalAmount),
+      currency: 'KZT',
+    });
 
     if (type === 'eachForHimself') {
       const owner = await this.reservationUserRepository.findOne({
@@ -84,6 +93,7 @@ export class PaymentsService {
         amount: reservationOrder?.orderData?.totalPrice,
         userId: owner.userId,
         orderPaymentId: orderPayment.id,
+        placeId: place.id,
       });
     } else {
       const users = await this.reservationUserRepository.findAll({
@@ -91,7 +101,6 @@ export class PaymentsService {
           reservationId: reservation.id,
         },
       });
-      const totalAmount = +reservationOrder?.orderData?.totalPrice;
       const userAmount = Math.floor(totalAmount / users.length);
       const ownerAmount =
         userAmount + (totalAmount - userAmount * users.length);
@@ -101,6 +110,7 @@ export class PaymentsService {
           amount: role === 'owner' ? String(ownerAmount) : String(userAmount),
           userId,
           orderPaymentId: orderPayment.id,
+          placeId: place.id,
         });
       }
     }
@@ -112,8 +122,9 @@ export class PaymentsService {
     amount: string;
     userId: string;
     orderPaymentId: string;
+    placeId: string;
   }) {
-    const { amount, userId, orderPaymentId } = dto;
+    const { amount, userId, orderPaymentId, placeId } = dto;
     const payment = await this.createPayment({
       amount: amount ?? '0',
       currency: 'KZT',
@@ -123,6 +134,7 @@ export class PaymentsService {
       userId,
       reservationOrderPaymentId: orderPaymentId,
       paymentId: payment.id,
+      placeId,
     });
 
     const userReferals = await this.referalsService.getReferalsByUserId(userId);

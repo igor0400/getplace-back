@@ -43,7 +43,7 @@ export class StatsService {
       }
 
       const placeGuests = await this.placeGuestsRepository.findAll({
-        limit: limit || 20,
+        limit: limit || 10,
         offset: offset || 0,
         where: {
           placeId: place.id,

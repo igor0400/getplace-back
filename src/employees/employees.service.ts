@@ -35,7 +35,7 @@ export class EmployeesService {
   async getAllEmployees(limit: number, offset: number, search: string = '') {
     const employees = await this.employeeRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       include: employeesInclude,
       where: {
         email: {

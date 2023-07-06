@@ -63,7 +63,7 @@ export class UsersService {
   async getAllUsers(limit: number, offset: number, search: string = '') {
     const users = await this.userRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       include: usersInclude,
       where: {
         email: {

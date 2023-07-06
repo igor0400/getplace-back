@@ -14,6 +14,14 @@ module.exports = {
         type: Sequelize.STRING(500),
         allowNull: false,
       },
+      totalAmount: {
+        type: Sequelize.STRING(200),
+        allowNull: false,
+      },
+      currency: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
       type: {
         type: Sequelize.STRING(100),
         defaultValue: 'oneForAll',

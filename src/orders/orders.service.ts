@@ -41,7 +41,7 @@ export class OrdersService {
   async getAllOrders(limit: number, offset: number) {
     const tables = await this.orderRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
     });
 
     return tables;

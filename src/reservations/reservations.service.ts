@@ -55,7 +55,7 @@ export class ReservationsService {
   async getAllReservations(limit: number, offset: number) {
     const reservations = await this.reservationRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
+      limit: limit || 10,
       include: reservationInclude,
       order: ['createdAt'],
     });

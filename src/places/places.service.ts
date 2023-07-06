@@ -45,6 +45,7 @@ import { Seat } from 'src/seats/models/seat.model';
 import { Boost } from 'src/boosts/models/boost.model';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { TablesService } from 'src/tables/tables.service';
+import { ValidationsService } from 'src/reservations/validations.service';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -58,6 +59,10 @@ const placesInclude = [
   PlaceAddress,
   Boost,
   Table,
+];
+
+const placesChangeFreeTablesInclude = [
+  { model: Room, include: [{ model: Table }] },
 ];
 
 @Injectable()
@@ -78,9 +83,11 @@ export class PlacesService {
     private readonly roomsService: RoomsService,
     @Inject(forwardRef(() => TablesService))
     private readonly tablesService: TablesService,
+    @Inject(forwardRef(() => ValidationsService))
+    private readonly validationsService: ValidationsService,
   ) {}
 
-  async getAllPlaces(
+  async getAllUpdatedPlaces(
     limit: number,
     offset: number,
     search: string = '',
@@ -95,8 +102,8 @@ export class PlacesService {
 
     const places = await this.placeRepository.findAll({
       offset: offset || 0,
-      limit: limit || 20,
-      include: placesInclude,
+      limit: limit || 10,
+      include: placesChangeFreeTablesInclude,
       where: {
         title: {
           [Op.like]: `%${search}%`,
@@ -105,10 +112,35 @@ export class PlacesService {
       },
     });
 
-    return places;
+    for (let place of places) {
+      await this.validationsService.changeFreeTablesByPlaceData(place);
+    }
+
+    return await this.placeRepository.findAll({
+      offset: offset || 0,
+      limit: limit || 10,
+      include: placesInclude,
+      where: {
+        title: {
+          [Op.like]: `%${search}%`,
+        },
+        ...isAccepted,
+      },
+    });
   }
 
-  async getPlaceById(id: string): Promise<Place> {
+  async getUpdatedPlaceById(id: string) {
+    const place = await this.placeRepository.findOne({
+      where: { id },
+      include: placesChangeFreeTablesInclude,
+    });
+
+    await this.validationsService.changeFreeTablesByPlaceData(place);
+
+    return this.getPlaceById(id);
+  }
+
+  async getPlaceById(id: string) {
     const place = await this.placeRepository.findOne({
       where: { id },
       include: placesInclude,
