@@ -28,6 +28,7 @@ import { PdfModule } from './pdf/pdf.module';
 import { BonusesModule } from './bonuses/bonuses.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { PromotionsModule } from './promotions/promotions.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { PromotionsModule } from './promotions/promotions.module';
     BonusesModule,
     FavouritesModule,
     PromotionsModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
 })
