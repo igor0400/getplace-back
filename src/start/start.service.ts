@@ -124,7 +124,13 @@ export class StartService {
     };
   }
 
-  async createTestData(dto: CreateTestDataDto) {
+  async createTestData(
+    dto: CreateTestDataDto,
+    images?: {
+      placeImage?: Express.Multer.File[];
+      dishImage?: Express.Multer.File[];
+    },
+  ) {
     const { email } = dto;
     const employee = await this.employeesService.getEmployeeByEmail(email);
     const user = await this.usersService.getUserByEmail(email);
@@ -135,9 +141,9 @@ export class StartService {
       );
     }
 
-    // передвать картинку заведения
     const place = await this.placesService.createPlace(
       testDtos.place(employee.id),
+      images?.placeImage,
     );
     const room = await this.roomsService.createRoom(testDtos.room(place.id));
     const table = await this.tablesService.createTable(
@@ -164,9 +170,9 @@ export class StartService {
       ),
     );
 
-    // передвать картинку бургера
     const placeDish = await this.restaurantsService.createDish(
       testDtos.placeDish(place.id),
+      images?.dishImage,
     );
 
     const reservationOrder = await this.ordersService.createReservationOrder({

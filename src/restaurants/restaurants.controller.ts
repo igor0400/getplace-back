@@ -32,13 +32,13 @@ export class RestaurantsController {
     description: 'Создание блюда (только с ролью MENU или OWNER)',
   })
   @ApiAcceptedResponse({
-    description: 'Загрузка до 5 файлов, поле image',
+    description: 'Загрузка 1 файла, поле image',
   })
   @ApiSecurity('MENU or OWNER only')
   @PlacesRoles('MENU', 'OWNER')
   @UseGuards(PlaceRolesGuard)
   @Post('dishes')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   createDish(
     @Body() dto: CreateRestaurantDishDto,
     @UploadedFiles() files: { image: Express.Multer.File[] },
@@ -50,7 +50,7 @@ export class RestaurantsController {
     description: 'Изменение блюда (только с ролью MENU или OWNER)',
   })
   @ApiAcceptedResponse({
-    description: 'Загрузка до 5 файлов, поле image',
+    description: 'Загрузка 1 файла, поле image',
   })
   @ApiParam({
     name: 'id',
@@ -60,7 +60,7 @@ export class RestaurantsController {
   @PlacesRoles('MENU', 'OWNER')
   @UseGuards(PlaceRolesGuard)
   @Patch('dishes/:id')
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 5 }]))
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   changeDish(
     @Body() dto: ChangeRestaurantDishDto,
     @Param('id') dishId: string,

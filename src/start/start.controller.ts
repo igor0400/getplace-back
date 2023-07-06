@@ -1,10 +1,20 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { StartService } from './start.service';
 import { SecretGuard } from './guards/secret.guard';
 import { Response, Request } from 'express';
 import { ApiDefaultResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { CreateInitialDataDto } from './dto/create-initial-data.dto';
 import { CreateTestDataDto } from './dto/create-test-data.dto';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Стартер')
 @Controller('start')
@@ -31,9 +41,20 @@ export class StartController {
   @ApiSecurity('secret key')
   @UseGuards(SecretGuard)
   @Post('test')
-  createTestData(@Body() dto: CreateTestDataDto) {
-    return this.startService.createTestData(dto);
-
-    // принимать еще картинки для place и placeDish
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'placeImage', maxCount: 5 },
+      { name: 'dishImage', maxCount: 1 },
+    ]),
+  )
+  createTestData(
+    @Body() dto: CreateTestDataDto,
+    @UploadedFiles()
+    files: {
+      placeImage?: Express.Multer.File[];
+      dishImage?: Express.Multer.File[];
+    },
+  ) {
+    return this.startService.createTestData(dto, files);
   }
 }
