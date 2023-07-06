@@ -48,6 +48,7 @@ import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-ord
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
 import { FreeTable } from 'src/tables/models/free-table.model';
+import { UserFavouritePlace } from 'src/favourites/models/user-favourite-place.model';
 
 @Module({
   imports: [
@@ -100,6 +101,7 @@ import { FreeTable } from 'src/tables/models/free-table.model';
       ReservationOrderPaymentUser,
       UserBonuses,
       FreeTable,
+      UserFavouritePlace,
     ]),
   ],
 })

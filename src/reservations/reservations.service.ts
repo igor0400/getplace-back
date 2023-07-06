@@ -290,10 +290,4 @@ export class ReservationsService {
 
     return false;
   }
-
-  test() {
-    return this.validationsService.changeFreeTables(
-      '130ce2b0ef-30ce2b0efd-0ce2b0efdf-ce2b0efdf7',
-    );
-  }
 }

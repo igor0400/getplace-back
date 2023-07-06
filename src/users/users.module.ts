@@ -18,8 +18,8 @@ import { StatusesModule } from 'src/statuses/statuses.module';
     forwardRef(() => RolesModule),
     forwardRef(() => AuthModule),
     forwardRef(() => EmailModule),
-    SessionsModule,
     forwardRef(() => StatusesModule),
+    SessionsModule,
   ],
   exports: [UsersService, UsersRepository],
 })
