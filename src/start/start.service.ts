@@ -155,6 +155,43 @@ export class StartService {
     const reservation = await this.reservationsService.createReservation(
       testDtos.reservation(user.id, table.id),
     );
+
+    const reservationsStartDate = new Date();
+    const reservationsEndDate = new Date();
+    reservationsStartDate.setUTCHours(19, 0, 0, 0);
+    reservationsEndDate.setUTCHours(20, 0, 0, 0);
+
+    await this.reservationsService.createReservation(
+      testDtos.reservation(
+        user.id,
+        table.id,
+        reservationsStartDate,
+        reservationsEndDate,
+      ),
+    );
+
+    reservationsStartDate.setUTCHours(20, 0, 0, 0);
+    reservationsEndDate.setUTCHours(21, 0, 0, 0);
+    await this.reservationsService.createReservation(
+      testDtos.reservation(
+        user.id,
+        table.id,
+        reservationsStartDate,
+        reservationsEndDate,
+      ),
+    );
+
+    reservationsStartDate.setUTCHours(21, 0, 0, 0);
+    reservationsEndDate.setUTCHours(22, 0, 0, 0);
+    await this.reservationsService.createReservation(
+      testDtos.reservation(
+        user.id,
+        table.id,
+        reservationsStartDate,
+        reservationsEndDate,
+      ),
+    );
+
     const reservationUser = await this.reservationUserRepository.findOne({
       where: {
         reservationId: reservation.id,

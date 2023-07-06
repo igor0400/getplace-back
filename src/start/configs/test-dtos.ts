@@ -42,14 +42,29 @@ export default {
     tableId,
     number: '3',
   }),
-  reservation: (userId: string, tableId: string): CreateReservationDto => ({
-    userId,
-    tableId,
-    startDate: new Date(Date.parse(new Date().toString()) + hour * 24 * 10),
-    endDate: new Date(
+  reservation: (
+    userId: string,
+    tableId: string,
+    startDate?: Date,
+    endDate?: Date,
+  ): CreateReservationDto => {
+    const exampleStartDate = new Date(
+      Date.parse(new Date().toString()) + hour * 24 * 10,
+    );
+    const exampleEndDate = new Date(
       Date.parse(new Date().toString()) + hour * 24 * 10 + hour,
-    ),
-  }),
+    );
+
+    exampleStartDate.setUTCHours(12, 0, 0, 0);
+    exampleEndDate.setUTCHours(13, 0, 0, 0);
+
+    return {
+      userId,
+      tableId,
+      startDate: startDate ?? exampleStartDate,
+      endDate: endDate ?? exampleEndDate,
+    };
+  },
   reservationUserSeat: (
     userId: string,
     reservationId: string,

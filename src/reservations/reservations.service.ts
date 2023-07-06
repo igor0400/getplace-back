@@ -93,6 +93,7 @@ export class ReservationsService {
       startDate,
       endDate,
     });
+    await this.validationsService.changeFreeTables(tableId);
 
     return this.getReservationById(reservation.id);
   }
@@ -135,8 +136,11 @@ export class ReservationsService {
         }
       }
     }
+    reservation.save();
 
-    return reservation.save();
+    await this.validationsService.changeFreeTables(reservation.tableId);
+
+    return reservation;
   }
 
   async cancelReservation(dto: CancelReservationDto) {
@@ -173,7 +177,11 @@ export class ReservationsService {
     }
 
     reservation.status = 'CANCELLED';
-    return reservation.save();
+    reservation.save();
+
+    await this.validationsService.changeFreeTables(reservation.tableId);
+
+    return reservation;
   }
 
   async createReservationUserInvite(dto: InviteReservationUserDto) {
@@ -285,7 +293,7 @@ export class ReservationsService {
 
   test() {
     return this.validationsService.changeFreeTables(
-      '5d21b6ec0e-d21b6ec0e3-21b6ec0e3e-1b6ec0e3ec',
+      '130ce2b0ef-30ce2b0efd-0ce2b0efdf-ce2b0efdf7',
     );
   }
 }

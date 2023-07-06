@@ -35,7 +35,7 @@ export class ValidationsService {
 
     if (datesDifference < 1000 * 60 * minReservationMinutes) {
       throw new BadRequestException(
-        `Минимально время брони ${minReservationMinutes} минут`,
+        `Минимальное время брони ${minReservationMinutes} минут`,
       );
     }
 
@@ -106,7 +106,44 @@ export class ValidationsService {
   async changeFreeTables(tableId: string) {
     const place = await this.placesService.getPlaceByTableId(tableId);
 
-    const { from, till } = getPeriodValues('day');
+    const isTableFree = this.isTableFree(tableId);
+
+    if (isTableFree) {
+      const freeTable = await this.freeTableRepository.findOne({
+        where: {
+          placeId: place.id,
+          tableId,
+        },
+      });
+
+      if (!freeTable) {
+        await this.freeTableRepository.create({
+          placeId: place.id,
+          tableId,
+        });
+        place.freeTables += 1;
+      }
+    } else {
+      const deleteCount = await this.freeTableRepository.destroy({
+        where: {
+          placeId: place.id,
+          tableId,
+        },
+      });
+
+      if (deleteCount > 0) {
+        place.freeTables -= deleteCount;
+      }
+    }
+
+    return place.save();
+  }
+
+  async isTableFree(tableId: string) {
+    const from = new Date();
+    const till = new Date();
+    till.setUTCHours(23, 59, 59, 999);
+
     const reservations = await this.reservationRepository.findAll({
       where: {
         tableId,
@@ -119,20 +156,33 @@ export class ValidationsService {
       },
     });
 
-    // вызывать эту функцию после создания, изменения и отмены брони (продумать отмену)
+    const place = await this.placesService.getPlaceByTableId(tableId);
 
-    // если стол свободен искать его в freeTables, если его там нет добавить и place.freeTables, если он там есть ничего не делать
-    // если стол занят искать его в freeTables, если его там есть удалить и убавить place.freeTables, если его там нет ничего не делать
+    const fromParseDate = Date.parse(from.toISOString());
 
-    // await this.freeTableRepository.create({
-    //   placeId: dto.placeId,
-    //   tableId: table.id,
-    // });
+    const palceEndWorkDate = new Date();
+    const placeEndWorkTime = place?.work?.time?.till;
+    const workTimeHours = +placeEndWorkTime.split(':')[0];
+    const workTimeMinutes = +placeEndWorkTime.split(':')[1];
+    palceEndWorkDate.setUTCHours(workTimeHours, workTimeMinutes, 0, 0);
+    const parsePlaceEndWorkTime = Date.parse(palceEndWorkDate.toISOString());
 
-    return place.save();
-  }
+    let totalDatesMilliseconds = 0;
+    const maxTotalMilliseconds = parsePlaceEndWorkTime - fromParseDate;
 
-  private async isTableFree(tableId: string) {
-    // Просматривать все reservations и если все на день занято возвращать false
+    for (let reservation of reservations) {
+      const parseReservationStartDate = Date.parse(
+        reservation.startDate.toISOString(),
+      );
+      const parseReservationEndDate = Date.parse(
+        reservation.endDate.toISOString(),
+      );
+      const datesDifference =
+        parseReservationEndDate - parseReservationStartDate;
+
+      totalDatesMilliseconds += datesDifference;
+    }
+
+    return totalDatesMilliseconds < maxTotalMilliseconds;
   }
 }
