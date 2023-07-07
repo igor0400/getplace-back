@@ -8,11 +8,12 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiDefaultResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiDefaultResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CustomReq } from 'src/common';
 import { FavouritesService } from './favourites.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@ApiTags('Избранное')
 @UseGuards(JwtAuthGuard)
 @Controller('favourites')
 export class FavouritesController {

@@ -5,8 +5,8 @@ import { PdfService } from './pdf.service';
 export class PdfController {
   constructor(private readonly PdfService: PdfService) {}
 
-  @Get('test')
-  test() {
-    return this.PdfService.generateCheckFile();
-  }
+  // @Get('test')
+  // test() {
+  //   return this.PdfService.generateCheckFile();
+  // }
 }
