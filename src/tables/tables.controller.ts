@@ -110,24 +110,42 @@ export class TablesController {
     description: 'Отступ от начала',
     required: false,
   })
-  @Get('reservations')
+  @ApiParam({
+    name: 'tableId',
+    description: 'id стола',
+  })
+  @Get(':tableId/reservations')
   getAllReservations(
     @Query('limit') limit: string,
     @Query('offset') offset: string,
+    @Param('tableId') tableId: string,
   ) {
-    return this.reservationsService.getAllReservations(+limit, +offset);
+    return this.reservationsService.getAllReservations(
+      tableId,
+      +limit,
+      +offset,
+    );
   }
 
   @ApiDefaultResponse({
     description: 'Получение бронирования по id',
   })
   @ApiParam({
-    name: 'id',
+    name: 'reservationId',
     description: 'id бронирования',
   })
-  @Get('reservations/:id')
-  getReservationById(@Param('id') id: string) {
-    return this.reservationsService.getReservationById(id);
+  @ApiParam({
+    name: 'tableId',
+    description: 'id стола',
+  })
+  @Get(':tableId/reservations/:reservationId')
+  getReservationById(
+    @Param('reservationId') reservationId: string,
+    @Param('tableId') tableId: string,
+  ) {
+    return this.reservationsService.getReservationById(reservationId, {
+      tableId,
+    });
   }
 
   @ApiDefaultResponse({

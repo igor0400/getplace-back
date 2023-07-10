@@ -26,6 +26,6 @@ export class CreateReservationDto {
     description: 'Дата окончания',
   })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('endDate') })
-  @IsDate({ message: requestMessages.isDate('startDate') })
+  @IsDate({ message: requestMessages.isDate('endDate') })
   readonly endDate: Date;
 }

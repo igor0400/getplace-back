@@ -52,20 +52,24 @@ export class ReservationsService {
     private readonly validationsService: ValidationsService,
   ) {}
 
-  async getAllReservations(limit: number, offset: number) {
+  async getAllReservations(tableId: string, limit: number, offset: number) {
     const reservations = await this.reservationRepository.findAll({
       offset: offset || 0,
       limit: limit || 10,
       include: reservationInclude,
+      where: {
+        tableId,
+      },
       order: ['createdAt'],
     });
 
     return reservations;
   }
 
-  async getReservationById(id: string) {
-    const reservation = await this.reservationRepository.findByPk(id, {
+  async getReservationById(id: string, where: any | undefined = {}) {
+    const reservation = await this.reservationRepository.findOne({
       include: reservationInclude,
+      where: { id, ...where },
     });
 
     return reservation;
