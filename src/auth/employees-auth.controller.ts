@@ -1,6 +1,7 @@
 import { Body, Controller, Post, Get, Res, Req } from '@nestjs/common';
 import { EmployeesAuthService } from './employees-auth.service';
 import {
+  ChangePasswordRequest,
   EmployeesLoginRequest,
   EmployeesRegisterRequest,
 } from './dto/employees-requests.dto';
@@ -54,5 +55,13 @@ export class EmployeesAuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     return this.authService.refresh(request, response);
+  }
+
+  @ApiDefaultResponse({
+    description: 'Смена пароля',
+  })
+  @Post('change-password')
+  public async changePassword(@Body() dto: ChangePasswordRequest) {
+    return this.authService.changePassword(dto);
   }
 }

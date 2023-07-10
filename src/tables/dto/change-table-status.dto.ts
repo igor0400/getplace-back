@@ -16,13 +16,11 @@ export class ChangeTableStatusDto {
   @ApiProperty({
     example: 'selected',
     description: 'Состояние стола',
-    default: 'free',
-    required: false,
     enum: tableStates,
   })
-  @IsOptional()
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('state') })
   @IsEnum(tableStates, {
     message: requestMessages.isEnum('state', tableStates),
   })
-  readonly state?: TableStates;
+  readonly state: TableStates;
 }

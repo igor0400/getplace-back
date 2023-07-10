@@ -1,6 +1,7 @@
 import { Body, Controller, Post, Get, Res, Req } from '@nestjs/common';
 import { UsersAuthService } from './users-auth.service';
 import {
+  ChangePasswordRequest,
   UsersLoginRequest,
   UsersRegisterRequest,
 } from './dto/users-requests.dto';
@@ -11,11 +12,16 @@ import {
   ApiDefaultResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CustomReq } from 'src/common';
+import { UsersService } from 'src/users/users.service';
 
 @ApiTags('Авторизация пользователей')
 @Controller('auth/users')
 export class UsersAuthController {
-  constructor(private authService: UsersAuthService) {}
+  constructor(
+    private readonly authService: UsersAuthService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @ApiDefaultResponse({ description: 'Регистрация' })
   @ApiBody({
@@ -55,5 +61,13 @@ export class UsersAuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     return this.authService.refresh(request, response);
+  }
+
+  @ApiDefaultResponse({
+    description: 'Смена пароля',
+  })
+  @Post('change-password')
+  public async changePassword(@Body() dto: ChangePasswordRequest) {
+    return this.authService.changePassword(dto);
   }
 }

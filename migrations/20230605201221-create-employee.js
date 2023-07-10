@@ -12,7 +12,6 @@ module.exports = {
       },
       iin: {
         type: Sequelize.STRING(100),
-        allowNull: false,
       },
       phone: {
         type: Sequelize.STRING(100),

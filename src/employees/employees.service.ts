@@ -137,7 +137,7 @@ export class EmployeesService {
   async changePassword(dto: ChangePasswordDto) {
     const { employeeId, verifyCode, newPassword, oldPassword } = dto;
     const verify = await this.emailService.checkVerifyCode(
-      employeeId.toString(),
+      employeeId,
       verifyCode,
     );
 

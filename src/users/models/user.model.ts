@@ -19,8 +19,8 @@ import { UserBonuses } from 'src/bonuses/models/user-bonuses.model';
 export interface UserCreationArgs {
   password: string;
   email: string;
-  iin: string;
   phone: string;
+  iin?: string;
   referalCode?: string;
 }
 
@@ -28,7 +28,6 @@ export interface UserCreationArgs {
 export class User extends AbstractModel<User, UserCreationArgs> {
   @Column({
     type: DataType.STRING,
-    allowNull: false,
   })
   iin: string;
 

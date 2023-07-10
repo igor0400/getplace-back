@@ -3,9 +3,11 @@ import {
   Injectable,
   UnauthorizedException,
   forwardRef,
+  BadRequestException,
 } from '@nestjs/common';
 import { compare } from 'bcryptjs';
 import {
+  ChangePasswordRequest,
   EmployeesLoginRequest,
   EmployeesRegisterRequest,
 } from './dto/employees-requests.dto';
@@ -14,6 +16,8 @@ import { EmployeesTokensService } from './employees-tokens.service';
 import { refreshTokenTime, refreshTokenTimeCookie } from './configs/tokens';
 import { EmployeesService } from '../employees/employees.service';
 import { EmployeesEmailService } from '../email/employees-email.service';
+import { EmployeeSessionRepository } from 'src/sessions/repositories/employee-session.repository';
+import { hash } from 'bcryptjs';
 
 const cookiesSettings = {
   maxAge: refreshTokenTimeCookie,
@@ -25,10 +29,11 @@ const cookiesSettings = {
 export class EmployeesAuthService {
   constructor(
     @Inject(forwardRef(() => EmployeesService))
-    private employeeService: EmployeesService,
-    private tokensService: EmployeesTokensService,
+    private readonly employeeService: EmployeesService,
+    private readonly tokensService: EmployeesTokensService,
     @Inject(forwardRef(() => EmployeesEmailService))
-    private emailService: EmployeesEmailService,
+    private readonly emailService: EmployeesEmailService,
+    private readonly employeeSessionRepository: EmployeeSessionRepository,
   ) {}
 
   async register(
@@ -147,5 +152,35 @@ export class EmployeesAuthService {
     response.cookie('refreshToken', refreshToken, cookiesSettings);
 
     return { accessToken, employee };
+  }
+
+  async changePassword(dto: ChangePasswordRequest) {
+    const { email, verifyCode, newPassword } = dto;
+    const employee = await this.employeeService.getEmployeeByEmail(email);
+
+    if (!employee) {
+      throw new BadRequestException('Сотрудник с таким email не найден');
+    }
+
+    const verify = await this.emailService.checkVerifyCode(
+      employee.id,
+      verifyCode,
+    );
+
+    if (!verify) {
+      throw new BadRequestException(
+        'Неправильный код подтверждения, возможно он устарел',
+      );
+    }
+
+    const password = await hash(newPassword, 10);
+
+    employee.password = password;
+
+    await this.employeeSessionRepository.destroy({
+      where: { employeeId: employee.id },
+    });
+
+    return employee.save();
   }
 }

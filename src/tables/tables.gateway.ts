@@ -50,6 +50,7 @@ export class TablesGateway {
     this.server.emit('onChangeTableState', {
       msg: 'Изменение состояния стола',
       content: dto,
+      error: false,
     });
   }
 
@@ -67,6 +68,7 @@ export class TablesGateway {
     this.server.emit('onCreateReservation', {
       msg: 'Новое бронирование',
       content: reservation,
+      error: false,
     });
   }
 
@@ -84,6 +86,7 @@ export class TablesGateway {
     this.server.emit('onChangeReservation', {
       msg: 'Изменение брони',
       content: reservation,
+      error: false,
     });
   }
 
@@ -101,6 +104,7 @@ export class TablesGateway {
     this.server.emit('onCancelReservation', {
       msg: 'Отмена брони',
       content: reservation,
+      error: false,
     });
   }
 
@@ -118,6 +122,7 @@ export class TablesGateway {
     this.server.emit('onInviteUser', {
       msg: 'Приглашение пользователя',
       content: invite,
+      error: false,
     });
   }
 
@@ -136,11 +141,13 @@ export class TablesGateway {
       this.server.emit('onAcceptInvite', {
         msg: 'Пользователь принял приглашение',
         content: invite,
+        error: false,
       });
     } else {
       this.server.emit('onRejectInvite', {
         msg: 'Пользователь отклонил приглашение',
         content: invite,
+        error: false,
       });
     }
   }
@@ -159,6 +166,7 @@ export class TablesGateway {
     this.server.emit('onCreateReservationDish', {
       msg: 'Пользователь добавил блюдо',
       content: dish,
+      error: false,
     });
   }
 
@@ -177,6 +185,7 @@ export class TablesGateway {
       this.server.emit('onDeleteReservationDish', {
         msg: 'Пользователь удалил блюдо',
         content: deleteInfo,
+        error: false,
       });
     }
   }
@@ -195,6 +204,7 @@ export class TablesGateway {
     this.server.emit('onСreateReservationUserSeat', {
       msg: 'Пользователь создал место',
       content: seat,
+      error: false,
     });
   }
 
@@ -215,6 +225,7 @@ export class TablesGateway {
       this.server.emit('onDeleteReservationUserSeat', {
         msg: 'Пользователь удалил место',
         content: deleteInfo,
+        error: false,
       });
     }
   }
@@ -234,6 +245,7 @@ export class TablesGateway {
       this.server.emit('onPayReservationOrder', {
         msg: 'Заказ брони оплачен',
         content: orderPayment,
+        error: false,
       });
     }
   }

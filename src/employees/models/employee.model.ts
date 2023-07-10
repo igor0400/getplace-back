@@ -14,8 +14,8 @@ import { EmployeeSession } from 'src/sessions/models/employee-session.model';
 export interface EmployeeCreationArgs {
   password: string;
   email: string;
-  iin: string;
   phone: string;
+  iin?: string;
   name?: string;
   birthday?: string;
 }
@@ -24,7 +24,6 @@ export interface EmployeeCreationArgs {
 export class Employee extends AbstractModel<Employee, EmployeeCreationArgs> {
   @Column({
     type: DataType.STRING,
-    allowNull: false,
   })
   iin: string;
 

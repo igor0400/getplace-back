@@ -1,7 +1,14 @@
-import { Injectable, UnauthorizedException, Inject, forwardRef } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  Inject,
+  forwardRef,
+  BadRequestException,
+} from '@nestjs/common';
 import { compare } from 'bcryptjs';
 import { UsersTokensService } from './users-tokens.service';
 import {
+  ChangePasswordRequest,
   UsersLoginRequest,
   UsersRegisterRequest,
 } from './dto/users-requests.dto';
@@ -10,6 +17,8 @@ import { refreshTokenTime, refreshTokenTimeCookie } from './configs/tokens';
 import { UsersService } from '../users/users.service';
 import { UsersEmailService } from '../email/users-email.service';
 import { ReferalsService } from '../referals/referals.service';
+import { hash } from 'bcryptjs';
+import { UserSessionRepository } from 'src/sessions/repositories/user-session.repository';
 
 const cookiesSettings = {
   maxAge: refreshTokenTimeCookie,
@@ -28,6 +37,8 @@ export class UsersAuthService {
     private emailService: UsersEmailService,
     @Inject(forwardRef(() => ReferalsService))
     private referalsService: ReferalsService,
+    private readonly userSessionRepository: UserSessionRepository,
+    private readonly usersService: UsersService,
   ) {}
 
   async register(
@@ -150,5 +161,30 @@ export class UsersAuthService {
     response.cookie('refreshToken', refreshToken, cookiesSettings);
 
     return { accessToken, user };
+  }
+
+  async changePassword(dto: ChangePasswordRequest) {
+    const { email, verifyCode, newPassword } = dto;
+    const user = await this.usersService.getUserByEmail(email);
+
+    if (!user) {
+      throw new BadRequestException('Пользователь с таким email не найден');
+    }
+
+    const verify = await this.emailService.checkVerifyCode(user.id, verifyCode);
+
+    if (!verify) {
+      throw new BadRequestException(
+        'Неправильный код подтверждения, возможно он устарел',
+      );
+    }
+
+    const password = await hash(newPassword, 10);
+
+    user.password = password;
+
+    await this.userSessionRepository.destroy({ where: { userId: user.id } });
+
+    return user.save();
   }
 }

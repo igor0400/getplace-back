@@ -5,6 +5,7 @@ import {
   IsString,
   IsPhoneNumber,
   MaxLength,
+  IsOptional,
 } from 'class-validator';
 import { requestMessages } from 'src/common';
 
@@ -38,12 +39,6 @@ export class EmployeesRegisterRequest {
   @MaxLength(500, { message: requestMessages.maxLength('password', 500) })
   readonly password: string;
 
-  @ApiProperty({ example: '760127649824', description: 'Иин' })
-  @IsNotEmpty({ message: requestMessages.isNotEmpty('iin') })
-  @IsString({ message: requestMessages.isString('iin') })
-  @MaxLength(100, { message: requestMessages.maxLength('iin', 100) })
-  readonly iin: string;
-
   @ApiProperty({ example: '+79114063377', description: 'Номер телефона' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('phone') })
   @IsPhoneNumber(undefined, { message: requestMessages.isPhone })
@@ -55,4 +50,33 @@ export class EmployeesRegisterRequest {
   @IsString({ message: requestMessages.isString('name') })
   @MaxLength(100, { message: requestMessages.maxLength('name', 100) })
   readonly name: string;
+
+  @ApiProperty({
+    example: '760127649824',
+    description: 'Иин',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('iin') })
+  @MaxLength(100, { message: requestMessages.maxLength('iin', 100) })
+  readonly iin?: string;
+}
+
+export class ChangePasswordRequest {
+  @ApiProperty({ example: 'user@mail.ru', description: 'Почта' })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('email') })
+  @IsEmail({}, { message: requestMessages.isEmail })
+  @MaxLength(100, { message: requestMessages.maxLength('email', 100) })
+  readonly email: string;
+
+  @ApiProperty({ example: '12345', description: 'Пароль' })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('password') })
+  @IsString({ message: requestMessages.isString('password') })
+  @MaxLength(500, { message: requestMessages.maxLength('password', 500) })
+  readonly newPassword: string;
+
+  @ApiProperty({ example: '37HDd903u6', description: 'Код подтверждения' })
+  @IsNotEmpty({ message: requestMessages.isNotEmpty('verifyCode') })
+  @IsString({ message: requestMessages.isString('verifyCode') })
+  readonly verifyCode: string;
 }

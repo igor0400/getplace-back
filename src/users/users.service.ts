@@ -55,9 +55,9 @@ export class UsersService {
     private readonly userRolesRepository: UserRolesRepository,
     private readonly userSessionRepository: UserSessionRepository,
     private readonly userStatusesRepository: UserStatusesRepository,
-    private roleService: RolesService,
-    private statusesService: StatusesService,
-    private emailService: UsersEmailService,
+    private readonly roleService: RolesService,
+    private readonly statusesService: StatusesService,
+    private readonly emailService: UsersEmailService,
   ) {}
 
   async getAllUsers(limit: number, offset: number, search: string = '') {
@@ -200,10 +200,7 @@ export class UsersService {
 
   async changePassword(dto: ChangePasswordDto) {
     const { userId, verifyCode, newPassword, oldPassword } = dto;
-    const verify = await this.emailService.checkVerifyCode(
-      userId.toString(),
-      verifyCode,
-    );
+    const verify = await this.emailService.checkVerifyCode(userId, verifyCode);
 
     if (!verify) {
       throw new HttpException(
