@@ -2,7 +2,10 @@ import { AbstractModel } from 'src/common';
 import { Column, DataType, Table } from 'sequelize-typescript';
 
 export interface ReviewCreationArgs {
-  rating: number;
+  totalRating: number;
+  ratingKitchen: number;
+  ratingAtmosphere: number;
+  ratingService: number;
   text: string;
 }
 
@@ -12,7 +15,25 @@ export class Review extends AbstractModel<Review, ReviewCreationArgs> {
     type: DataType.INTEGER,
     allowNull: false,
   })
-  rating: number;
+  totalRating: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  ratingKitchen: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  ratingAtmosphere: number;
+
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  ratingService: number;
 
   @Column({
     type: DataType.STRING,

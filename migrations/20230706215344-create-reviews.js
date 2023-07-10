@@ -10,7 +10,19 @@ module.exports = {
         unique: true,
         primaryKey: true,
       },
-      rating: {
+      totalRating: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      ratingKitchen: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      ratingAtmosphere: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
+      ratingService: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

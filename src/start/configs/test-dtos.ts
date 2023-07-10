@@ -91,6 +91,8 @@ export default {
     placeId,
     userId,
     text: 'Хорошее заведение',
-    rating: 4,
+    ratingKitchen: 4,
+    ratingAtmosphere: 3.5,
+    ratingService: 5,
   }),
 };
