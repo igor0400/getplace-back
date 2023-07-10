@@ -1,4 +1,10 @@
-import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { Dish } from '../../dishes/models/dish.model';
 import { AbstractModel } from 'src/common';
 import { Restaurant } from './restaurant.model';
@@ -26,4 +32,7 @@ export class RestaurantDishes extends AbstractModel<
     allowNull: false,
   })
   dishId: string;
+
+  @BelongsTo(() => Dish)
+  dishData: Dish;
 }

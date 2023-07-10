@@ -7,13 +7,10 @@ import {
   Delete,
   UseInterceptors,
   UploadedFiles,
-  ParseFilePipeBuilder,
-  HttpStatus,
 } from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBearerAuth,
-  ApiExcludeController,
   ApiParam,
   ApiQuery,
   ApiSecurity,
@@ -29,9 +26,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { EmployeesRoles } from '../roles/decorators/employees-roles.decorator';
 import { EmployeeRolesGuard } from '../roles/guards/employee-roles.guard';
 import { PlacesRoles } from 'src/roles/decorators/places-roles.decorator';
-import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
-import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
-import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 import { ChangePlaceDto } from './dto/change-place.dto';
 import { PlaceRolesUrlGuard } from 'src/roles/guards/place-roles-url.guard';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -177,49 +171,5 @@ export class PlacesController {
   @Post(':id/moderate')
   mederatePlace(@Body() dto: ModeratePlaceDto, @Param('id') placeId: string) {
     return this.placesService.moderatePlaceById({ ...dto, placeId });
-  }
-
-  @ApiDefaultResponse({
-    description: 'Добавление сотрудника (только с ролью OWNER)',
-  })
-  @ApiSecurity('OWNER only')
-  @PlacesRoles('OWNER')
-  @UseGuards(PlaceRolesGuard)
-  @Post('employees')
-  createEmployee(@Body() dto: CreatePlaceEmployeeDto) {
-    return this.placesService.createEmployee(dto);
-  }
-
-  @ApiDefaultResponse({
-    description: 'Изменение сотрудника (только с ролью OWNER)',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'id сотрудника заведения',
-  })
-  @ApiSecurity('OWNER only')
-  @PlacesRoles('OWNER')
-  @UseGuards(PlaceRolesGuard)
-  @Patch('employees/:id')
-  changeEmployee(
-    @Body() dto: ChangePlaceEmployeeDto,
-    @Param('id') placeEmployeeId: string,
-  ) {
-    return this.placesService.changeEmployee({ ...dto, placeEmployeeId });
-  }
-
-  @ApiDefaultResponse({
-    description: 'Удаление сотрудника (только с ролью OWNER)',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'id сотрудника заведения',
-  })
-  @ApiSecurity('OWNER only')
-  @PlacesRoles('OWNER')
-  @UseGuards(PlaceRolesGuard)
-  @Delete('employees/:id')
-  deleteEmployee(@Param('id') employeeId: string) {
-    return this.placesService.deleteEmployee(employeeId);
   }
 }

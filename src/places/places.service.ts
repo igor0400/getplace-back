@@ -18,22 +18,13 @@ import { Restaurant } from '../restaurants/models/restaurant.model';
 import { Dish } from '../dishes/models/dish.model';
 import { WorkDays } from './models/work-days.model';
 import { WorkTime } from './models/work-time.model';
-import { PlaceEmployees } from './models/employees.model';
-import { Role } from '../roles/models/roles.model';
-import { Employee } from '../employees/models/employee.model';
 import { PlaceRepository } from './repositories/place.repository';
 import { PlaceWorkRepository } from './repositories/work.repository';
 import { WorkDaysRepository } from './repositories/work-days.repository';
 import { WorkTimeRepository } from './repositories/work-time.repository';
 import { PlaceAddressRepository } from './repositories/address.repository';
 import { PlaceEmployeesRepository } from './repositories/employees.repository';
-import { EmployeePlaceRolesRepository } from '../roles/repositories/employee-place-roles.repository';
 import { RestaurantsService } from '../restaurants/restaurants.service';
-import { RolesService } from '../roles/roles.service';
-import { Place } from './models/place.model';
-import { CreatePlaceEmployeeDto } from './dto/create-place-employee.dto';
-import { EmployeesService } from 'src/employees/employees.service';
-import { ChangePlaceEmployeeDto } from './dto/change-place-employee.dto';
 import { DishFood } from 'src/dishes/models/food.model';
 import { DishDrink } from 'src/dishes/models/drink.model';
 import { ChangePlaceDto } from './dto/change-place.dto';
@@ -46,15 +37,11 @@ import { Boost } from 'src/boosts/models/boost.model';
 import { RoomsService } from 'src/rooms/rooms.service';
 import { TablesService } from 'src/tables/tables.service';
 import { ValidationsService } from 'src/reservations/validations.service';
+import { PlaceEmployeesService } from './employees/place-employees.service';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
-  {
-    model: Restaurant,
-    include: [{ model: Dish, include: [DishFood, DishDrink, File] }],
-  },
-  { model: PlaceEmployees, include: [Role, Employee] },
-  { model: Room, include: [{ model: Table, include: [Seat] }] },
+  Restaurant,
   File,
   PlaceAddress,
   Boost,
@@ -75,16 +62,14 @@ export class PlacesService {
     private readonly placeAddressRepository: PlaceAddressRepository,
     private readonly placeEmployeesRepository: PlaceEmployeesRepository,
     private readonly placeImagesRepository: PlaceImagesRepository,
-    private readonly employeePlaceRolesRepository: EmployeePlaceRolesRepository,
     private readonly restaurantService: RestaurantsService,
-    private readonly rolesService: RolesService,
-    private readonly employeesService: EmployeesService,
     private readonly filesService: FilesService,
     private readonly roomsService: RoomsService,
     @Inject(forwardRef(() => TablesService))
     private readonly tablesService: TablesService,
     @Inject(forwardRef(() => ValidationsService))
     private readonly validationsService: ValidationsService,
+    private readonly placeEmployeesService: PlaceEmployeesService,
   ) {}
 
   async getAllUpdatedPlaces(
@@ -212,7 +197,10 @@ export class PlacesService {
       title: 'Владелец',
     });
 
-    await this.addPlaceEmployeeRole(placeEmployee.id, 'OWNER');
+    await this.placeEmployeesService.addPlaceEmployeeRole(
+      placeEmployee.id,
+      'OWNER',
+    );
 
     if (dto.type === 'restaurant') {
       await this.restaurantService.createRestaurant(place.id);
@@ -349,117 +337,6 @@ export class PlacesService {
     }
 
     return deleteCount;
-  }
-
-  async addPlaceEmployeeRole(placeEmployeeId: string, value: string) {
-    const role = await this.rolesService.getRoleByValue(value);
-
-    if (!role) {
-      throw new HttpException('Роль не найдена', HttpStatus.BAD_REQUEST);
-    }
-
-    return this.employeePlaceRolesRepository.create({
-      placeEmployeeId,
-      roleId: role.id,
-    });
-  }
-
-  async createEmployee(dto: CreatePlaceEmployeeDto) {
-    const { placeId, employeeEmail, title, roles } = dto;
-
-    const employee = await this.employeesService.getEmployeeByEmail(
-      employeeEmail,
-    );
-
-    if (!employee) {
-      throw new NotFoundException(
-        `Сотрудник с email: ${employeeEmail}, не найден. Возможно он еще не зарегестрировался.`,
-      );
-    }
-
-    const isCreated = await this.isEmployeeCreated(employeeEmail, placeId);
-
-    if (isCreated) {
-      throw new BadRequestException(
-        `Сотрудник с email: ${employeeEmail} уже существует`,
-      );
-    }
-
-    const placeEmployee = await this.placeEmployeesRepository.create({
-      placeId,
-      employeeId: employee.id,
-      title,
-    });
-
-    for (let roleValue of roles) {
-      await this.addPlaceEmployeeRole(placeEmployee.id, roleValue);
-    }
-
-    return this.getPlaceEmployeeById(placeEmployee.id);
-  }
-
-  async changeEmployee(dto: ChangePlaceEmployeeDto) {
-    const { placeEmployeeId, title, roles } = dto;
-
-    const placeEmployee = await this.getPlaceEmployeeById(placeEmployeeId);
-
-    if (!placeEmployee) {
-      throw new NotFoundException('Сотрудник не найден');
-    }
-
-    if (roles) {
-      await this.employeePlaceRolesRepository.destroy({
-        where: {
-          placeEmployeeId,
-        },
-      });
-      for (let roleValue of roles) {
-        await this.addPlaceEmployeeRole(placeEmployee.id, roleValue);
-      }
-    }
-
-    if (title) {
-      placeEmployee.title = title;
-      placeEmployee.save();
-    }
-
-    return this.getPlaceEmployeeById(placeEmployee.id);
-  }
-
-  async deleteEmployee(placeEmployeeId: string) {
-    const deleteCount = await this.placeEmployeesRepository.destroy({
-      where: { id: placeEmployeeId },
-    });
-
-    await this.employeePlaceRolesRepository.destroy({
-      where: {
-        placeEmployeeId,
-      },
-    });
-
-    return deleteCount;
-  }
-
-  async getPlaceEmployeeById(id: string) {
-    const employee = await this.placeEmployeesRepository.findByPk(id, {
-      include: [Role],
-    });
-
-    return employee;
-  }
-
-  async isEmployeeCreated(email: string, placeId: string) {
-    const employee = await this.employeesService.getEmployeeByEmail(email);
-    const placeEmployee = await this.placeEmployeesRepository.findOne({
-      where: {
-        employeeId: employee.id,
-        placeId,
-      },
-    });
-
-    if (placeEmployee) return true;
-
-    return false;
   }
 
   moderatePlaceById(dto: ModeratePlaceDto) {

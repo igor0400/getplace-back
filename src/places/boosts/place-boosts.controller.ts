@@ -10,7 +10,7 @@ import { CreatePlaceBoostDto } from './dto/create-place-boost.dto';
 import { PlaceRolesGuard } from 'src/roles/guards/place-roles.guard';
 import { PlacesRoles } from 'src/roles/decorators/places-roles.decorator';
 
-@ApiTags('Заведения')
+@ApiTags('Бусты заведения')
 @PlacesRoles('OWNER', 'PROMOTION')
 @UseGuards(PlaceRolesGuard)
 @Controller('places/boosts')

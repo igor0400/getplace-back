@@ -26,7 +26,7 @@ import { CustomReq } from 'src/common';
 import { ChangePlaceReviewDto } from 'src/reviews/dto/change-place-review.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@ApiTags('Заведения')
+@ApiTags('Отзывы заведения')
 @Controller('places/:placeId/reviews')
 export class PlaceReviewsController {
   constructor(

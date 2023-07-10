@@ -10,11 +10,14 @@ import { DishesModule } from 'src/dishes/dishes.module';
 import { RestaurantDishes } from './models/restaurant-dishes.model';
 import { RestaurantDishesRepository } from './repositories/restaurant-dishes.repository';
 import { PlacesModule } from 'src/places/places.module';
+import { RestaurantMenuService } from './menu/restaurant-menu.service';
+import { RestaurantMenuController } from './menu/resturant-menu.controller';
 
 @Module({
-  controllers: [RestaurantsController],
+  controllers: [RestaurantMenuController, RestaurantsController],
   providers: [
     RestaurantsService,
+    RestaurantMenuService,
     RestaurantRepository,
     RestaurantDishesRepository,
   ],

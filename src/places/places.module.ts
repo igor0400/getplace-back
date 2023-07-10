@@ -23,24 +23,30 @@ import { PlaceAddressRepository } from './repositories/address.repository';
 import { WorkDaysRepository } from './repositories/work-days.repository';
 import { WorkTimeRepository } from './repositories/work-time.repository';
 import { FilesModule } from 'src/files/files.module';
-import { PlaceBoostsController } from './place-boosts.controller';
-import { PlaceBoostsService } from './place-boosts.service';
+import { PlaceBoostsController } from './boosts/place-boosts.controller';
+import { PlaceBoostsService } from './boosts/place-boosts.service';
 import { BoostsModule } from 'src/boosts/boosts.module';
 import { RoomsModule } from 'src/rooms/rooms.module';
 import { TablesModule } from 'src/tables/tables.module';
 import { ReviewsModule } from 'src/reviews/reviews.module';
-import { PlaceReviewsController } from './place-reviews.controller';
+import { PlaceReviewsController } from './reviews/place-reviews.controller';
 import { ReservationsModule } from 'src/reservations/reservations.module';
+import { PlaceEmployeesController } from './employees/place-employees.controller';
+import { PlaceEmployeesService } from './employees/place-employees.service';
+import { PlaceRoomsController } from './rooms/place-rooms.controller';
 
 @Module({
   controllers: [
     PlaceReviewsController,
     PlaceBoostsController,
+    PlaceEmployeesController,
+    PlaceRoomsController,
     PlacesController,
   ],
   providers: [
     PlacesService,
     PlaceBoostsService,
+    PlaceEmployeesService,
     PlaceRepository,
     PlaceWorkRepository,
     PlaceEmployeesRepository,

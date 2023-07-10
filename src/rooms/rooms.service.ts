@@ -5,8 +5,9 @@ import { RoomRepository } from './repositories/room.repository';
 import { TablesService } from 'src/tables/tables.service';
 import { Op } from 'sequelize';
 import { Table } from 'src/tables/models/table.model';
+import { Seat } from 'src/seats/models/seat.model';
 
-const roomsInclude = [Table];
+const roomsInclude = [{ model: Table, include: [Seat] }];
 
 @Injectable()
 export class RoomsService {
@@ -15,7 +16,12 @@ export class RoomsService {
     private readonly tablesService: TablesService,
   ) {}
 
-  async getAllRooms(limit: number, offset: number, search: string = '') {
+  async getAllRooms(
+    limit: number,
+    offset: number,
+    search: string = '',
+    where: any | undefined = {},
+  ) {
     const rooms = await this.roomRepository.findAll({
       offset: offset || 0,
       limit: limit || 10,
@@ -24,6 +30,7 @@ export class RoomsService {
         title: {
           [Op.like]: `%${search}%`,
         },
+        ...where,
       },
     });
 
