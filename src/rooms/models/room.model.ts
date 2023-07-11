@@ -14,6 +14,7 @@ export interface RoomCreationArgs {
   title: string;
   maxPositionsX: number;
   maxPositionsY: number;
+  description?: string;
 }
 
 @NestTable({ tableName: 'place_rooms' })
@@ -30,6 +31,11 @@ export class Room extends AbstractModel<Room, RoomCreationArgs> {
     allowNull: false,
   })
   title: string;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  description: string;
 
   @Column({
     type: DataType.INTEGER,

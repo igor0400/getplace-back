@@ -27,6 +27,7 @@ export default {
   }),
   room: (placeId: string): CreateRoomDto => ({
     title: 'Обычный',
+    description: 'Обычный зал',
     placeId,
     maxPositionsX: 6,
     maxPositionsY: 5,

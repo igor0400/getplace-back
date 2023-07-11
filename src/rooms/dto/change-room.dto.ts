@@ -22,6 +22,14 @@ export class ChangeRoomDto {
   readonly title?: string;
 
   @ApiProperty({
+    example: 'Обычный зал',
+    description: 'Описание зала',
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('description') })
+  readonly description?: string;
+
+  @ApiProperty({
     example: 6,
     description: 'Максимальное кол-во столов по оси X',
   })

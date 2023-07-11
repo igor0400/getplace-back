@@ -55,9 +55,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onChangeTableState', {
-        msg: 'Изменение состояния стола',
+        message: 'Изменение состояния стола',
         content: dto,
-        error: false,
       });
     } catch (e) {
       this.sendError('onChangeTableStateError', e?.message);
@@ -80,9 +79,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onCreateReservation', {
-        msg: 'Новое бронирование',
+        message: 'Новое бронирование',
         content: reservation,
-        error: false,
       });
     } catch (e) {
       this.sendError('onCreateReservationError', e?.message);
@@ -105,9 +103,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onChangeReservation', {
-        msg: 'Изменение брони',
+        message: 'Изменение брони',
         content: reservation,
-        error: false,
       });
     } catch (e) {
       this.sendError('onChangeReservationError', e?.message);
@@ -130,9 +127,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onCancelReservation', {
-        msg: 'Отмена брони',
+        message: 'Отмена брони',
         content: reservation,
-        error: false,
       });
     } catch (e) {
       this.sendError('onCancelReservationError', e?.message);
@@ -156,9 +152,8 @@ export class TablesGateway {
       );
 
       this.server.emit('onInviteUser', {
-        msg: 'Приглашение пользователя',
+        message: 'Приглашение пользователя',
         content: invite,
-        error: false,
       });
     } catch (e) {
       this.sendError('onInviteUserError', e?.message);
@@ -182,15 +177,13 @@ export class TablesGateway {
 
       if (dto.solution === 'accept') {
         this.server.emit('onAcceptInvite', {
-          msg: 'Пользователь принял приглашение',
+          message: 'Пользователь принял приглашение',
           content: invite,
-          error: false,
         });
       } else {
         this.server.emit('onRejectInvite', {
-          msg: 'Пользователь отклонил приглашение',
+          message: 'Пользователь отклонил приглашение',
           content: invite,
-          error: false,
         });
       }
     } catch (e) {
@@ -214,9 +207,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onCreateReservationDish', {
-        msg: 'Пользователь добавил блюдо',
+        message: 'Пользователь добавил блюдо',
         content: dish,
-        error: false,
       });
     } catch (e) {
       this.sendError('onCreateReservationDishError', e?.message);
@@ -241,9 +233,8 @@ export class TablesGateway {
 
       if (deleteInfo) {
         this.server.emit('onDeleteReservationDish', {
-          msg: 'Пользователь удалил блюдо',
+          message: 'Пользователь удалил блюдо',
           content: deleteInfo,
-          error: false,
         });
       }
     } catch (e) {
@@ -267,9 +258,8 @@ export class TablesGateway {
       });
 
       this.server.emit('onСreateReservationUserSeat', {
-        msg: 'Пользователь создал место',
+        message: 'Пользователь создал место',
         content: seat,
-        error: false,
       });
     } catch (e) {
       this.sendError('onСreateReservationUserSeatError', e.message);
@@ -294,9 +284,8 @@ export class TablesGateway {
 
       if (deleteInfo) {
         this.server.emit('onDeleteReservationUserSeat', {
-          msg: 'Пользователь удалил место',
+          message: 'Пользователь удалил место',
           content: deleteInfo,
-          error: false,
         });
       }
     } catch (e) {
@@ -321,9 +310,8 @@ export class TablesGateway {
 
       if (orderPayment) {
         this.server.emit('onPayReservationOrder', {
-          msg: 'Заказ брони оплачен',
+          message: 'Заказ брони оплачен',
           content: orderPayment,
-          error: false,
         });
       }
     } catch (e) {
@@ -331,11 +319,14 @@ export class TablesGateway {
     }
   }
 
-  private sendError(eventName: string, errorMessage: string) {
+  private sendError(
+    eventName: string,
+    errorMessage: string,
+    content: any | undefined = {},
+  ) {
     this.server.emit(eventName, {
-      msg: errorMessage,
-      content: {},
-      error: true,
+      message: errorMessage,
+      content,
     });
   }
 }

@@ -18,6 +18,9 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
+      description: {
+        type: Sequelize.STRING(500),
+      },
       maxPositionsX: {
         type: Sequelize.INTEGER,
         allowNull: false,

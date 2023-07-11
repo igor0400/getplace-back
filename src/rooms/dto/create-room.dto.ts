@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { requestMessages } from 'src/common';
 
 export class CreateRoomDto {
@@ -18,6 +18,14 @@ export class CreateRoomDto {
   @IsNotEmpty({ message: requestMessages.isNotEmpty('title') })
   @IsString({ message: requestMessages.isString('title') })
   readonly title: string;
+
+  @ApiProperty({
+    example: 'Обычный зал',
+    description: 'Описание зала',
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('description') })
+  readonly description?: string;
 
   @ApiProperty({
     example: 6,
