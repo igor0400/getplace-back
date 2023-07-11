@@ -2,15 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { BoostRepository } from './repositories/boost.repository';
 import { CreateBoostDto } from './dto/create-boost.dto';
 import { ChangeBoostDto } from './dto/change-boost.dto';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class BoostsService {
   constructor(private readonly boostRepository: BoostRepository) {}
 
-  async getAllBoosts() {
+  async getAllBoosts(limit: number, offset: number, search: string = '') {
     const boosts = await this.boostRepository.findAll({
-      include: { all: true },
+      offset: offset || 0,
+      limit: limit || 10,
+      where: {
+        value: {
+          [Op.like]: `%${search}%`,
+        },
+      },
     });
+
     return boosts;
   }
 

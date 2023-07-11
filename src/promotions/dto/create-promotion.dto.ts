@@ -14,6 +14,8 @@ import { PromotionActionTypes } from '../types/promotion-action-types';
 import { promotionActionTypes } from '../configs/promotion-action-types';
 
 export class CreatePromotionDto {
+  readonly placeId: string;
+
   @ApiProperty({ example: 'Супер скидки', description: 'Описание' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('description') })
   @IsString({ message: requestMessages.isString('description') })
@@ -77,4 +79,22 @@ export class CreatePromotionDto {
   @IsOptional()
   @IsString({ message: requestMessages.isString('dishId') })
   readonly dishId?: string;
+
+  @ApiProperty({
+    example: '11:00',
+    description: 'Прийти с',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('visitTimeFrom') })
+  readonly visitTimeFrom?: string;
+
+  @ApiProperty({
+    example: '16:00',
+    description: 'Прийти до',
+    required: false,
+  })
+  @IsOptional()
+  @IsString({ message: requestMessages.isString('visitTimeTill') })
+  readonly visitTimeTill?: string;
 }

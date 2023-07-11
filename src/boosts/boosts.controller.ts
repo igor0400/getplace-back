@@ -6,9 +6,15 @@ import {
   Patch,
   Body,
   Param,
+  Query,
 } from '@nestjs/common';
 import { BoostsService } from './boosts.service';
-import { ApiDefaultResponse, ApiSecurity, ApiTags } from '@nestjs/swagger';
+import {
+  ApiDefaultResponse,
+  ApiQuery,
+  ApiSecurity,
+  ApiTags,
+} from '@nestjs/swagger';
 import { EmployeesRoles } from 'src/roles/decorators/employees-roles.decorator';
 import { EmployeeRolesGuard } from 'src/roles/guards/employee-roles.guard';
 import { CreateBoostDto } from './dto/create-boost.dto';
@@ -25,9 +31,28 @@ export class BoostsController {
   @ApiDefaultResponse({
     description: 'Получение всех бустов',
   })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Ограничение колличества',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'offset',
+    description: 'Отступ от начала',
+    required: false,
+  })
+  @ApiQuery({
+    name: 'search',
+    description: 'Поиск по названию',
+    required: false,
+  })
   @Get()
-  getAllBoosts() {
-    return this.boostsService.getAllBoosts();
+  getAllBoosts(
+    @Query('limit') limit: string,
+    @Query('offset') offset: string,
+    @Query('search') search: string,
+  ) {
+    return this.boostsService.getAllBoosts(+limit, +offset, search);
   }
 
   @ApiDefaultResponse({

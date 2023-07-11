@@ -24,5 +24,6 @@ import { PromotionVisitTimeRepository } from './repositories/visit-time.reposito
     PromotionProductRepository,
     PromotionVisitTimeRepository,
   ],
+  exports: [PromotionsService],
 })
 export class PromotionsModule {}

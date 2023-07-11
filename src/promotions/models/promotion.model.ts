@@ -12,6 +12,7 @@ import { PromotionTypes } from '../types/promotion-types';
 import { promotionActionTypes } from '../configs/promotion-action-types';
 import { PromotionActionTypes } from '../types/promotion-action-types';
 import { PromotionProduct } from './product.model';
+import { PromotionVisitTime } from './visit-time.model';
 
 export interface PromotionCreationArgs {
   placeId: string;
@@ -74,4 +75,7 @@ export class Promotion extends AbstractModel<Promotion, PromotionCreationArgs> {
 
   @HasOne(() => PromotionProduct)
   freeProduct: PromotionProduct;
+
+  @HasOne(() => PromotionVisitTime)
+  visitTime: PromotionVisitTime;
 }

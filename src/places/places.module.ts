@@ -34,6 +34,8 @@ import { ReservationsModule } from 'src/reservations/reservations.module';
 import { PlaceEmployeesController } from './employees/place-employees.controller';
 import { PlaceEmployeesService } from './employees/place-employees.service';
 import { PlaceRoomsController } from './rooms/place-rooms.controller';
+import { PromotionsModule } from 'src/promotions/promotions.module';
+import { PlacePromotionsController } from './promotions/place-promotions.controller';
 
 @Module({
   controllers: [
@@ -41,6 +43,7 @@ import { PlaceRoomsController } from './rooms/place-rooms.controller';
     PlaceBoostsController,
     PlaceEmployeesController,
     PlaceRoomsController,
+    PlacePromotionsController,
     PlacesController,
   ],
   providers: [
@@ -82,6 +85,7 @@ import { PlaceRoomsController } from './rooms/place-rooms.controller';
     forwardRef(() => TablesModule),
     forwardRef(() => ReviewsModule),
     forwardRef(() => ReservationsModule),
+    PromotionsModule,
   ],
   exports: [PlacesService],
 })
