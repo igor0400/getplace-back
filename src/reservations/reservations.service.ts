@@ -2,7 +2,7 @@ import { Injectable, BadRequestException } from '@nestjs/common';
 import { TableReservationRepository } from './repositories/reservation.repository';
 import { TableReservationUserRepository } from './repositories/reservation-user.repository';
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
-import { TableReservationUser } from './model/table-reservation-user.model';
+import { TableReservationUser } from './models/table-reservation-user.model';
 import { User } from 'src/users/models/user.model';
 import { Seat } from 'src/seats/models/seat.model';
 import { ReservationOrder } from 'src/orders/models/reservation-order.model';

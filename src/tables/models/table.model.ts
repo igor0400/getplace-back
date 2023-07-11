@@ -10,7 +10,7 @@ import { TableStates } from '../types/table-states';
 import { tableStates } from '../configs/table-states';
 import { Room } from 'src/rooms/models/room.model';
 import { Seat } from 'src/seats/models/seat.model';
-import { TableReservation } from 'src/reservations/model/table-reservation.model';
+import { TableReservation } from 'src/reservations/models/table-reservation.model';
 
 export interface TableCreationArgs {
   roomId: string;

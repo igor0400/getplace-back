@@ -5,9 +5,9 @@ import { TableReservationUserRepository } from './repositories/reservation-user.
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
 import { DatabaseModule } from 'src/common';
 import { Table } from 'src/tables/models/table.model';
-import { TableReservation } from './model/table-reservation.model';
-import { TableReservationUser } from './model/table-reservation-user.model';
-import { TableReservationInvite } from './model/table-reservation-invite.model';
+import { TableReservation } from './models/table-reservation.model';
+import { TableReservationUser } from './models/table-reservation-user.model';
+import { TableReservationInvite } from './models/table-reservation-invite.model';
 import { SeatsModule } from 'src/seats/seats.module';
 import { PlacesModule } from 'src/places/places.module';
 import { StatsModule } from 'src/stats/stats.module';

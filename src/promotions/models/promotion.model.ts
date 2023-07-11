@@ -1,10 +1,17 @@
-import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  DataType,
+  ForeignKey,
+  HasOne,
+} from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { Place } from 'src/places/models/place.model';
 import { promotionTypes } from '../configs/promotion-types';
 import { PromotionTypes } from '../types/promotion-types';
 import { promotionActionTypes } from '../configs/promotion-action-types';
 import { PromotionActionTypes } from '../types/promotion-action-types';
+import { PromotionProduct } from './product.model';
 
 export interface PromotionCreationArgs {
   placeId: string;
@@ -12,6 +19,9 @@ export interface PromotionCreationArgs {
   description: string;
   type: PromotionTypes;
   actionType: PromotionActionTypes;
+  discountAmount?: number;
+  buyFromAmount?: number;
+  buyFromCurrency?: string;
 }
 
 @Table({ tableName: 'promotions' })
@@ -47,5 +57,21 @@ export class Promotion extends AbstractModel<Promotion, PromotionCreationArgs> {
   })
   actionType: PromotionActionTypes;
 
-  // cделать вложенные модели, продукт и тд (чек service)
+  @Column({
+    type: DataType.INTEGER,
+  })
+  discountAmount: number;
+
+  @Column({
+    type: DataType.INTEGER,
+  })
+  buyFromAmount: number;
+
+  @Column({
+    type: DataType.STRING,
+  })
+  buyFromCurrency: string;
+
+  @HasOne(() => PromotionProduct)
+  freeProduct: PromotionProduct;
 }

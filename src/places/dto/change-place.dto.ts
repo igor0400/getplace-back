@@ -23,7 +23,7 @@ export class ChangePlaceDto {
 
   @ApiProperty({
     example: 'Лучшее в мире заведение',
-    description: 'Название',
+    description: 'Описание',
     required: false,
   })
   @IsOptional()

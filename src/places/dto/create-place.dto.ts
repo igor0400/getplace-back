@@ -23,7 +23,7 @@ export class CreatePlaceDto {
   @MaxLength(100, { message: requestMessages.maxLength('title', 100) })
   readonly title: string;
 
-  @ApiProperty({ example: 'Лучшее в мире заведение', description: 'Название' })
+  @ApiProperty({ example: 'Лучшее в мире заведение', description: 'Описание' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('description') })
   @IsString({ message: requestMessages.isString('description') })
   @MaxLength(1000, { message: requestMessages.maxLength('description', 1000) })

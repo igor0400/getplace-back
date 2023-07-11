@@ -24,6 +24,8 @@ import { ChangeRestaurantDishDto } from './dto/change-dish.dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Рестораны (заведения)')
+@PlacesRoles('MENU', 'OWNER')
+@UseGuards(PlaceRolesGuard)
 @Controller('restaurants')
 export class RestaurantsController {
   constructor(private readonly restaurantsService: RestaurantsService) {}
@@ -35,8 +37,6 @@ export class RestaurantsController {
     description: 'Загрузка 1 файла, поле image',
   })
   @ApiSecurity('MENU or OWNER only')
-  @PlacesRoles('MENU', 'OWNER')
-  @UseGuards(PlaceRolesGuard)
   @Post('dishes')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   createDish(
@@ -57,8 +57,6 @@ export class RestaurantsController {
     description: 'id блюда',
   })
   @ApiSecurity('MENU or OWNER only')
-  @PlacesRoles('MENU', 'OWNER')
-  @UseGuards(PlaceRolesGuard)
   @Patch('dishes/:id')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'image', maxCount: 1 }]))
   changeDish(
@@ -77,8 +75,6 @@ export class RestaurantsController {
     description: 'id блюда',
   })
   @ApiSecurity('MENU or OWNER only')
-  @PlacesRoles('MENU', 'OWNER')
-  @UseGuards(PlaceRolesGuard)
   @Delete('dishes/:id')
   deleteDish(@Param('id') id: string) {
     return this.restaurantsService.deleteDishById(id);

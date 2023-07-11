@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import {
   TableReservation,
   TableReservationCreationArgs,
-} from '../model/table-reservation.model';
+} from '../models/table-reservation.model';
 
 @Injectable()
 export class TableReservationRepository extends AbstractRepository<

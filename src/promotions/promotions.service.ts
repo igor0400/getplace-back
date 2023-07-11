@@ -1,8 +1,18 @@
 import { Injectable } from '@nestjs/common';
+import { PromotionRepository } from './repositories/promotion.repository';
+import { PromotionProductRepository } from './repositories/product.repository';
+import { PromotionVisitTimeRepository } from './repositories/visit-time.repository';
+import { CreatePromotionDto } from './dto/create-promotion.dto';
 
 @Injectable()
-export class PromotionsService {}
+export class PromotionsService {
+  constructor(
+    private readonly promotionRepository: PromotionRepository,
+    private readonly promotionProductRepository: PromotionProductRepository,
+    private readonly promotionVisitTimeRepository: PromotionVisitTimeRepository,
+  ) {}
 
-// посмотреть сначала на макет
+  async createPromotion(dto: CreatePromotionDto) {}
+}
+
 // учитывать скидки при оплате
-// 2 типа пока сделать, скидка и бесплатный продукт. И типы действий, при первом посещении, при заказе от, приди с до

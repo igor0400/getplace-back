@@ -11,7 +11,7 @@ import { SeatsService } from 'src/seats/seats.service';
 import { Seat } from 'src/seats/models/seat.model';
 import { ChangeTableDto } from './dto/change-table.dto';
 import { Op } from 'sequelize';
-import { TableReservation } from 'src/reservations/model/table-reservation.model';
+import { TableReservation } from 'src/reservations/models/table-reservation.model';
 import { PlacesService } from 'src/places/places.service';
 import { FreeTableRepository } from './repositories/free-table.repository';
 

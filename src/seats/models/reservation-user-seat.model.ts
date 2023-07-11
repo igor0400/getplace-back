@@ -1,6 +1,6 @@
 import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
-import { TableReservationUser } from 'src/reservations/model/table-reservation-user.model';
+import { TableReservationUser } from 'src/reservations/models/table-reservation-user.model';
 import { Seat } from 'src/seats/models/seat.model';
 
 export interface ReservationUserSeatCreationArgs {

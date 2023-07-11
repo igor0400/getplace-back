@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule as AppDatabaseModule } from 'src/common';
+import { DatabaseModule as CommonDatabaseModule } from 'src/common';
 import { Dish } from '../dishes/models/dish.model';
 import { DishDrink } from '../dishes/models/drink.model';
 import { DishFood } from '../dishes/models/food.model';
@@ -40,9 +40,9 @@ import { PlaceBoosts } from 'src/boosts/models/place-boosts.model';
 import { PlaceStat } from 'src/stats/models/place-stat.model';
 import { PlaceGuests } from 'src/stats/models/place-guests.model';
 import { PlaceStatItem } from 'src/stats/models/place-stat-item.model';
-import { TableReservation } from 'src/reservations/model/table-reservation.model';
-import { TableReservationUser } from 'src/reservations/model/table-reservation-user.model';
-import { TableReservationInvite } from 'src/reservations/model/table-reservation-invite.model';
+import { TableReservation } from 'src/reservations/models/table-reservation.model';
+import { TableReservationUser } from 'src/reservations/models/table-reservation-user.model';
+import { TableReservationInvite } from 'src/reservations/models/table-reservation-invite.model';
 import { Payment } from 'src/payments/models/payment.model';
 import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
@@ -51,10 +51,13 @@ import { FreeTable } from 'src/tables/models/free-table.model';
 import { UserFavouritePlace } from 'src/favourites/models/user-favourite-place.model';
 import { Review } from 'src/reviews/models/review.model';
 import { PlaceReview } from 'src/reviews/models/place-review.model';
+import { PromotionVisitTime } from 'src/promotions/models/visit-time.model';
+import { PromotionProduct } from 'src/promotions/models/product.model';
+import { Promotion } from 'src/promotions/models/promotion.model';
 
 @Module({
   imports: [
-    AppDatabaseModule.forRoot([
+    CommonDatabaseModule.forRoot([
       Dish,
       DishDrink,
       DishFood,
@@ -106,6 +109,9 @@ import { PlaceReview } from 'src/reviews/models/place-review.model';
       UserFavouritePlace,
       Review,
       PlaceReview,
+      Promotion,
+      PromotionProduct,
+      PromotionVisitTime,
     ]),
   ],
 })
