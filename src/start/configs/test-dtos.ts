@@ -1,4 +1,5 @@
 import { CreatePlaceDto } from 'src/places/dto/create-place.dto';
+import { CreatePromotionDto } from 'src/promotions/dto/create-promotion.dto';
 import { CreateTableReservationUserSeatDto } from 'src/reservations/dto/create-reservation-user-seat.dto';
 import { CreateReservationDto } from 'src/reservations/dto/create-reservation.dto';
 import { CreateRestaurantDishDto } from 'src/restaurants/dto/create-dish.dto';
@@ -95,5 +96,14 @@ export default {
     ratingKitchen: 4,
     ratingAtmosphere: 3.5,
     ratingService: 5,
+  }),
+  promotion: (placeId: string): CreatePromotionDto => ({
+    placeId,
+    description: 'Очень выгодная акция',
+    type: 'discount',
+    actionType: 'buyFrom',
+    discountAmount: 10,
+    buyFromAmount: 1000,
+    buyFromCurrency: 'KZT',
   }),
 };

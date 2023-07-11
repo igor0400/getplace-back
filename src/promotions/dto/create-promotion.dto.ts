@@ -19,7 +19,7 @@ export class CreatePromotionDto {
   @ApiProperty({ example: 'Супер скидки', description: 'Описание' })
   @IsNotEmpty({ message: requestMessages.isNotEmpty('description') })
   @IsString({ message: requestMessages.isString('description') })
-  @MaxLength(500, { message: requestMessages.maxLength('description', 500) })
+  @MaxLength(50, { message: requestMessages.maxLength('description', 50) })
   readonly description: string;
 
   @ApiProperty({

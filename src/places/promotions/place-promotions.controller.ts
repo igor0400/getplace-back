@@ -28,13 +28,20 @@ export class PlacePromotionsController {
     description: 'Поиск по названию',
     required: false,
   })
+  @ApiParam({
+    name: 'placeId',
+    description: 'id заведения',
+  })
   @Get()
   getAllPlaces(
     @Query('limit') limit: string,
     @Query('offset') offset: string,
     @Query('search') search: string,
+    @Param('placeId') placeId: string,
   ) {
-    return this.promotionsService.getAllPromotions(+limit, +offset, search);
+    return this.promotionsService.getAllPromotions(+limit, +offset, search, {
+      placeId,
+    });
   }
 
   @ApiDefaultResponse({
@@ -49,7 +56,10 @@ export class PlacePromotionsController {
   @PlacesRoles('OWNER', 'PROMOTION')
   @UseGuards(PlaceRolesUrlGuard)
   @Post()
-  createPromotion(@Body() dto: CreatePromotionDto, @Param() placeId: string) {
+  createPromotion(
+    @Body() dto: CreatePromotionDto,
+    @Param('placeId') placeId: string,
+  ) {
     return this.promotionsService.createPromotion({
       ...dto,
       placeId,

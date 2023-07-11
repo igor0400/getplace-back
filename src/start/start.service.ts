@@ -24,6 +24,7 @@ import { TableReservationUserRepository } from 'src/reservations/repositories/re
 import { RestaurantsService } from 'src/restaurants/restaurants.service';
 import { OrdersService } from 'src/orders/orders.service';
 import { ReviewsService } from 'src/reviews/reviews.service';
+import { PromotionsService } from 'src/promotions/promotions.service';
 
 @Injectable()
 export class StartService {
@@ -43,6 +44,7 @@ export class StartService {
     private readonly restaurantsService: RestaurantsService,
     private readonly ordersService: OrdersService,
     private readonly reviewsService: ReviewsService,
+    private readonly promotionsService: PromotionsService,
   ) {}
 
   async createInitialData(
@@ -194,6 +196,9 @@ export class StartService {
     await this.reviewsService.createPlaceReview(
       testDtos.review(place.id, user.id),
     );
+    await this.promotionsService.createPromotion(
+      testDtos.promotion(place.id)
+    )
 
     return this.placesService.getPlaceById(place.id);
   }

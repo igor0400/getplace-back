@@ -17,7 +17,12 @@ export class PromotionsService {
     private readonly promotionVisitTimeRepository: PromotionVisitTimeRepository,
   ) {}
 
-  async getAllPromotions(limit: number, offset: number, search: string = '') {
+  async getAllPromotions(
+    limit: number,
+    offset: number,
+    search: string = '',
+    where: any | undefined = {},
+  ) {
     const promotions = await this.promotionRepository.findAll({
       offset: offset || 0,
       limit: limit || 10,
@@ -26,6 +31,7 @@ export class PromotionsService {
         title: {
           [Op.like]: `%${search}%`,
         },
+        ...where,
       },
     });
 

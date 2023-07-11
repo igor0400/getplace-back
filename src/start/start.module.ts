@@ -14,6 +14,7 @@ import { TablesModule } from 'src/tables/tables.module';
 import { OrdersModule } from 'src/orders/orders.module';
 import { RestaurantsModule } from 'src/restaurants/restaurants.module';
 import { ReviewsModule } from 'src/reviews/reviews.module';
+import { PromotionsModule } from 'src/promotions/promotions.module';
 
 @Module({
   controllers: [StartController],
@@ -32,6 +33,7 @@ import { ReviewsModule } from 'src/reviews/reviews.module';
     RestaurantsModule,
     OrdersModule,
     ReviewsModule,
+    PromotionsModule,
   ],
 })
 export class StartModule {}
