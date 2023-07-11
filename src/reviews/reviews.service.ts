@@ -34,9 +34,9 @@ export class ReviewsService {
   async createPlaceReview(dto: CreatePlaceReviewDto) {
     const { placeId, userId, text } = dto;
 
-    const ratingKitchen = Math.floor(dto.ratingKitchen),
-      ratingAtmosphere = Math.floor(dto.ratingAtmosphere),
-      ratingService = Math.floor(dto.ratingService);
+    const ratingKitchen = Math.round(dto.ratingKitchen),
+      ratingAtmosphere = Math.round(dto.ratingAtmosphere),
+      ratingService = Math.round(dto.ratingService);
 
     const payment = await this.reservationOrderPaymentUserRepository.findOne({
       where: {
@@ -51,7 +51,7 @@ export class ReviewsService {
       );
     }
 
-    const totalRating = Math.floor(
+    const totalRating = Math.round(
       (ratingKitchen + ratingAtmosphere + ratingService) / 3,
     );
 
@@ -96,7 +96,7 @@ export class ReviewsService {
           item === 'ratingAtmosphere' ||
           item === 'ratingService'
         ) {
-          review[item] = Math.floor(dto[item]);
+          review[item] = Math.round(dto[item]);
         } else {
           review[item] = dto[item];
         }
@@ -105,7 +105,7 @@ export class ReviewsService {
 
     review.save();
 
-    const totalRating = Math.floor(
+    const totalRating = Math.round(
       (review.ratingKitchen + review.ratingAtmosphere + review.ratingService) /
         3,
     );
