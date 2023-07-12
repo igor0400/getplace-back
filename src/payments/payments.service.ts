@@ -17,6 +17,8 @@ import { ReservationOrderPaymentUser } from './models/reservation-order-payment-
 import { ReferalsService } from 'src/referals/referals.service';
 import { BonusesService } from 'src/bonuses/bonuses.service';
 import { PlacesService } from 'src/places/places.service';
+import { PromotionRepository } from 'src/promotions/repositories/promotion.repository';
+import { Op } from 'sequelize';
 
 const reservationOrderPaymentInclude = [ReservationOrderPaymentUser];
 
@@ -27,6 +29,7 @@ export class PaymentsService {
     private readonly reservationOrderPaymentRepository: ReservationOrderPaymentRepository,
     private readonly reservationOrderPaymentUserRepository: ReservationOrderPaymentUserRepository,
     private readonly reservationUserRepository: TableReservationUserRepository,
+    private readonly promotionRepository: PromotionRepository,
     private readonly reservationsService: ReservationsService,
     @Inject(forwardRef(() => OrdersService))
     private readonly ordersService: OrdersService,
@@ -35,16 +38,23 @@ export class PaymentsService {
     private readonly placesService: PlacesService,
   ) {}
 
-  async createPayment(dto: CreatePaymentDto) {
-    const { initialAmount, discount } = dto;
+  // сделать акцию на скидку в starter
 
-    const discountAmount = +((+initialAmount * +discount) / 100).toFixed(2);
-    const totalAmount = String(+initialAmount - discountAmount);
+  async createPayment(dto: CreatePaymentDto) {
+    const initialAmount = dto.initialAmount ?? '0';
+    const discountProcent = dto.discountProcent ?? '0';
+
+    const discountAmount = ((+initialAmount * +discountProcent) / 100).toFixed(
+      2,
+    );
+    const totalAmount = String(+initialAmount - +discountAmount);
 
     const payment = await this.paymentRepository.create({
       ...dto,
       shortId: uid(20).toUpperCase(),
-      discount: discount ?? '0',
+      initialAmount,
+      discountProcent,
+      discountAmount,
       totalAmount,
     });
 
@@ -65,10 +75,12 @@ export class PaymentsService {
   }
 
   async payReservationOrder(dto: PayReservationOrderDto) {
-    const { reservationOrderId, type } = dto;
+    const { reservationOrderId, type, userId } = dto;
     const reservationOrder = await this.ordersService.getReservationOrderById(
       reservationOrderId,
     );
+
+    // добавдять бесплатное блюдо
 
     if (!reservationOrder)
       throw new BadRequestException('Заказ брони не найден');
@@ -87,6 +99,12 @@ export class PaymentsService {
       totalAmount: String(totalAmount),
       currency: 'KZT',
     });
+    const discountProcent = await this.getPlaceOrderDiscount({
+      placeId: place.id,
+      amount: String(totalAmount),
+      reservationId: reservation.id,
+      userId,
+    });
 
     if (type === 'eachForHimself') {
       const owner = await this.reservationUserRepository.findOne({
@@ -97,7 +115,8 @@ export class PaymentsService {
       });
 
       await this.createUserPayment({
-        amount: reservationOrder?.orderData?.totalPrice,
+        amount: String(totalAmount),
+        discountProcent,
         userId: owner.userId,
         orderPaymentId: orderPayment.id,
         placeId: place.id,
@@ -127,16 +146,16 @@ export class PaymentsService {
 
   private async createUserPayment(dto: {
     amount: string;
+    discountProcent?: string;
     userId: string;
     orderPaymentId: string;
     placeId: string;
   }) {
-    const { amount, userId, orderPaymentId, placeId } = dto;
-
-    // сделать расчет скидки
+    const { amount, discountProcent, userId, orderPaymentId, placeId } = dto;
 
     const payment = await this.createPayment({
-      amount: amount ?? '0',
+      initialAmount: amount,
+      discountProcent,
       currency: 'KZT',
     });
 
@@ -160,5 +179,51 @@ export class PaymentsService {
         amount: bonusesAmount,
       });
     }
+  }
+
+  private async getPlaceOrderDiscount(dto: {
+    placeId: string;
+    amount: string;
+    userId: string;
+    reservationId: string;
+  }) {
+    const { placeId, amount, userId, reservationId } = dto;
+    let discount = 0;
+
+    const promotions = await this.promotionRepository.findAll({
+      where: {
+        placeId,
+        type: 'discount',
+      },
+    });
+
+    for (let promotion of promotions) {
+      const { actionType, buyFromAmount, discountAmount } = promotion;
+
+      if (actionType === 'buyFrom' && +amount >= +buyFromAmount) {
+        discount += +discountAmount;
+      }
+
+      if (actionType === 'firstVisit') {
+        const isVisit = await this.reservationUserRepository.findOne({
+          where: {
+            userId,
+            reservationId: {
+              [Op.not]: reservationId,
+            },
+          },
+        });
+
+        if (!isVisit) {
+          discount += +discountAmount;
+        }
+      }
+
+      if (actionType === 'visitFromTill') {
+        
+      }
+    }
+
+    return String(discount);
   }
 }

@@ -12,6 +12,7 @@ import { OrdersModule } from 'src/orders/orders.module';
 import { ReferalsModule } from 'src/referals/referals.module';
 import { BonusesModule } from 'src/bonuses/bonuses.module';
 import { PlacesModule } from 'src/places/places.module';
+import { PromotionsModule } from 'src/promotions/promotions.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { PlacesModule } from 'src/places/places.module';
     forwardRef(() => PlacesModule),
     ReferalsModule,
     BonusesModule,
+    PromotionsModule,
   ],
   providers: [
     PaymentsService,

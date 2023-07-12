@@ -19,7 +19,11 @@ module.exports = {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      discount: {
+      discountProcent: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      discountAmount: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },

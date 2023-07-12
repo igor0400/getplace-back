@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
-  IsNumber,
+  IsNumberString,
   IsOptional,
   IsString,
   MaxLength,
@@ -19,22 +19,28 @@ export class ChangePromotionDto {
   readonly description?: string;
 
   @ApiProperty({
-    example: 10,
+    example: '10',
     description: 'Скидка в процентах',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('discountAmount') })
-  readonly discountAmount?: number;
+  @IsNumberString(
+    {},
+    { message: requestMessages.isNumberString('discountAmount') },
+  )
+  readonly discountAmount?: string;
 
   @ApiProperty({
-    example: 1000,
+    example: '1000',
     description: 'Сумма заказа от',
     required: false,
   })
   @IsOptional()
-  @IsNumber({}, { message: requestMessages.isNumber('buyFromAmount') })
-  readonly buyFromAmount?: number;
+  @IsNumberString(
+    {},
+    { message: requestMessages.isNumberString('buyFromAmount') },
+  )
+  readonly buyFromAmount?: string;
 
   @ApiProperty({
     example: 'KZT',

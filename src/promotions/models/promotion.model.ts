@@ -20,8 +20,8 @@ export interface PromotionCreationArgs {
   description: string;
   type: PromotionTypes;
   actionType: PromotionActionTypes;
-  discountAmount?: number;
-  buyFromAmount?: number;
+  discountAmount?: string;
+  buyFromAmount?: string;
   buyFromCurrency?: string;
 }
 
@@ -59,14 +59,14 @@ export class Promotion extends AbstractModel<Promotion, PromotionCreationArgs> {
   actionType: PromotionActionTypes;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  discountAmount: number;
+  discountAmount: string;
 
   @Column({
-    type: DataType.INTEGER,
+    type: DataType.STRING,
   })
-  buyFromAmount: number;
+  buyFromAmount: string;
 
   @Column({
     type: DataType.STRING,

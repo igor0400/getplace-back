@@ -31,10 +31,10 @@ module.exports = {
         allowNull: false,
       },
       discountAmount: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(100),
       },
       buyFromAmount: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING(100),
       },
       buyFromCurrency: {
         type: Sequelize.STRING(50),
