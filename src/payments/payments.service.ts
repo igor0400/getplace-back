@@ -36,9 +36,16 @@ export class PaymentsService {
   ) {}
 
   async createPayment(dto: CreatePaymentDto) {
+    const { initialAmount, discount } = dto;
+
+    const discountAmount = +((+initialAmount * +discount) / 100).toFixed(2);
+    const totalAmount = String(+initialAmount - discountAmount);
+
     const payment = await this.paymentRepository.create({
       ...dto,
       shortId: uid(20).toUpperCase(),
+      discount: discount ?? '0',
+      totalAmount,
     });
 
     // тут подключить оплату (сделать отдельную модель для ioka и stripe, относится к paymentModel)
@@ -125,6 +132,9 @@ export class PaymentsService {
     placeId: string;
   }) {
     const { amount, userId, orderPaymentId, placeId } = dto;
+
+    // сделать расчет скидки
+
     const payment = await this.createPayment({
       amount: amount ?? '0',
       currency: 'KZT',

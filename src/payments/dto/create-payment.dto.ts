@@ -1,4 +1,5 @@
 export class CreatePaymentDto {
-  readonly amount: string;
+  readonly initialAmount: string;
+  readonly discount?: string;
   readonly currency: string;
 }

@@ -15,7 +15,15 @@ module.exports = {
         unique: true,
         allowNull: false,
       },
-      amount: {
+      initialAmount: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      discount: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
+      totalAmount: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },

@@ -3,7 +3,9 @@ import { AbstractModel } from 'src/common';
 
 export interface PaymentCreationArgs {
   shortId: string;
-  amount: string;
+  initialAmount: string;
+  discount: string;
+  totalAmount: string;
   currency: string;
 }
 
@@ -20,7 +22,19 @@ export class Payment extends AbstractModel<Payment, PaymentCreationArgs> {
     type: DataType.STRING,
     allowNull: false,
   })
-  amount: string;
+  initialAmount: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  discount: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  totalAmount: string;
 
   @Column({
     type: DataType.STRING,
