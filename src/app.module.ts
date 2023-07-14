@@ -29,6 +29,7 @@ import { BonusesModule } from './bonuses/bonuses.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { PromotionsModule } from './promotions/promotions.module';
 import { ReviewsModule } from './reviews/reviews.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -65,6 +66,7 @@ import { ReviewsModule } from './reviews/reviews.module';
     FavouritesModule,
     PromotionsModule,
     ReviewsModule,
+    ChatModule,
   ],
   controllers: [AppController],
 })
