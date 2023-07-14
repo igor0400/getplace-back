@@ -18,7 +18,7 @@ export interface ReservationOrderPaymentUserCreationArgs {
   userId: string;
 }
 
-@Table({ tableName: 'reservation_order_payment_users' })
+@Table({ tableName: 'reservation_order_payment_users', timestamps: false })
 export class ReservationOrderPaymentUser extends AbstractModel<
   ReservationOrderPaymentUser,
   ReservationOrderPaymentUserCreationArgs

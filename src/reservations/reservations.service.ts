@@ -1,4 +1,9 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  Inject,
+  forwardRef,
+} from '@nestjs/common';
 import { TableReservationRepository } from './repositories/reservation.repository';
 import { TableReservationUserRepository } from './repositories/reservation-user.repository';
 import { TableReservationInviteRepository } from './repositories/reservation-invite.repository';
@@ -18,8 +23,6 @@ import { SeatsService } from 'src/seats/seats.service';
 import { StatsService } from 'src/stats/stats.service';
 import { PlacesService } from 'src/places/places.service';
 import { CancelReservationDto } from './dto/cancel-reservation.dto';
-import { Op } from 'sequelize';
-import { getPeriodValues } from 'src/common';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 import { ReservationOrderPaymentUser } from 'src/payments/models/reservation-order-payment-user.model';
 import { Payment } from 'src/payments/models/payment.model';
@@ -48,6 +51,7 @@ export class ReservationsService {
     private readonly reservationInviteRepository: TableReservationInviteRepository,
     private readonly seatsService: SeatsService,
     private readonly statsService: StatsService,
+    @Inject(forwardRef(() => PlacesService))
     private readonly placesService: PlacesService,
     private readonly validationsService: ValidationsService,
   ) {}

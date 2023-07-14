@@ -1,4 +1,10 @@
-import { Column, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from 'sequelize-typescript';
 import { AbstractModel } from 'src/common';
 import { Promotion } from './promotion.model';
 import { ProductTypes } from '../types/product-types';
@@ -34,4 +40,7 @@ export class PromotionProduct extends AbstractModel<
     type: DataType.STRING,
   })
   dishId: string;
+
+  @BelongsTo(() => Dish)
+  dishData: Dish;
 }

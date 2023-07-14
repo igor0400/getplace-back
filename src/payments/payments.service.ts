@@ -19,6 +19,9 @@ import { BonusesService } from 'src/bonuses/bonuses.service';
 import { PlacesService } from 'src/places/places.service';
 import { PromotionRepository } from 'src/promotions/repositories/promotion.repository';
 import { Op } from 'sequelize';
+import { Promotion } from 'src/promotions/models/promotion.model';
+import { PromotionVisitTime } from 'src/promotions/models/visit-time.model';
+import { PromotionsService } from 'src/promotions/promotions.service';
 
 const reservationOrderPaymentInclude = [ReservationOrderPaymentUser];
 
@@ -36,9 +39,8 @@ export class PaymentsService {
     private readonly referalsService: ReferalsService,
     private readonly bonusesService: BonusesService,
     private readonly placesService: PlacesService,
+    private readonly promotionsService: PromotionsService,
   ) {}
-
-  // сделать акцию на скидку в starter
 
   async createPayment(dto: CreatePaymentDto) {
     const initialAmount = dto.initialAmount ?? '0';
@@ -80,8 +82,6 @@ export class PaymentsService {
       reservationOrderId,
     );
 
-    // добавдять бесплатное блюдо
-
     if (!reservationOrder)
       throw new BadRequestException('Заказ брони не найден');
 
@@ -94,19 +94,28 @@ export class PaymentsService {
 
     const totalAmount = +reservationOrder?.orderData?.totalPrice;
 
-    const orderPayment = await this.reservationOrderPaymentRepository.create({
-      ...dto,
-      totalAmount: String(totalAmount),
-      currency: 'KZT',
-    });
     const discountProcent = await this.getPlaceOrderDiscount({
       placeId: place.id,
       amount: String(totalAmount),
       reservationId: reservation.id,
       userId,
     });
+    const discountTotalAmount = +(
+      (totalAmount * +discountProcent) /
+      100
+    ).toFixed(2);
+    const totalAmountWithDisc = +(totalAmount - discountTotalAmount).toFixed(2);
 
-    if (type === 'eachForHimself') {
+    const orderPayment = await this.reservationOrderPaymentRepository.create({
+      ...dto,
+      initialAmount: String(totalAmount),
+      discountProcent,
+      discountAmount: String(discountTotalAmount),
+      totalAmount: String(totalAmountWithDisc),
+      currency: 'KZT',
+    });
+
+    if (type === 'oneForAll') {
       const owner = await this.reservationUserRepository.findOne({
         where: {
           reservationId: reservation.id,
@@ -127,9 +136,10 @@ export class PaymentsService {
           reservationId: reservation.id,
         },
       });
-      const userAmount = Math.floor(totalAmount / users.length);
+
+      const userAmount = Math.floor(totalAmountWithDisc / users.length);
       const ownerAmount =
-        userAmount + (totalAmount - userAmount * users.length);
+        userAmount + (totalAmountWithDisc - userAmount * users.length);
 
       for (let { userId, role } of users) {
         await this.createUserPayment({
@@ -195,13 +205,16 @@ export class PaymentsService {
         placeId,
         type: 'discount',
       },
+      include: [PromotionVisitTime],
     });
 
     for (let promotion of promotions) {
-      const { actionType, buyFromAmount, discountAmount } = promotion;
+      const { type, actionType, buyFromAmount, discountProcent } = promotion;
+
+      if (type !== 'discount') continue;
 
       if (actionType === 'buyFrom' && +amount >= +buyFromAmount) {
-        discount += +discountAmount;
+        discount += +discountProcent;
       }
 
       if (actionType === 'firstVisit') {
@@ -215,12 +228,17 @@ export class PaymentsService {
         });
 
         if (!isVisit) {
-          discount += +discountAmount;
+          discount += +discountProcent;
         }
       }
 
       if (actionType === 'visitFromTill') {
-        
+        const { nowParse, fromParse, tillParse } =
+          this.promotionsService.getPromotionVisitDates(promotion);
+
+        if (nowParse > fromParse && nowParse < tillParse) {
+          discount += +discountProcent;
+        }
       }
     }
 

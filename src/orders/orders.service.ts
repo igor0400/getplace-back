@@ -19,6 +19,13 @@ import { Order } from './models/order.model';
 import { ReservationOrderPayment } from 'src/payments/models/reservation-order-payment.model';
 import { PaymentsService } from 'src/payments/payments.service';
 import { PayReservationOrderDto } from 'src/payments/dto/pay-reservation-order.dto';
+import { ReservationOrder } from './models/reservation-order.model';
+import { PlacesService } from 'src/places/places.service';
+import { PromotionProduct } from 'src/promotions/models/product.model';
+import { Dish } from 'src/dishes/models/dish.model';
+import { PromotionRepository } from 'src/promotions/repositories/promotion.repository';
+import { PromotionsService } from 'src/promotions/promotions.service';
+import { Op } from 'sequelize';
 
 const reservationOrdersInclude = [
   ReservationOrderDish,
@@ -33,9 +40,12 @@ export class OrdersService {
     private readonly reservationOrderRepository: ReservationOrderRepository,
     private readonly reservationOrderDishRepository: ReservationOrderDishRepository,
     private readonly tableReservationUserRepository: TableReservationUserRepository,
+    private readonly promotionRepository: PromotionRepository,
     private readonly dishesService: DishesService,
     @Inject(forwardRef(() => PaymentsService))
     private readonly paymentsService: PaymentsService,
+    private readonly placesService: PlacesService,
+    private readonly promotionsService: PromotionsService,
   ) {}
 
   async getAllOrders(limit: number, offset: number) {
@@ -146,10 +156,12 @@ export class OrdersService {
     const orderPayment = await this.paymentsService.payReservationOrder(dto);
     const order = await this.getOrderById(reservationOrder.orderId);
 
+    const freeDishes = await this.getFreeDishes(reservationOrder, userId);
+
     order.status = 'PAID';
     order.save();
 
-    return orderPayment;
+    return { orderPayment, freeDishes };
   }
 
   async deleteReservationOrderDishById(dto: DeleteReservationOrderDishDto) {
@@ -191,6 +203,62 @@ export class OrdersService {
     }
 
     return false;
+  }
+
+  private async getFreeDishes(
+    reservationOrder: ReservationOrder,
+    userId: string,
+  ) {
+    const dishes = [];
+
+    const { orderId, reservationId } = reservationOrder;
+    const order = await this.getOrderById(orderId);
+    const place = await this.placesService.getPlaceByReservationId(
+      reservationId,
+    );
+    const promotions = await this.promotionRepository.findAll({
+      where: {
+        placeId: place.id,
+        type: 'freeProduct',
+      },
+      include: [{ model: PromotionProduct, include: [Dish] }],
+    });
+
+    for (let promotion of promotions) {
+      const { type, actionType, buyFromAmount, freeProduct } = promotion;
+
+      if (type !== 'freeProduct') continue;
+
+      if (actionType === 'buyFrom' && +order.totalPrice >= +buyFromAmount) {
+        dishes.push(freeProduct);
+      }
+
+      if (actionType === 'firstVisit') {
+        const isVisit = await this.tableReservationUserRepository.findOne({
+          where: {
+            userId,
+            reservationId: {
+              [Op.not]: reservationId,
+            },
+          },
+        });
+
+        if (!isVisit) {
+          dishes.push(freeProduct);
+        }
+      }
+
+      if (actionType === 'visitFromTill') {
+        const { nowParse, fromParse, tillParse } =
+          this.promotionsService.getPromotionVisitDates(promotion);
+
+        if (nowParse > fromParse && nowParse < tillParse) {
+          dishes.push(freeProduct);
+        }
+      }
+    }
+
+    return dishes;
   }
 
   private async getDishAndOrderByDishId(reservationOrderDishId: string) {

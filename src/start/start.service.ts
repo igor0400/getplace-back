@@ -188,6 +188,8 @@ export class StartService {
       reservationId: reservation.id,
       dishId: placeDish.dishInfo.id,
     });
+
+    await this.promotionsService.createPromotion(testDtos.promotion(place.id));
     await this.ordersService.payReservationOrder({
       userId: user.id,
       reservationOrderId: reservationOrder.id,
@@ -196,9 +198,6 @@ export class StartService {
     await this.reviewsService.createPlaceReview(
       testDtos.review(place.id, user.id),
     );
-    await this.promotionsService.createPromotion(
-      testDtos.promotion(place.id)
-    )
 
     return this.placesService.getPlaceById(place.id);
   }

@@ -38,6 +38,7 @@ import { RoomsService } from 'src/rooms/rooms.service';
 import { TablesService } from 'src/tables/tables.service';
 import { ValidationsService } from 'src/reservations/validations.service';
 import { PlaceEmployeesService } from './employees/place-employees.service';
+import { ReservationsService } from 'src/reservations/reservations.service';
 
 const placesInclude = [
   { model: PlaceWork, include: [WorkDays, WorkTime] },
@@ -70,6 +71,8 @@ export class PlacesService {
     @Inject(forwardRef(() => ValidationsService))
     private readonly validationsService: ValidationsService,
     private readonly placeEmployeesService: PlaceEmployeesService,
+    @Inject(forwardRef(() => ReservationsService))
+    private readonly reservationsService: ReservationsService,
   ) {}
 
   async getAllUpdatedPlaces(
@@ -146,6 +149,22 @@ export class PlacesService {
 
   async getPlaceByTableId(tableId: string) {
     const table = await this.tablesService.getTableById(tableId);
+
+    if (!table) throw new BadRequestException('Стол не найден');
+
+    const place = await this.getPlaceByRoomId(table.roomId);
+
+    return place;
+  }
+
+  async getPlaceByReservationId(reservationId: string) {
+    const reservation = await this.reservationsService.getReservationById(
+      reservationId,
+    );
+
+    if (!reservation) throw new BadRequestException('Бронь не найдена');
+
+    const table = await this.tablesService.getTableById(reservation.tableId);
 
     if (!table) throw new BadRequestException('Стол не найден');
 

@@ -6,6 +6,7 @@ import { CreatePromotionDto } from './dto/create-promotion.dto';
 import { Op } from 'sequelize';
 import { PromotionProduct } from './models/product.model';
 import { PromotionVisitTime } from './models/visit-time.model';
+import { Promotion } from './models/promotion.model';
 
 export const promotionsInclude = [PromotionProduct, PromotionVisitTime];
 
@@ -44,7 +45,7 @@ export class PromotionsService {
       description,
       type,
       actionType,
-      discountAmount,
+      discountProcent,
       buyFromAmount,
       buyFromCurrency,
       dishId,
@@ -60,7 +61,7 @@ export class PromotionsService {
       description,
       type,
       actionType,
-      discountAmount,
+      discountProcent,
       buyFromAmount,
       buyFromCurrency,
     });
@@ -106,11 +107,35 @@ export class PromotionsService {
     return deleteCount;
   }
 
+  getPromotionVisitDates(promotion: Promotion) {
+    const now = new Date();
+    const from = new Date();
+    const till = new Date();
+
+    const fromSplitDate = +promotion.visitTime.from.split(':');
+    const fromHours = fromSplitDate[0];
+    const fromMinutes = fromSplitDate[1];
+
+    from.setHours(fromHours, fromMinutes);
+
+    const tillSplitDate = +promotion.visitTime.till.split(':');
+    const tillHours = tillSplitDate[0];
+    const tillMinutes = tillSplitDate[1];
+
+    till.setHours(tillHours, tillMinutes);
+
+    const nowParse = Date.parse(now.toISOString());
+    const fromParse = Date.parse(from.toISOString());
+    const tillParse = Date.parse(till.toISOString());
+
+    return { now, from, till, nowParse, fromParse, tillParse };
+  }
+
   private generateTitle(dto: CreatePromotionDto) {
     const {
       type,
       actionType,
-      discountAmount,
+      discountProcent,
       buyFromAmount,
       visitTimeFrom,
       visitTimeTill,
@@ -118,9 +143,9 @@ export class PromotionsService {
     let result = '';
 
     if (type === 'discount') {
-      this.checkRequiredField(discountAmount, 'discountAmount');
+      this.checkRequiredField(discountProcent, 'discountProcent');
 
-      result += `Скидка ${discountAmount}%`;
+      result += `Скидка ${discountProcent}%`;
     }
     if (type === 'freeProduct') {
       result += 'Бесплатный продукт';

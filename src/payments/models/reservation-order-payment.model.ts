@@ -13,6 +13,9 @@ import { reservationOrderPaymentTypes } from '../configs/reservation-order-payme
 
 export interface ReservationOrderPaymentCreationArgs {
   reservationOrderId: string;
+  initialAmount: string;
+  discountProcent: string;
+  discountAmount: string;
   totalAmount: string;
   currency: string;
   type?: ReservationOrderPaymentTypes;
@@ -29,6 +32,24 @@ export class ReservationOrderPayment extends AbstractModel<
     allowNull: false,
   })
   reservationOrderId: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  initialAmount: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  discountProcent: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
+  })
+  discountAmount: string;
 
   @Column({
     type: DataType.STRING,

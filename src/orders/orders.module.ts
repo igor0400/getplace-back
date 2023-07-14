@@ -12,6 +12,8 @@ import { DishesModule } from 'src/dishes/dishes.module';
 import { OrdersController } from './orders.controller';
 import { ReservationsModule } from 'src/reservations/reservations.module';
 import { PaymentsModule } from 'src/payments/payments.module';
+import { PromotionsModule } from 'src/promotions/promotions.module';
+import { PlacesModule } from 'src/places/places.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { PaymentsModule } from 'src/payments/payments.module';
     forwardRef(() => DishesModule),
     forwardRef(() => ReservationsModule),
     forwardRef(() => PaymentsModule),
+    forwardRef(() => PlacesModule),
+    PromotionsModule,
   ],
   providers: [
     OrdersService,

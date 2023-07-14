@@ -26,9 +26,9 @@ export class ChangePromotionDto {
   @IsOptional()
   @IsNumberString(
     {},
-    { message: requestMessages.isNumberString('discountAmount') },
+    { message: requestMessages.isNumberString('discountProcent') },
   )
-  readonly discountAmount?: string;
+  readonly discountProcent?: string;
 
   @ApiProperty({
     example: '1000',

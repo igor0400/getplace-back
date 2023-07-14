@@ -102,8 +102,8 @@ export default {
     description: 'Очень выгодная акция',
     type: 'discount',
     actionType: 'buyFrom',
-    discountAmount: '10',
-    buyFromAmount: '1000',
+    discountProcent: '5',
+    buyFromAmount: '200',
     buyFromCurrency: 'KZT',
   }),
 };
